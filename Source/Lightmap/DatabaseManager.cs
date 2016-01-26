@@ -92,6 +92,8 @@ namespace Lightmap
                 var migrationVersion = migration.GetType().GetTypeInfo().GetCustomAttribute<MigrationVersionAttribute>();
                 return true;
             });
+
+            await this.MigrateSqlDatabase(migrationsRemainingToUpgrade);
         }
 
         private SqliteConnection CreateSqliteConnection()
