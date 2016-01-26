@@ -50,6 +50,9 @@ namespace SampleApp
     {
         public static void Main(string[] args)
         {
+            IMigration initialDbMigration = new InitialDb();
+            var manager = new DatabaseManager("MyGame.sqlite", new IMigration[] { initialDbMigration });
+            manager.CreateDatabase();
         }
     }
 }
