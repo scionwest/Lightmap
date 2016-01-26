@@ -17,8 +17,7 @@ namespace SampleApp
         public void Configure()
         {
             var database = new DatabaseModeler();
-            IEntityBuilder builder = database.Create();
-            ITableModeler userTable = builder.Table("User");
+            ITableModeler userTable = database.Create().Table("User");
             userTable
                 .WithColumn<int>("UserId")
                     .AsPrimaryKey()
@@ -30,7 +29,7 @@ namespace SampleApp
                     .NotNull()
                .WithColumn<char>("MiddleInitial");
 
-            var accountTable = builder.Table("Account");
+            var accountTable = database.Create().Table("Account");
             accountTable
                 .WithColumn<int>("AcountId")
                     .AsPrimaryKey()
