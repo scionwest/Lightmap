@@ -7,10 +7,10 @@
 
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>51b6aa56-c521-4394-8a6d-4fd746914900</ProjectGuid>
-    <RootNamespace>SampleApp</RootNamespace>
-    <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\Lightmap\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <OutputPath Condition="'$(OutputPath)'=='' ">..\Lightmap\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
+    <ProjectGuid>392585f0-0b4b-4d31-92b0-2206e667e19a</ProjectGuid>
+    <RootNamespace>Lightmap.Core</RootNamespace>
+    <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <OutputPath Condition="'$(OutputPath)'=='' ">..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup>

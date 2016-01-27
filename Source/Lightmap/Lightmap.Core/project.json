@@ -1,30 +1,19 @@
-{
+﻿{
   "version": "1.0.0-*",
-  "description": "SampleApp Console Application",
+  "description": "Lightmap.Core Class Library",
   "authors": [ "johna" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
 
-  "compilationOptions": {
-    "emitEntryPoint": true
-  },
-
-  "dependencies": {
-    "Lightmap": "1.0.0-*"
-  },
-
-  "commands": {
-    "SampleApp": "SampleApp"
-  },
-
   "frameworks": {
-    "dnxcore50": {
+    "net451": { },
+    "dotnet5.4": {
       "dependencies": {
         "Microsoft.CSharp": "4.0.1-beta-23516",
         "System.Collections": "4.0.11-beta-23516",
-        "System.Console": "4.0.0-beta-23516",
         "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
         "System.Threading": "4.0.11-beta-23516"
       }
     }
