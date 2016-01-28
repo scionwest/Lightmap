@@ -14,7 +14,6 @@ namespace Lightmap.Provider.Sqlite
     {
         public static SqliteConnection CreateSqliteConnection(this DatabaseManager manager)
         {
-
             return new SqliteConnection($"Data Source={manager.Database}");
         }
 
@@ -37,8 +36,11 @@ namespace Lightmap.Provider.Sqlite
                 throw new DatabaseExistsException($"Unable to locate the Sqlite database {manager.Database}.", manager.Database);
             }
 
-            DbConnection connection = await manager.OpenSqliteConnectionAsync();
-            var version = await connection.ExecuteScalarAsync("Pragma schema_version");
+            using (DbConnection connection = await manager.OpenSqliteConnectionAsync())
+            {
+                var version = await connection.ExecuteScalarAsync("Pragma schema_version");
+            }
+
             IEnumerable<IMigration> migrationsRemainingToUpgrade = manager.Migrations.Where(migration =>
             {
                 var migrationVersion = migration.GetType().GetTypeInfo().GetCustomAttribute<MigrationVersionAttribute>();

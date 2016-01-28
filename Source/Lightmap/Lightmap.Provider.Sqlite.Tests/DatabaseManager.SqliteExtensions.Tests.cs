@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Lightmap.Provider.Sqlite.Tests.Mocks;
 using Xunit;
 
 namespace Lightmap.Provider.Sqlite.Tests
@@ -51,6 +52,24 @@ namespace Lightmap.Provider.Sqlite.Tests
             // Assert
             Assert.True(state.Value == System.Data.ConnectionState.Open);
             Assert.True(File.Exists(databaseName), "Database was not created");
+        }
+
+        [Fact]
+        public async Task Upgrade_database_configures_migrations()
+        {
+            // Act
+            bool configured = false;
+            var completionSource = new TaskCompletionSource<bool>();
+            IMigration initialMigration = new InitialDatabaseMigrationMock(() => configured = true, completionSource);
+            var manager = new DatabaseManager(databaseName, new IMigration[] { initialMigration });
+
+            // Arrange
+            Task upgradeTask = manager.UpgradeDatabase();
+            await completionSource.Task;
+            await upgradeTask;
+
+            // Assert
+            Assert.True(configured);
         }
 
         public void Dispose()
