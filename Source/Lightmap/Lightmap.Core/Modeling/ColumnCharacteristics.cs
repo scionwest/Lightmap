@@ -4,39 +4,19 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class ColumnSelector<TTableData> : IColumnSelector<TTableData>, IColumnSelectorResult<TTableData>
+    public class ExpressionColumnCharacteristics<TTableData> : IExpressionColumnCharacteristics<TTableData>
     {
-        public IColumnSelectorResult<TTableData> AsForeignKey<TForeignKey>(ITableModeler constraint, Expression<Func<TTableData, TForeignKey>> definition)
+        public ITableModeler Table(string name)
         {
             throw new NotImplementedException();
         }
 
-        public IColumnSelectorResult<TTableData> AsPrimaryKey()
+        public IExpressionColumnCharacteristics<TTableData> UseForeignKey<TForeignKey>(string relatedTable, Expression<Func<TTableData, TForeignKey>> constraint)
         {
             throw new NotImplementedException();
         }
 
-        public IColumnSelectorResult<TTableData> IsUnique()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnSelectorResult<TTableData> ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnSelectorResult<TTableData> NotNull()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnSelectorResult<TTableData> WithIndex()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnSelectorResult<TTableData> WithIndex(string name)
+        public IExpressionColumnCharacteristics<TTableData> UsePrimaryKey<TColumn>(Expression<Func<TTableData, TColumn>> columnSelector)
         {
             throw new NotImplementedException();
         }
@@ -57,53 +37,53 @@ namespace Lightmap.Modeling
 
         public string Name { get; }
 
-        public string DefaultValue { get; private set; }
+        public IColumnDefinitionResult AsPrimaryKey()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnDefinitionResult WithIndex()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnDefinitionResult WithIndex(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnDefinitionResult NotNull()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnDefinitionResult IsUnique()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnDefinitionResult WithDefaultValue(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnDefinitionResult WithDefaultValue<TDataType>(TDataType value)
+        {
+            throw new NotImplementedException();
+        }
 
         public IColumnCharacteristics WithColumn<TDataType>(string name)
         {
-            return this.Owner.WithColumn<TDataType>(name);
+            throw new NotImplementedException();
         }
 
-        public IColumnCharacteristics WithDefaultValue<TDataType>(TDataType value)
-        {
-            this.DefaultValue = value.ToString();
-            return this;
-        }
-
-        public IColumnCharacteristics AsForeignKey(ITableModeler constraint, string name)
+        public IColumnCharacteristics WithColumn(Type dataType, string columnName)
         {
             throw new NotImplementedException();
         }
 
-        public IColumnCharacteristics NotNull()
+        public IExpressionColumnCharacteristics<TColumns> WithColumns<TColumns>(Expression<Func<TColumns>> columnDefinition)
         {
-            throw new NotImplementedException();
-        }
-
-        public IColumnCharacteristics AsPrimaryKey()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnCharacteristics IsUnique()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnCharacteristics WithIndex(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnCharacteristics WithDefaultValue(object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IColumnCharacteristics WithIndex()
-        {
-            string indexName = $"{Owner.Name}_{this.Name}_IX";
-
             throw new NotImplementedException();
         }
     }

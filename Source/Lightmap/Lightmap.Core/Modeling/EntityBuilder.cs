@@ -24,49 +24,36 @@ namespace Lightmap.Modeling
             return table;
         }
 
-        public IColumnSelector<TColumns> Table<TColumns>(string name, Expression<Func<TColumns>> columnDefinitions)
-        {
-            var expression = (NewExpression)columnDefinitions.Body;
-            var columns = expression.Members;
-            var table = new TableModeler(name, this);
+        //public IColumnSelector<TColumns> Table<TColumns>(string name, Expression<Func<TColumns>> columnDefinitions)
+        //{
+        //}
 
-            foreach (PropertyInfo property in columns.OfType<PropertyInfo>())
-            {
-                table.WithColumn(property.PropertyType, property.Name);
-            }
+        //public IColumnSelector<TColumns> Table<TTable, TColumns>(Expression<Func<TColumns>> columnDefinitions)
+        //    where TTable : class
+        //{
+        //    return this.Table(typeof(TTable).Name, columnDefinitions);
+        //}
 
-            this.tableSchema.Add(table);
+        //public IColumnSelector<TTable> Table<TTable>() where TTable : class
+        //{
+        //    var table = new TableModeler(typeof(TTable).Name, this);
+        //    IEnumerable<PropertyInfo> propertiesToDefineColumns = PropertyCache.GetPropertiesForType<TTable>();
+        //    foreach(PropertyInfo property in propertiesToDefineColumns)
+        //    {
+        //        table.WithColumn(property.PropertyType, property.Name);
+        //    }
 
-            return new ColumnSelector<TColumns>();
-        }
+        //    return null; // table;
+        //}
 
-        public IColumnSelector<TColumns> Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions)
-        {
-            var expression = (NewExpression)tableName.Body;
-            var name = expression.Members.First();
-            return null;// this.Table(name.Name, columnDefinitions);
-        }
+        //public IEntityModeler View(string name)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public IColumnSelector<TEntity> Table<TEntity>() where TEntity : class
-        {
-            var table = new TableModeler(typeof(TEntity).Name, this);
-            IEnumerable<PropertyInfo> propertiesToDefineColumns = PropertyCache.GetPropertiesForType<TEntity>();
-            foreach(PropertyInfo property in propertiesToDefineColumns)
-            {
-                table.WithColumn(property.PropertyType, property.Name);
-            }
-
-            return null; // table;
-        }
-
-        public IEntityModeler View(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEntityModeler View<TEntity>()
-        {
-            throw new NotImplementedException();
-        }
+        //public IEntityModeler View<TEntity>()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

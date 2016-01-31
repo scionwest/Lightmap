@@ -4,45 +4,24 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public interface IColumnSelector<TTableData>
-    {
-        IColumnSelectorResult<TTableData> ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate);
-    }
-
-    public interface IColumnSelectorResult<TTableData> : IColumnSelector<TTableData>
-    {
-        IColumnSelectorResult<TTableData> AsPrimaryKey();
-
-        IColumnSelectorResult<TTableData> AsForeignKey<TForeignKey>(ITableModeler constraint, Expression<Func<TTableData, TForeignKey>> definition);
-
-        IColumnSelectorResult<TTableData> WithIndex();
-
-        IColumnSelectorResult<TTableData> WithIndex(string name);
-
-        IColumnSelectorResult<TTableData> NotNull();
-
-        IColumnSelectorResult<TTableData> IsUnique();
-    }
-
     public interface IColumnCharacteristics : ITableModeler
     {
         Type DataType { get; }
 
-        IColumnCharacteristics AsPrimaryKey();
+        IColumnDefinitionResult AsPrimaryKey();
 
-        IColumnCharacteristics AsForeignKey(ITableModeler constraint, string name);
+        IColumnDefinitionResult WithIndex();
 
-        IColumnCharacteristics WithIndex();
+        IColumnDefinitionResult WithIndex(string name);
 
-        IColumnCharacteristics WithIndex(string name);
+        IColumnDefinitionResult NotNull();
 
-        IColumnCharacteristics NotNull();
+        IColumnDefinitionResult IsUnique();
 
-        IColumnCharacteristics IsUnique();
-        IColumnCharacteristics WithDefaultValue(object value);
+        IColumnDefinitionResult WithDefaultValue(object value);
 
-        IColumnCharacteristics WithDefaultValue<TDataType>(TDataType value);
+        IColumnDefinitionResult WithDefaultValue<TDataType>(TDataType value);
 
-        //IColumnCharacteristics WithTrigger(string name);
+        //IColumnDefinitionResult WithTrigger(string name);
     }
 }

@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0512AA9E-1A3E-4E1B-BDE5-3CFC7BD51DC9}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		Lightmap.Core\global.json = Lightmap.Core\global.json
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lightmap.Core", "Lightmap.Core\Lightmap.Core.xproj", "{392585F0-0B4B-4D31-92B0-2206E667E19A}"

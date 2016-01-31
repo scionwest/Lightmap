@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Lightmap.Modeling;
 
 namespace Lightmap
 {
@@ -22,7 +23,8 @@ namespace Lightmap
 
             foreach (IMigration migration in this.Migrations)
             {
-                migration.Configure();
+                var modeler = new DatabaseModeler(this.Database);
+                migration.Configure(modeler);
             }
         }
 

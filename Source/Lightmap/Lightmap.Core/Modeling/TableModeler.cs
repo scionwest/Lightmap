@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Lightmap.Modeling
 {
-    public class TableModeler : IEntityModeler, ITableModeler
+    public class TableModeler : ITableModeler, ITableDefiniton
     {
         private readonly IEntityBuilder owner;
 
@@ -15,9 +16,8 @@ namespace Lightmap.Modeling
         {
             this.owner = owner;
             this.Name = tableName;
-            tableName.Split(',');
         }
-
+        
         public string Name { get; }
 
         public IColumnCharacteristics WithColumn<TDataType>(string name)
@@ -32,6 +32,19 @@ namespace Lightmap.Modeling
             ColumnCharacteristics characteristic = new ColumnCharacteristics(columnName, dataType, this);
             this.characteristics.Add(characteristic);
             return characteristic;
+        }
+
+        public IExpressionColumnCharacteristics<TColumns> WithColumns<TColumns>(Expression<Func<TColumns>> columnDefinition)
+        {
+            var expression = (NewExpression)columnDefinition.Body;
+            var columns = expression.Members;
+
+            foreach (PropertyInfo property in columns.OfType<PropertyInfo>())
+            {
+                this.WithColumn(property.PropertyType, property.Name);
+            }
+
+            return new ExpressionColumnCharacteristics<TColumns>();
         }
     }
 }

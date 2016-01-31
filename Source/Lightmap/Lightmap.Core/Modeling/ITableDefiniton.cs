@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Lightmap.Modeling
 {
-    public interface IEntityModeler
+    public interface ITableDefiniton
     {
         string Name { get; }
     }

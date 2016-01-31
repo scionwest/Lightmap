@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Lightmap.Modeling;
 
 namespace Lightmap.Provider.Sqlite.Tests.Mocks
 {
@@ -22,7 +23,7 @@ namespace Lightmap.Provider.Sqlite.Tests.Mocks
             return this.completionTask.Task;
         }
 
-        public void Configure()
+        public void Configure(IDatabaseModeler modeler)
         {
             this.onConfiguration();
         }
