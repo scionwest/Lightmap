@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace Lightmap.Modeling
 {
-    internal class DatabaseModeler : IDatabaseModeler
+    public class DatabaseModeler : IDatabaseModeler
     {
         private List<IEntityBuilder> schema = new List<IEntityBuilder>();
 
         private readonly TableManager tableManager;
 
-        internal DatabaseModeler(string databaseName)
+        public DatabaseModeler(string databaseName)
         {
             this.DatabaseName = databaseName;
             this.tableManager = new TableManager();

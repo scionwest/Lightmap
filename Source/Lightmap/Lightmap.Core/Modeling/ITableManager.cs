@@ -7,7 +7,7 @@ namespace Lightmap.Modeling
     {
         ITableModeler GetTable(string name);
 
-        ITableModeler GetTable<TTable>();
+        ITableEditor GetTable<TTable>();
 
         ITableModeler GetTable(Func<ITableModeler, bool> predicate);
     }

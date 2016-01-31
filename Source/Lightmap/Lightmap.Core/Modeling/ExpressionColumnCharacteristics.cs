@@ -20,12 +20,12 @@ namespace Lightmap.Modeling
 
         public IExpressionColumnCharacteristics<TTableData> UseForeignKey<TForeignKey>(string relatedTable, Expression<Func<TTableData, TForeignKey>> constraint)
         {
-            throw new NotImplementedException();
+            return this;
         }
 
         public IExpressionColumnCharacteristics<TTableData> UsePrimaryKey<TColumn>(Expression<Func<TTableData, TColumn>> columnSelector)
         {
-            throw new NotImplementedException();
+            return this;
         }
     }
 }

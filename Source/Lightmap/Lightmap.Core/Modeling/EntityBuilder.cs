@@ -49,7 +49,9 @@ namespace Lightmap.Modeling
                 table.WithColumn(property.PropertyType, property.Name);
             }
 
-            return null; // table;
+            this.tableManager.AddTable(table);
+
+            return new EntityMappedTableCharacteristics<TTable>(this.owner, this.tableManager); // table;
         }
 
         //public IEntityModeler View(string name)

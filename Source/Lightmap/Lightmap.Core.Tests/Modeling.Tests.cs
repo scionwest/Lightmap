@@ -52,15 +52,17 @@ namespace Lightmap.Provider.Sqlite.Tests
         [Fact]
         public void DatabaseModeler_provides_table_modeler()
         {
-            // Act
+            // Arrange
             int count = 100000;
             var time = new List<double>();
 
+            // Act
             for (int c = 0; c < count; c++)
             {
                 var watch = new Stopwatch();
                 watch.Start();
-                //this.ModelDatabase();
+                IMigration initialDatabase = new InitialDatabase();
+                initialDatabase.Configure(new DatabaseModeler("Test.sqlite"));
                 watch.Stop();
                 time.Add(watch.Elapsed.TotalMilliseconds);
                 watch.Reset();
