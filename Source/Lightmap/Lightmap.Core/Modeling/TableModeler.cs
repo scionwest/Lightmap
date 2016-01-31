@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Lightmap.Modeling
 {
-    public class TableModeler : IEntityModeler, ITableModeler, IColumnModeler
+    public class TableModeler : IEntityModeler, ITableModeler
     {
         private readonly IEntityBuilder owner;
 
@@ -19,13 +19,6 @@ namespace Lightmap.Modeling
         }
 
         public string Name { get; }
-
-        public IColumnCharacteristics NewColumn<T>()
-        {
-            ColumnCharacteristics characteristic = new ColumnCharacteristics(null, null, this);
-            this.characteristics.Add(characteristic);
-            return characteristic;
-        }
 
         public IColumnCharacteristics WithColumn<TDataType>(string name)
         {

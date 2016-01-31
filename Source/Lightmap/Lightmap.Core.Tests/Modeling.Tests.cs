@@ -24,13 +24,14 @@ namespace Lightmap.Provider.Sqlite.Tests
             var modeler = new DatabaseModeler();
 
             modeler.Create()
-                .Table("User", (c) => new
+                .Table("User", () => new
                 {
-                    UserId = c.NewColumn<int>().AsPrimaryKey(),
-                    FirstName = c.NewColumn<string>().NotNull(),
-                    LastName = c.NewColumn<string>().NotNull(),
-                    MiddleInitial = c.NewColumn<string>()
-                });
+                    UserId = default(int),
+                    FirstName = default(string),
+                    LastName = default(string),
+                    MiddleInitial = default(string),
+                })
+                .ModifyColumn((table, columns) => columns.First(c => c.Name == nameof(table.FirstName))).NotNull();
         }
     }
 }

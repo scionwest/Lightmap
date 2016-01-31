@@ -10,7 +10,7 @@ namespace Lightmap.Modeling
     {
         ITableModeler Table(string name);
 
-        ITableModeler Table<TColumns>(string name, Expression<Func<IColumnModeler, TColumns>> columnDefinitions);
+        IColumnSelector<TColumns> Table<TColumns>(string name, Expression<Func<TColumns>> columnDefinitions);
 
         IEntityBuilder Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions);
 
