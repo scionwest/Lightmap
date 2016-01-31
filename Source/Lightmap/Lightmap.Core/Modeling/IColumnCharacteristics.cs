@@ -6,7 +6,7 @@ namespace Lightmap.Modeling
 {
     public interface IColumnSelector<TTableData>
     {
-        IColumnCharacteristics ModifyColumn(Func<TTableData, IEnumerable<IColumnCharacteristics>, IColumnCharacteristics> selector);
+        IColumnCharacteristics ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate);
     }
 
     public interface IColumnCharacteristics : ITableModeler
