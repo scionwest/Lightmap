@@ -21,17 +21,22 @@ namespace Lightmap.Provider.Sqlite.Tests
             modeler.Create()
                 .Table("User")
                     .WithColumn<int>("UserId")
-                    .AsPrimaryKey()
-                    .IsUnique()
-                .WithColumn<string>("Email")
+                        .AsPrimaryKey()
+                        .IsUnique()
+                    .WithColumn<string>("Email")
                     .IsUnique()
                     .NotNull();
 
+            modeler.Create().Table<Bank>()
+                .UsePrimaryKey(bank => bank.BankId)
+                .IgnoreColumn(bank => bank.IsDirty);
+
             modeler.Create()
                 .Table("Account")
-                .WithColumns(() => new { UserId = default(int), AccountId = default(int) })
+                .WithColumns(() => new { UserId = default(int), AccountId = default(int), BankId = default(int) })
                     .UsePrimaryKey(table => table.AccountId)
-                    .UseForeignKey("User", accountTable => accountTable.UserId);
+                    .UseForeignKey("User", accountTable => new { UserId = accountTable.UserId })
+                    .UseForeignKey("Bank", accountTable => new { BankId = accountTable.BankId });
         }
 
         public Task Rollback()

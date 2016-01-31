@@ -12,6 +12,6 @@ namespace Lightmap.Modeling
 
         IColumnCharacteristics WithColumn(Type dataType, string columnName);
 
-        IExpressionColumnCharacteristics<TColumns> WithColumns<TColumns>(Expression<Func<TColumns>> columnDefinition);
+        IExpressionColumnCharacteristics<TColumns> WithColumns<TColumns>(System.Linq.Expressions.Expression<Func<TColumns>> columnDefinition);
     }
 }

@@ -4,87 +4,95 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class ExpressionColumnCharacteristics<TTableData> : IExpressionColumnCharacteristics<TTableData>
+    public class ColumnCharacteristics : IColumnDefinitionResult
     {
-        public ITableModeler Table(string name)
-        {
-            throw new NotImplementedException();
-        }
+        private IDatabaseModeler databaseModeler;
 
-        public IExpressionColumnCharacteristics<TTableData> UseForeignKey<TForeignKey>(string relatedTable, Expression<Func<TTableData, TForeignKey>> constraint)
+        public ColumnCharacteristics(string name, Type dataType, TableModeler owner, IDatabaseModeler database)
         {
-            throw new NotImplementedException();
-        }
-
-        public IExpressionColumnCharacteristics<TTableData> UsePrimaryKey<TColumn>(Expression<Func<TTableData, TColumn>> columnSelector)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class ColumnCharacteristics : IColumnCharacteristics
-    {
-        public ColumnCharacteristics(string name, Type dataType, ITableModeler owner)
-        {
+            this.databaseModeler = database;
             this.Name = name;
             this.Owner = owner;
             this.DataType = dataType;
         }
 
-        internal ITableModeler Owner { get; }
+        internal TableModeler Owner { get; }
 
         public Type DataType { get; }
 
         public string Name { get; }
 
+        public bool IsPrimaryKey { get; private set; }
+
+        public string DatabaseName => this.databaseModeler.DatabaseName;
+
+        public string IndexName { get; private set; }
+
+        public bool RequiresUniqueness { get; private set; }
+
+        public bool IsNullable { get; private set; }
+
+        public object DefaultValue { get; private set; }
+
         public IColumnDefinitionResult AsPrimaryKey()
         {
-            throw new NotImplementedException();
+            this.IsPrimaryKey = true;
+            return this;
         }
 
         public IColumnDefinitionResult WithIndex()
         {
-            throw new NotImplementedException();
+            this.IndexName = string.Concat(Owner.Name, "_", this.Name, "_IX");
+            return this;
         }
 
         public IColumnDefinitionResult WithIndex(string name)
         {
-            throw new NotImplementedException();
+            this.IndexName = name;
+            return this;
         }
 
         public IColumnDefinitionResult NotNull()
         {
-            throw new NotImplementedException();
+            this.IsNullable = false;
+            return this;
         }
 
         public IColumnDefinitionResult IsUnique()
         {
-            throw new NotImplementedException();
+            this.RequiresUniqueness = true;
+            return this;
         }
 
         public IColumnDefinitionResult WithDefaultValue(object value)
         {
-            throw new NotImplementedException();
+            this.DefaultValue = value;
+            return this;
         }
 
         public IColumnDefinitionResult WithDefaultValue<TDataType>(TDataType value)
         {
-            throw new NotImplementedException();
+            return this.WithDefaultValue(value);
         }
 
         public IColumnCharacteristics WithColumn<TDataType>(string name)
         {
-            throw new NotImplementedException();
+            return this.Owner.WithColumn<TDataType>(name);
         }
 
         public IColumnCharacteristics WithColumn(Type dataType, string columnName)
         {
-            throw new NotImplementedException();
+            return this.Owner.WithColumn(dataType, columnName);
         }
 
         public IExpressionColumnCharacteristics<TColumns> WithColumns<TColumns>(Expression<Func<TColumns>> columnDefinition)
         {
-            throw new NotImplementedException();
+            return this.Owner.WithColumns(columnDefinition);
+        }
+
+        public IEntityBuilder Create()
+        {
+            return this.databaseModeler.Create();
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Lightmap.Modeling
 {
-    public interface IColumnDefinitionResult : ITableModeler, IColumnCharacteristics
+    public interface IColumnDefinitionResult : IDatabaseModeler, IColumnCharacteristics
     {
     }
 }

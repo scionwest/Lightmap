@@ -7,7 +7,7 @@ namespace Lightmap.Modeling
     {
         ITableModeler Table(string name);
 
-        //IColumnSelector<TTable> Table<TTable>() where TTable : class;
+        IDirectEntityMappedTableCharacteristics<TTable> Table<TTable>() where TTable : class;
 
         //IColumnSelector<TColumns> Table<TTable, TColumns>(Expression<Func<TColumns>> columnDefinitions)
         //    where TTable : class;
