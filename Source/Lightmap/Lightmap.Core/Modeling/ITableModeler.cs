@@ -7,6 +7,6 @@ namespace Lightmap.Modeling
 {
     public interface ITableModeler : IEntityModeler
     {
-        IColumnCharacteristics<TDataType> WithColumn<TDataType>(string name);
+        IColumnCharacteristics WithColumn<TDataType>(string name);
     }
 }

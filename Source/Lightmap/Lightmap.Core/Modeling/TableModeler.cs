@@ -9,21 +9,27 @@ namespace Lightmap.Modeling
     {
         private readonly IEntityBuilder owner;
 
-        private List<IColumnCharacteristics> characteristics = new List<IColumnCharacteristics>();
+        private List<ColumnCharacteristics> characteristics = new List<ColumnCharacteristics>();
 
-        public TableModeler(string columnName, IEntityBuilder owner)
+        public TableModeler(string tableName, IEntityBuilder owner)
         {
             this.owner = owner;
-            this.Name = columnName;
+            this.Name = tableName;
+            tableName.Split(',');
         }
 
         public string Name { get; }
 
-        public Type DataType { get; }
-
-        public IColumnCharacteristics<TDataType> WithColumn<TDataType>(string name)
+        public IColumnCharacteristics WithColumn<TDataType>(string name)
         {
-            IColumnCharacteristics<TDataType> characteristic = new ColumnCharacteristics<TDataType>(name, this);
+            ColumnCharacteristics characteristic = new ColumnCharacteristics(name, typeof(TDataType), this);
+            this.characteristics.Add(characteristic);
+            return characteristic;
+        }
+
+        public IColumnCharacteristics WithColumn(Type dataType, string columnName)
+        {
+            ColumnCharacteristics characteristic = new ColumnCharacteristics(columnName, dataType, this);
             this.characteristics.Add(characteristic);
             return characteristic;
         }

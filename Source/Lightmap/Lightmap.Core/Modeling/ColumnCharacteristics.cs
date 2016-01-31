@@ -1,28 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class ColumnCharacteristics<TDataType> : IColumnCharacteristics<TDataType>
+    public class ColumnCharacteristics<TColumnData> : IColumnCharacteristics<TColumnData>
     {
-        public ColumnCharacteristics(string name, ITableModeler owner)
+        private readonly Expression<Func<TColumnData>> columnData;
+
+        public ColumnCharacteristics(Expression<Func<TColumnData>> data)
         {
-            this.ColumnName = name;
-            this.Owner = owner;
+            this.columnData = data;
         }
 
-        internal string ColumnName { get; }
+        public IColumnCharacteristics WithColumnOptions(Expression<Func<TColumnData, IEnumerable<IColumnCharacteristics>, IColumnCharacteristics>> test)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ColumnCharacteristics : IColumnCharacteristics
+    {
+        public ColumnCharacteristics(string name, Type dataType, ITableModeler owner)
+        {
+            this.Name = name;
+            this.Owner = owner;
+            this.DataType = dataType;
+        }
 
         internal ITableModeler Owner { get; }
 
-        public string Name
+        public Type DataType { get; }
+
+        public string Name { get; }
+
+        public string DefaultValue { get; private set; }
+
+
+
+        public IColumnCharacteristics WithColumn<TDataType>(string name)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            return this.Owner.WithColumn<TDataType>(name);
+        }
+
+        public IColumnCharacteristics WithDefaultValue<TDataType>(TDataType value)
+        {
+            this.DefaultValue = value.ToString();
+            return this;
         }
 
         public IColumnCharacteristics AsForeignKey(ITableModeler constraint, string name)
@@ -45,26 +69,21 @@ namespace Lightmap.Modeling
             throw new NotImplementedException();
         }
 
-        public IColumnCharacteristics WithDefaultValue(TDataType value)
+        public IColumnCharacteristics WithIndex(string name)
         {
             throw new NotImplementedException();
         }
 
-        public IColumnCharacteristics WithIndex(string name)
+        public IColumnCharacteristics WithDefaultValue(object value)
         {
             throw new NotImplementedException();
         }
 
         public IColumnCharacteristics WithIndex()
         {
-            string indexName = $"{Owner.Name}_{this.ColumnName}_IX";
+            string indexName = $"{Owner.Name}_{this.Name}_IX";
 
             throw new NotImplementedException();
-        }
-
-        public IColumnCharacteristics<T> WithColumn<T>(string name)
-        {
-            return this.Owner.WithColumn<T>(name);
         }
     }
 }

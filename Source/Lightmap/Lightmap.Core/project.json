@@ -1,21 +1,26 @@
-﻿{
-    "version": "1.0.0-*",
-    "description": "Lightmap.Core Class Library",
-    "authors": [
-        "johna"
-    ],
-    "tags": [
-        ""
-    ],
-    "projectUrl": "",
-    "licenseUrl": "",
-    "dependencies": {
-        "NETStandard.Library": "1.0.0-*"
-    },
-    "frameworks": {
-        "dotnet5.4": {
-            "dependencies": {
-            }
-        }
+{
+  "authors": [
+    "johna"
+  ],
+  "dependencies": {
+    "System.Collections.Concurrent": "4.0.11-beta-23516"
+  },
+  "description": "Lightmap.Core Class Library",
+  "frameworks": {
+    "dotnet5.4": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1-beta-23516",
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Threading": "4.0.11-beta-23516"
+      }
     }
+  },
+  "licenseUrl": "",
+  "projectUrl": "",
+  "tags": [
+    ""
+  ],
+  "version": "1.0.0-*"
 }

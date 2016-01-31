@@ -1,9 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
+    public interface IColumnCharacteristics<TColumnData>
+    {
+        IColumnCharacteristics WithColumnOptions(Expression<Func<TColumnData, IEnumerable<IColumnCharacteristics>, IColumnCharacteristics>> test);
+    }
+
     public interface IColumnCharacteristics : ITableModeler
     {
+        Type DataType { get; }
+
         IColumnCharacteristics AsPrimaryKey();
 
         IColumnCharacteristics AsForeignKey(ITableModeler constraint, string name);
@@ -15,12 +24,10 @@ namespace Lightmap.Modeling
         IColumnCharacteristics NotNull();
 
         IColumnCharacteristics IsUnique();
+        IColumnCharacteristics WithDefaultValue(object value);
+
+        IColumnCharacteristics WithDefaultValue<TDataType>(TDataType value);
 
         //IColumnCharacteristics WithTrigger(string name);
-    }
-
-    public interface IColumnCharacteristics<TDataType> : IColumnCharacteristics
-    {
-        IColumnCharacteristics WithDefaultValue(TDataType value);
     }
 }

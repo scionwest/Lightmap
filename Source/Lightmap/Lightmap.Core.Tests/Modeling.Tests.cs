@@ -1,28 +1,54 @@
-﻿// using System;
-// using System.Collections.Generic;
-// using System.Data;
-// using System.Data.Common;
-// using System.IO;
-// using System.Linq;
-// using System.Linq.Expressions;
-// using System.Threading.Tasks;
-// using Lightmap.Modeling;
-// using Lightmap.Provider.Sqlite.Tests.Mocks;
-// using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using Lightmap.Modeling;
+using Xunit;
 
-// namespace Lightmap.Provider.Sqlite.Tests
-// {
-//     // This project can output the Class library as a NuGet Package.
-//     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-//     public class DatabaseManagerSqliteExtensionsTests
-//     {
-//         [Fact]
-//         public void DatabaseModeler_provides_table_modeler()
-//         {
-//             // Arrange
-//             var modeler = new DatabaseModeler();
-//             ITableModeler tableModeler = modeler.Create().Table("User");
-//             tableModeler.WithColumn<int>("Id").AsPrimaryKey().WithIndex().IsUnique();
-//         }
-//     }
-// }
+namespace Lightmap.Provider.Sqlite.Tests
+{
+    // This project can output the Class library as a NuGet Package.
+    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+    public class DatabaseManagerSqliteExtensionsTests
+    {
+        public void test(IPAddress ip, int port)
+        {
+
+        }
+
+        [Fact]
+        public void DatabaseModeler_provides_table_modeler()
+        {
+            // Arrange
+            int maxCount = 100000;
+            var elapsed = new List<double>();
+
+            // Act
+            var modeler = new DatabaseModeler();
+
+            for (int count = 0; count < maxCount; count++)
+            {
+                var watch = new Stopwatch();
+                watch.Start();
+                modeler.Create()
+                    .Table("User", () => new { UserId = default(int), FirstName = default(string), LastName = default(string) })
+                    .WithColumnOptions((table, columns) => columns.First(c => c.Name == nameof(table.FirstName)))
+                        .AsPrimaryKey()
+                        .IsUnique()
+                        .NotNull();
+
+                //.Table(
+                //    "Account",
+                //    () => new { AccountId = default(int), Number = default(double), UserId = default(int) });
+                watch.Stop();
+                elapsed.Add(watch.Elapsed.TotalMilliseconds);
+            }
+
+            double average = elapsed.Average();
+            Debug.WriteLine($"Average is {average}");
+        }
+
+
+    }
+}

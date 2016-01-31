@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Lightmap.Modeling
 {
     public class EntityBuilder : IEntityBuilder
     {
-        private static List<ITableModeler> tableSchema = new List<ITableModeler>();
+        private List<TableModeler> tableSchema = new List<TableModeler>();
 
         internal EntityBuilder(EntityState initialState)
         {
@@ -23,9 +24,39 @@ namespace Lightmap.Modeling
             return table;
         }
 
-        public ITableModeler Table<TEntity>() where TEntity : new()
+        public IColumnCharacteristics<TColumns> Table<TColumns>(string name, Expression<Func<TColumns>> columnDefinitions)
         {
-            throw new NotImplementedException();
+            var expression = (NewExpression)columnDefinitions.Body;
+            var columns = expression.Members;
+            var table = new TableModeler(name, this);
+
+            foreach (PropertyInfo property in columns.OfType<PropertyInfo>())
+            {
+                table.WithColumn(property.PropertyType, property.Name);
+            }
+
+            this.tableSchema.Add(table);
+
+            return new ColumnCharacteristics<TColumns>(columnDefinitions);
+        }
+
+        public IEntityBuilder Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions)
+        {
+            var expression = (NewExpression)tableName.Body;
+            var name = expression.Members.First();
+            return null;// this.Table(name.Name, columnDefinitions);
+        }
+
+        public ITableModeler Table<TEntity>() where TEntity : class
+        {
+            var table = new TableModeler(typeof(TEntity).Name, this);
+            IEnumerable<PropertyInfo> propertiesToDefineColumns = PropertyCache.GetPropertiesForType<TEntity>();
+            foreach(PropertyInfo property in propertiesToDefineColumns)
+            {
+                table.WithColumn(property.PropertyType, property.Name);
+            }
+
+            return table;
         }
 
         public IEntityModeler View(string name)
@@ -33,7 +64,7 @@ namespace Lightmap.Modeling
             throw new NotImplementedException();
         }
 
-        public IEntityModeler View<TEntity>() where TEntity : new()
+        public IEntityModeler View<TEntity>()
         {
             throw new NotImplementedException();
         }
