@@ -32,11 +32,13 @@ namespace Lightmap.Provider.Sqlite.Tests
                 var watch = new Stopwatch();
                 watch.Start();
                 modeler.Create()
-                    .Table("User", () => new { UserId = default(int), FirstName = default(string), LastName = default(string) })
-                    .WithColumnOptions((table, columns) => columns.First(c => c.Name == nameof(table.FirstName)))
-                        .AsPrimaryKey()
-                        .IsUnique()
-                        .NotNull();
+                    .Table("User", (c) => new
+                    {
+                        UserId = c.NewColumn<int>().AsPrimaryKey(),
+                        FirstName = c.NewColumn<string>().NotNull(),
+                        LastName = c.NewColumn<string>().NotNull(),
+                        MiddleInitial = c.NewColumn<string>()
+                    });
 
                 //.Table(
                 //    "Account",

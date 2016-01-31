@@ -4,21 +4,6 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class ColumnCharacteristics<TColumnData> : IColumnCharacteristics<TColumnData>
-    {
-        private readonly Expression<Func<TColumnData>> columnData;
-
-        public ColumnCharacteristics(Expression<Func<TColumnData>> data)
-        {
-            this.columnData = data;
-        }
-
-        public IColumnCharacteristics WithColumnOptions(Expression<Func<TColumnData, IEnumerable<IColumnCharacteristics>, IColumnCharacteristics>> test)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class ColumnCharacteristics : IColumnCharacteristics
     {
         public ColumnCharacteristics(string name, Type dataType, ITableModeler owner)
@@ -35,8 +20,6 @@ namespace Lightmap.Modeling
         public string Name { get; }
 
         public string DefaultValue { get; private set; }
-
-
 
         public IColumnCharacteristics WithColumn<TDataType>(string name)
         {

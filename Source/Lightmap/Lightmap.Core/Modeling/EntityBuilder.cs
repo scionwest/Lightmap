@@ -6,6 +6,11 @@ using System.Reflection;
 
 namespace Lightmap.Modeling
 {
+    public interface IColumnModeler
+    {
+        IColumnCharacteristics NewColumn<T>();
+    }
+
     public class EntityBuilder : IEntityBuilder
     {
         private List<TableModeler> tableSchema = new List<TableModeler>();
@@ -24,7 +29,7 @@ namespace Lightmap.Modeling
             return table;
         }
 
-        public IColumnCharacteristics<TColumns> Table<TColumns>(string name, Expression<Func<TColumns>> columnDefinitions)
+        public ITableModeler Table<TColumns>(string name, Expression<Func<IColumnModeler, TColumns>> columnDefinitions)
         {
             var expression = (NewExpression)columnDefinitions.Body;
             var columns = expression.Members;
@@ -37,7 +42,7 @@ namespace Lightmap.Modeling
 
             this.tableSchema.Add(table);
 
-            return new ColumnCharacteristics<TColumns>(columnDefinitions);
+            return table;
         }
 
         public IEntityBuilder Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions)

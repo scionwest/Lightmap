@@ -4,11 +4,6 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public interface IColumnCharacteristics<TColumnData>
-    {
-        IColumnCharacteristics WithColumnOptions(Expression<Func<TColumnData, IEnumerable<IColumnCharacteristics>, IColumnCharacteristics>> test);
-    }
-
     public interface IColumnCharacteristics : ITableModeler
     {
         Type DataType { get; }
