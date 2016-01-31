@@ -7,7 +7,7 @@ namespace Lightmap.Modeling
 {
     public class EntityBuilder : IEntityBuilder
     {
-        private List<IEntityModeler> schema = new List<IEntityModeler>();
+        private static List<ITableModeler> tableSchema = new List<ITableModeler>();
 
         internal EntityBuilder(EntityState initialState)
         {
@@ -19,11 +19,11 @@ namespace Lightmap.Modeling
         public ITableModeler Table(string name)
         {
             var table = new TableModeler(name, this);
-            schema.Add(table);
+            tableSchema.Add(table);
             return table;
         }
 
-        public ITableModeler Table<TEntity>()
+        public ITableModeler Table<TEntity>() where TEntity : new()
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace Lightmap.Modeling
             throw new NotImplementedException();
         }
 
-        public IEntityModeler View<TEntity>()
+        public IEntityModeler View<TEntity>() where TEntity : new()
         {
             throw new NotImplementedException();
         }
