@@ -31,7 +31,10 @@ namespace Lightmap.Provider.Sqlite.Tests
                     LastName = default(string),
                     MiddleInitial = default(string),
                 })
-                .ModifyColumn((table, columns) => columns.First(c => c.Name == nameof(table.FirstName))).NotNull();
+                .ModifyColumn((table, columns) => columns.First(c => c.Name == nameof(table.UserId)))
+                    .NotNull()
+                    .AsPrimaryKey()
+                    .IsUnique();
         }
     }
 }
