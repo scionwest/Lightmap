@@ -40,14 +40,14 @@ namespace Lightmap.Modeling
             return new ColumnSelector<TColumns>();
         }
 
-        public IEntityBuilder Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions)
+        public IColumnSelector<TColumns> Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions)
         {
             var expression = (NewExpression)tableName.Body;
             var name = expression.Members.First();
             return null;// this.Table(name.Name, columnDefinitions);
         }
 
-        public ITableModeler Table<TEntity>() where TEntity : class
+        public IColumnSelector<TEntity> Table<TEntity>() where TEntity : class
         {
             var table = new TableModeler(typeof(TEntity).Name, this);
             IEnumerable<PropertyInfo> propertiesToDefineColumns = PropertyCache.GetPropertiesForType<TEntity>();
@@ -56,7 +56,7 @@ namespace Lightmap.Modeling
                 table.WithColumn(property.PropertyType, property.Name);
             }
 
-            return table;
+            return null; // table;
         }
 
         public IEntityModeler View(string name)

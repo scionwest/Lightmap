@@ -4,11 +4,41 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class ColumnSelector<TTableData> : IColumnSelector<TTableData>
+    public class ColumnSelector<TTableData> : IColumnSelector<TTableData>, IColumnSelectorResult<TTableData>
     {
-        public IColumnCharacteristics ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate)
+        public IColumnSelectorResult<TTableData> AsForeignKey<TForeignKey>(ITableModeler constraint, Expression<Func<TTableData, TForeignKey>> definition)
         {
-            return default(IColumnCharacteristics);
+            throw new NotImplementedException();
+        }
+
+        public IColumnSelectorResult<TTableData> AsPrimaryKey()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnSelectorResult<TTableData> IsUnique()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnSelectorResult<TTableData> ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnSelectorResult<TTableData> NotNull()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnSelectorResult<TTableData> WithIndex()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnSelectorResult<TTableData> WithIndex(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 

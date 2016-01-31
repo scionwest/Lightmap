@@ -12,9 +12,9 @@ namespace Lightmap.Modeling
 
         IColumnSelector<TColumns> Table<TColumns>(string name, Expression<Func<TColumns>> columnDefinitions);
 
-        IEntityBuilder Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions);
+        IColumnSelector<TColumns> Table<TTableName, TColumns>(Expression<Func<TTableName>> tableName, Expression<Func<TColumns>> columnDefinitions);
 
-        ITableModeler Table<TEntity>() where TEntity : class;
+        IColumnSelector<TEntity> Table<TEntity>() where TEntity : class;
 
         IEntityModeler View(string name);
 

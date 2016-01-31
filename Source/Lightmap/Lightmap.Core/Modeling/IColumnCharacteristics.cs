@@ -6,7 +6,22 @@ namespace Lightmap.Modeling
 {
     public interface IColumnSelector<TTableData>
     {
-        IColumnCharacteristics ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate);
+        IColumnSelectorResult<TTableData> ModifyColumn(Func<TTableData, IColumnCharacteristics, bool> predicate);
+    }
+
+    public interface IColumnSelectorResult<TTableData> : IColumnSelector<TTableData>
+    {
+        IColumnSelectorResult<TTableData> AsPrimaryKey();
+
+        IColumnSelectorResult<TTableData> AsForeignKey<TForeignKey>(ITableModeler constraint, Expression<Func<TTableData, TForeignKey>> definition);
+
+        IColumnSelectorResult<TTableData> WithIndex();
+
+        IColumnSelectorResult<TTableData> WithIndex(string name);
+
+        IColumnSelectorResult<TTableData> NotNull();
+
+        IColumnSelectorResult<TTableData> IsUnique();
     }
 
     public interface IColumnCharacteristics : ITableModeler
