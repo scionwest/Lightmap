@@ -8,5 +8,9 @@ namespace Lightmap.Modeling
     public interface ITableDefiniton
     {
         string Name { get; }
+
+        IColumnCharacteristics GetColumn(string name);
+
+        void RemoveColumn(IColumnCharacteristics column);
     }
 }

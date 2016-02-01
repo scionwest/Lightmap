@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Lightmap.Modeling
 {
     public class EntityBuilder : IEntityBuilder
     {
-        private List<TableModeler> tableSchema = new List<TableModeler>();
-
         private TableManager tableManager;
 
         private readonly IDatabaseModeler owner;
 
         internal EntityBuilder(EntityState initialState, TableManager manager, IDatabaseModeler owner)
         {
+            if (manager == null)
+            {
+                throw new ArgumentNullException(nameof(manager), "In order to build an entity, you must provide a table manager.");
+            }
+
+            if (owner == null)
+            {
+                throw new ArgumentNullException(nameof(owner), "In order to build an entity, you must provide the database model that the entity will belong to.");
+            }
+
             this.State = initialState;
             this.owner = owner;
             this.tableManager = manager;
@@ -25,6 +31,11 @@ namespace Lightmap.Modeling
 
         public ITableModeler Table(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name), "The table name can not be blank.");
+            }
+
             var table = new TableModeler(name, this, this.owner);
             tableManager.AddTable(table);
             return table;
@@ -51,7 +62,7 @@ namespace Lightmap.Modeling
 
             this.tableManager.AddTable(table);
 
-            return new EntityMappedTableCharacteristics<TTable>(this.owner, this.tableManager); // table;
+            return new EntityMappedTableCharacteristics<TTable>(this.owner, this.tableManager);
         }
 
         //public IEntityModeler View(string name)

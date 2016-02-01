@@ -12,7 +12,7 @@ namespace Lightmap.Modeling
 
         private readonly IDatabaseModeler databaseModeler;
 
-        private List<ColumnCharacteristics> characteristics = new List<ColumnCharacteristics>();
+        private List<IColumnCharacteristics> characteristics = new List<IColumnCharacteristics>();
 
         public TableModeler(string tableName, IEntityBuilder owner, IDatabaseModeler database)
         {
@@ -25,14 +25,14 @@ namespace Lightmap.Modeling
 
         public IColumnCharacteristics WithColumn<TDataType>(string name)
         {
-            ColumnCharacteristics characteristic = new ColumnCharacteristics(name, typeof(TDataType), this, this.databaseModeler);
+            IColumnCharacteristics characteristic = new ColumnCharacteristics(name, typeof(TDataType), this, this.databaseModeler);
             this.characteristics.Add(characteristic);
             return characteristic;
         }
 
         public IColumnCharacteristics WithColumn(Type dataType, string columnName)
         {
-            ColumnCharacteristics characteristic = new ColumnCharacteristics(columnName, dataType, this, this.databaseModeler);
+            IColumnCharacteristics characteristic = new ColumnCharacteristics(columnName, dataType, this, this.databaseModeler);
             this.characteristics.Add(characteristic);
             return characteristic;
         }
@@ -48,6 +48,16 @@ namespace Lightmap.Modeling
             }
 
             return new ExpressionColumnCharacteristics<TColumns>();
+        }
+
+        public IColumnCharacteristics GetColumn(string name)
+        {
+            return this.characteristics.FirstOrDefault(c => c.Name == name);
+        }
+
+        public void RemoveColumn(IColumnCharacteristics column)
+        {
+            this.characteristics.Remove(column);
         }
     }
 }

@@ -29,7 +29,8 @@ namespace Lightmap.Provider.Sqlite.Tests
 
             modeler.Create().Table<Bank>()
                 .UsePrimaryKey(bank => bank.BankId)
-                .IgnoreColumn(bank => bank.IsDirty);
+                .IgnoreColumn(bank => bank.IsDirty)
+                .UseForeignKey("User", bank => new { BankId = bank.BankId });
 
             modeler.Create()
                 .Table("Account")

@@ -8,6 +8,8 @@ namespace Lightmap.Modeling
     {
         Type DataType { get; }
 
+        string Name { get; }
+
         IColumnDefinitionResult AsPrimaryKey();
 
         IColumnDefinitionResult WithIndex();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
@@ -10,6 +9,26 @@ namespace Lightmap.Modeling
 
         public ColumnCharacteristics(string name, Type dataType, TableModeler owner, IDatabaseModeler database)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name), $"The {dataType.Name} column on the {owner.Name} table can not have a null or empty name.");
+            }
+
+            if (dataType == null)
+            {
+                throw new ArgumentNullException(nameof(dataType), $"The {name} column on the {owner.Name} table can not have a null data type.");
+            }
+
+            if (owner == null)
+            {
+                throw new ArgumentNullException(nameof(owner), $"The {name} column must have an owning table assigned to it.");
+            }
+
+            if (database == null)
+            {
+                throw new ArgumentNullException(nameof(database), $"The {name} column must be associated to a database model.");
+            }
+
             this.databaseModeler = database;
             this.Name = name;
             this.Owner = owner;
@@ -42,12 +61,27 @@ namespace Lightmap.Modeling
 
         public IColumnDefinitionResult WithIndex()
         {
+            if (string.IsNullOrEmpty(this.Owner.Name))
+            {
+                throw new InvalidOperationException("The owning table does not have a name and can't be used by this column.");
+            }
+
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                throw new InvalidOperationException("This column does not have a name assigned to it. Indexes can not be created when the column name is unknown.");
+            }
+
             this.IndexName = string.Concat(Owner.Name, "_", this.Name, "_IX");
             return this;
         }
 
         public IColumnDefinitionResult WithIndex(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name), "The given index name can not be used without a valid name being provided.");
+            }
+
             this.IndexName = name;
             return this;
         }
