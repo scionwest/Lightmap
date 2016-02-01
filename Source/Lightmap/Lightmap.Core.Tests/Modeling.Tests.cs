@@ -18,6 +18,7 @@ namespace Lightmap.Provider.Sqlite.Tests
 
         public void Configure(IDatabaseModeler modeler)
         {
+            // Model a table using strings and generic Type arguments for data-types.
             modeler.Create()
                 .Table("User")
                     .WithColumn<int>("UserId")
@@ -27,17 +28,32 @@ namespace Lightmap.Provider.Sqlite.Tests
                     .IsUnique()
                     .NotNull();
 
+            // Model a table based off the properties in an existing model.
             modeler.Create().Table<Bank>()
                 .UsePrimaryKey(bank => bank.BankId)
                 .IgnoreColumn(bank => bank.IsDirty)
                 .UseForeignKey("User", bank => new { BankId = bank.BankId });
 
+            // Model a table using anonymous types
             modeler.Create()
                 .Table("Account")
                 .WithColumns(() => new { UserId = default(int), AccountId = default(int), BankId = default(int) })
                     .UsePrimaryKey(table => table.AccountId)
                     .UseForeignKey("User", accountTable => new { UserId = accountTable.UserId })
                     .UseForeignKey("Bank", accountTable => new { BankId = accountTable.BankId });
+
+            modeler.Create()
+                .Table("Product")
+                    .WithColumn<int>("ProductId").AsPrimaryKey()
+                    .WithColumn<string>("Name").NotNull();
+
+            modeler.Create()
+                .Table("Purchase")
+                .WithColumns(() => new { PurchaseId = default(int), UserId = default(int), ProductId = default(int), AccountId = default(int) })
+                    .UsePrimaryKey(purchaseTable => purchaseTable.PurchaseId)
+                    .UseForeignKey("Account", purchaseTable => new { AccountId = purchaseTable.AccountId })
+                    .UseForeignKey("User", purchaseTable => new { UserId = purchaseTable.UserId })
+                    .UseForeignKey("Product", purchaseTable => new { ProductId = purchaseTable.ProductId });
         }
 
         public Task Rollback()
