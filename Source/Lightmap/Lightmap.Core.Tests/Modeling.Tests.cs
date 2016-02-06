@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseManagerSqliteExtensionsTests;
+using Lightmap.Core.Tests;
 using Lightmap.Modeling2;
 using Xunit;
 
@@ -73,9 +74,9 @@ namespace Lightmap.Provider.Sqlite.Tests
             for (int c = 0; c < count; c++)
             {
                 var watch = new Stopwatch();
+                var model = new StronglyTypedMigration();
                 watch.Start();
-                IMigration initialDatabase = new InitialDatabase();
-                initialDatabase.Configure(new DatabaseModeler("Test.sqlite"));
+                model.Configure(new DatabaseModeler("Foo.sql"));
                 watch.Stop();
                 time.Add(watch.Elapsed.TotalMilliseconds);
                 watch.Reset();

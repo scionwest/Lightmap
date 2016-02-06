@@ -20,14 +20,14 @@ namespace Lightmap.Modeling
             return new Table(this.DatabaseModeler);
         }
 
-        public Table<TTable> Table<TTable>() where TTable : class
+        public StronglyTypedTableOptions<TTable> Table<TTable>() where TTable : class
         {
-            return new Table<TTable>(this.DatabaseModeler);
+            return new StronglyTypedTableOptions<TTable>(new Table<TTable>(this.DatabaseModeler));
         }
 
         public TableExpressionDefinitonOptions<TTableDefinition> Table<TTableDefinition>(string name, Expression<Func<TTableDefinition>> definition)
         {
-            return new TableExpressionDefinitonOptions<TTableDefinition>();
+            return new TableExpressionDefinitonOptions<TTableDefinition>(new Table<TTableDefinition>(this.DatabaseModeler));
         }
     }
 }

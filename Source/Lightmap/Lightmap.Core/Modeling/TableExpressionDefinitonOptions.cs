@@ -17,7 +17,7 @@ namespace Lightmap.Modeling
 
         public Table<TTableDefinition> GetTable()
         {
-            return new Table<TTableDefinition>(this.owner.GetDatabaseModeler());
+            return owner;
         }
 
         public TableExpressionDefinitonOptions<TTableDefinition> WithPrimaryKey<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector)
