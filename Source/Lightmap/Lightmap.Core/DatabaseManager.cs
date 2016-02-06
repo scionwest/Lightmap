@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Lightmap.Modeling;
+using Lightmap.Modeling2;
 
 namespace Lightmap
 {

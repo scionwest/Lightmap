@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public class TableManager : ITableManager
     {
@@ -13,7 +13,19 @@ namespace Lightmap.Modeling
             return schema.OfType<TableModeler>().FirstOrDefault(modeler => modeler.Name == name);
         }
 
-        public ITableEditor GetTable<TTable>()
+        public ITableModeler GetTable<TTable>()
+        {
+            ITableModeler tableModeler = schema.OfType<ITableModeler>().FirstOrDefault(modeler => modeler is TTable);
+
+            if (tableModeler == null)
+            {
+                throw new InvalidOperationException($"The {typeof(TTable).Name} table has not been defined as part of this database model.");
+            }
+
+            return tableModeler;
+        }
+
+        public ITableEditor EditTable<TTable>()
         {
             ITableDefiniton tableModeler = schema.OfType<ITableDefiniton>().FirstOrDefault(modeler => modeler.Name == typeof(TTable).Name);
 

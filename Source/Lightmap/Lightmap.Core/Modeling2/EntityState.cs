@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
-    public interface IColumnDefinitionResult : IDatabaseModeler, IColumnCharacteristics
+    public enum EntityState
     {
+        Creating,
+        Altering,
+        Deleting
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public class ColumnCharacteristics : IColumnDefinitionResult
     {

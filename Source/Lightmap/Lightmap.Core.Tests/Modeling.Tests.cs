@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseManagerSqliteExtensionsTests;
-using Lightmap.Modeling;
+using Lightmap.Modeling2;
 using Xunit;
 
 namespace Lightmap.Provider.Sqlite.Tests
@@ -19,12 +19,11 @@ namespace Lightmap.Provider.Sqlite.Tests
         public void Configure(IDatabaseModeler modeler)
         {
             // Model a table using strings and generic Type arguments for data-types.
-            modeler.Create()
-                .Table("User")
-                    .WithColumn<int>("UserId")
-                        .AsPrimaryKey()
-                        .IsUnique()
-                    .WithColumn<string>("Email")
+            modeler.Create().Table("User")
+                .WithColumn<int>("UserId")
+                    .AsPrimaryKey()
+                    .IsUnique()
+                .WithColumn<string>("Email")
                     .IsUnique()
                     .NotNull();
 
@@ -35,20 +34,17 @@ namespace Lightmap.Provider.Sqlite.Tests
                 .UseForeignKey("User", bank => new { BankId = bank.BankId });
 
             // Model a table using anonymous types
-            modeler.Create()
-                .Table("Account")
+            modeler.Create().Table("Account")
                 .WithColumns(() => new { UserId = default(int), AccountId = default(int), BankId = default(int) })
                     .UsePrimaryKey(table => table.AccountId)
                     .UseForeignKey("User", accountTable => new { UserId = accountTable.UserId })
                     .UseForeignKey("Bank", accountTable => new { BankId = accountTable.BankId });
 
-            modeler.Create()
-                .Table("Product")
-                    .WithColumn<int>("ProductId").AsPrimaryKey()
-                    .WithColumn<string>("Name").NotNull();
+            modeler.Create().Table("Product")
+                .WithColumn<int>("ProductId").AsPrimaryKey()
+                .WithColumn<string>("Name").NotNull();
 
-            modeler.Create()
-                .Table("Purchase")
+            modeler.Create().Table("Purchase")
                 .WithColumns(() => new { PurchaseId = default(int), UserId = default(int), ProductId = default(int), AccountId = default(int) })
                     .UsePrimaryKey(purchaseTable => purchaseTable.PurchaseId)
                     .UseForeignKey("Account", purchaseTable => new { AccountId = purchaseTable.AccountId })
@@ -88,51 +84,19 @@ namespace Lightmap.Provider.Sqlite.Tests
             double average = time.Average();
         }
 
-        //private void ModelDatabase()
-        //{
-        //    var modeler = new DatabaseModeler();
+        [Fact]
+        public void Test()
+        {
+            var database = new Lightmap.Modeling.DatabaseModeler("test");
+            var testTable = database.Create()
+                .Table("Account", () => new { AccountId = default(int), Name = default(string) })
+                    .WithPrimaryKey(table => table.AccountId)
+                    .GetTableDefinition();
 
-        //    // Create the user table with 4 columns, with UserId being a primary key.
-        //    // The table name is defined by the anonymous type that contains a single property that maps to the name of the table "User".
-        //    modeler.Create()
-        //        .Table(
-        //            () => new { User = default(int) },
-        //            () => new
-        //            {
-        //                UserId = default(int),
-        //                FirstName = default(string),
-        //                LastName = default(string),
-        //                MiddleInitial = default(string),
-        //            })
-        //        .ModifyColumn((table, column) => column.Name == nameof(table.UserId))
-        //            .NotNull()
-        //            .AsPrimaryKey()
-        //            .IsUnique();
-
-        //    // Create a bank table based off the properties in the Bank Type, with BankId being the PK.
-        //    modeler.Create().Table<Bank>()
-        //            .ModifyColumn((bankTable, column) => column.Name == nameof(bankTable.BankId))
-        //            .AsPrimaryKey()
-        //            .IsUnique();
-
-        //    // Create an Account table based with 4 columns. The AccountId is the PK and OwnerId and BankId are foreign keys to the Bank and User tables.
-        //    modeler.Create()
-        //        .Table(
-        //            "Account",
-        //            () => new
-        //            {
-        //                AccountId = default(int),
-        //                Number = default(string),
-        //                OwnerId = default(int),
-        //                BankId = default(int),
-        //            })
-        //        .ModifyColumn((accountTable, column) => column.Name == nameof(accountTable.AccountId))
-        //            .IsUnique()
-        //            .AsPrimaryKey()
-        //        .ModifyColumn((accountTable, column) => column.Name == nameof(accountTable.OwnerId))
-        //            .AsForeignKey(modeler.GetTable("User"), accountTable => new { UserId = accountTable.OwnerId })
-        //        .ModifyColumn((accountTable, column) => column.Name == nameof(accountTable.BankId))
-        //            .AsForeignKey(modeler.GetTable<Bank>(), accountTable => new { BankId = accountTable.BankId });
-        //}
+            database.Create()
+                .Table("User", () => new { UserId = default(int), FirstName = default(string), BankId = default(int) })
+                    .WithPrimaryKey(table => table.UserId)
+                    .WithForeignKey(testTable, (table, referenceTable) => table.BankId == referenceTable.AccountId);
+        }
     }
 }

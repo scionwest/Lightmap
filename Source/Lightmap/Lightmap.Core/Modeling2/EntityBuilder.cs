@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public class EntityBuilder : IEntityBuilder
     {

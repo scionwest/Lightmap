@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public interface IColumnCharacteristics : ITableModeler
     {

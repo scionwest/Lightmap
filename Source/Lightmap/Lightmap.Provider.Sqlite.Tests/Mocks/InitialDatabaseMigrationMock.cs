@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Lightmap.Modeling;
+using Lightmap.Modeling2;
 
 namespace Lightmap.Provider.Sqlite.Tests.Mocks
 {

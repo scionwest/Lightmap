@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public class TableModeler : ITableModeler, ITableDefiniton
     {

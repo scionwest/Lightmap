@@ -1,13 +1,13 @@
 ﻿using System;
-using Lightmap.Modeling;
+using Lightmap.Modeling2;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public interface ITableManager
     {
         ITableModeler GetTable(string name);
 
-        ITableEditor GetTable<TTable>();
+        ITableEditor EditTable<TTable>();
 
         ITableModeler GetTable(Func<ITableModeler, bool> predicate);
     }

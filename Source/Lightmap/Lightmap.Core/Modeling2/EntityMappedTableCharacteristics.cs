@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Lightmap.Modeling
+namespace Lightmap.Modeling2
 {
     public class EntityMappedTableCharacteristics<TTable> : IDirectEntityMappedTableCharacteristics<TTable>
     {
@@ -44,7 +44,7 @@ namespace Lightmap.Modeling
             try
             {
                 expression = (MemberExpression)columnSelector.Body;
-                tableManager.GetTable<TTable>().RemoveColumn(expression.Member.Name);
+                tableManager.EditTable<TTable>().RemoveColumn(expression.Member.Name);
             }
             catch (InvalidCastException e)
             {
