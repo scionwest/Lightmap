@@ -39,14 +39,9 @@ namespace Lightmap.Modeling
     {
         public Table(DatabaseModeler modeler) : base(modeler) { }
 
-        public TTableDefiniton GetTableDefiniton()
-        {
-            return default(TTableDefiniton);
-        }
-
         public TableExpressionDefinitonOptions<TTableDefiniton> GetColumn<TColumn>(Expression<Func<TTableDefiniton, TColumn>> columnSelector)
         {
-            return new TableExpressionDefinitonOptions<TTableDefiniton>();
+            return new TableExpressionDefinitonOptions<TTableDefiniton>(this);
         }
     }
 }

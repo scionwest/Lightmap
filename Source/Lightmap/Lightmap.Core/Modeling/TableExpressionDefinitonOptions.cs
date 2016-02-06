@@ -8,9 +8,16 @@ namespace Lightmap.Modeling
 {
     public class TableExpressionDefinitonOptions<TTableDefinition>
     {
-        public TTableDefinition GetTableDefinition()
+        private Table<TTableDefinition> owner;
+
+        public TableExpressionDefinitonOptions(Table<TTableDefinition> owningTable)
         {
-            return default(TTableDefinition);
+            this.owner = owningTable;
+        }
+
+        public Table<TTableDefinition> GetTable()
+        {
+            return new Table<TTableDefinition>(this.owner.GetDatabaseModeler());
         }
 
         public TableExpressionDefinitonOptions<TTableDefinition> WithPrimaryKey<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector)
@@ -18,7 +25,7 @@ namespace Lightmap.Modeling
             return this;
         }
 
-        public TableExpressionDefinitonOptions<TTableDefinition> WithForeignKey<TReferenceTable, TColumnMapping>(TReferenceTable referenceTable, Expression<Func<TTableDefinition, TReferenceTable, TColumnMapping>> constraint)
+        public TableExpressionDefinitonOptions<TTableDefinition> WithForeignKey<TReferenceTable, TColumnMapping>(Table<TReferenceTable> referenceTable, Expression<Func<TTableDefinition, TReferenceTable, TColumnMapping>> constraint)
         {
             var binaryExpression = constraint as BinaryExpression;
             var leftLeaf = binaryExpression.Left as MemberExpression;

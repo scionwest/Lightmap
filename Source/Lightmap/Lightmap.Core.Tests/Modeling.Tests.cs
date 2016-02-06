@@ -90,8 +90,7 @@ namespace Lightmap.Provider.Sqlite.Tests
             var database = new Lightmap.Modeling.DatabaseModeler("test");
             var testTable = database.Create()
                 .Table("Account", () => new { AccountId = default(int), Name = default(string) })
-                    .WithPrimaryKey(table => table.AccountId)
-                    .GetTableDefinition();
+                    .WithPrimaryKey(table => table.AccountId).GetTable();
 
             database.Create()
                 .Table("User", () => new { UserId = default(int), FirstName = default(string), BankId = default(int) })
