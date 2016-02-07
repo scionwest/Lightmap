@@ -37,7 +37,7 @@ namespace Lightmap.Provider.Sqlite.Tests
 
                 model = null;
                 databaseManager = null;
-                time.Add(watch.ElapsedTicks);
+                time.Add(watch.Elapsed.TotalMilliseconds);
                 watch.Reset();
             }
 

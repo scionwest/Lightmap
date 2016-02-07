@@ -48,8 +48,8 @@ namespace Lightmap.Provider.Sqlite
 
             IEnumerable<IMigration> migrationsRemainingToUpgrade = manager.Migrations.Where(migration =>
             {
-                var migrationVersion = migration.GetType().GetTypeInfo().GetCustomAttribute<MigrationVersionAttribute>();
-                return true;
+                var migrationVersion = AttributeCache.GetAttribute<MigrationVersionAttribute>(migration.GetType());
+                return migrationVersion != null;
             });
 
             IDataProvider provider = manager.GetProvider();
