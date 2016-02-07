@@ -17,17 +17,25 @@ namespace Lightmap.Modeling
 
         public Table Table(string name)
         {
-            return new Table(this.DatabaseModeler);
+            var table = new Table(this.DatabaseModeler);
+            this.DatabaseModeler.AddTable(table);
+            return table;
         }
 
         public StronglyTypedTableOptions<TTable> Table<TTable>() where TTable : class
         {
-            return new StronglyTypedTableOptions<TTable>(new Table<TTable>(this.DatabaseModeler));
+            var table = new Table<TTable>(this.DatabaseModeler);
+            var tableOptions = new StronglyTypedTableOptions<TTable>(table);
+            this.DatabaseModeler.AddTable(table);
+
+            return tableOptions;
         }
 
         public TableExpressionDefinitonOptions<TTableDefinition> Table<TTableDefinition>(string name, Expression<Func<TTableDefinition>> definition)
         {
-            return new TableExpressionDefinitonOptions<TTableDefinition>(new Table<TTableDefinition>(this.DatabaseModeler));
+            var table = new Table<TTableDefinition>(this.DatabaseModeler);
+            this.DatabaseModeler.AddTable(table);
+            return new TableExpressionDefinitonOptions<TTableDefinition>(table);
         }
     }
 }

@@ -1,20 +1,36 @@
-﻿namespace Lightmap.Modeling
+﻿using System;
+using System.Collections.Generic;
+
+namespace Lightmap.Modeling
 {
     public class Column
     {
-        public Column AsPrimaryKey()
+        private Dictionary<string, List<string>> definition;
+
+        public Column(Table owner, string name, Type dataType)
         {
-            return this;
+            this.Owner = owner;
+            this.Name = name;
+            this.DataType = dataType;
+            this.definition = new Dictionary<string, List<string>>();
         }
 
-        public Column WithForeignKey(Table referenceTable, string constrainedColumn)
-        {
-            return this;
-        }
+        public string Name { get; set; }
 
-        public Column WithForeignKey(Table referenceTable, Column constrainedColumn)
+        public Table Owner { get; set; }
+
+        public Type DataType { get; set; }
+
+        public void AddDefiniton(string statementKey, string statementValue)
         {
-            return this;
+            List<string> existingDefinitions = null;
+            if (!this.definition.TryGetValue(statementKey, out existingDefinitions))
+            {
+                this.definition.Add(statementKey, new List<string>() { statementValue });
+                return;
+            }
+
+            existingDefinitions.Add(statementValue);
         }
     }
 }

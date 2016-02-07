@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
@@ -7,9 +8,11 @@ namespace Lightmap.Modeling
     {
         private DatabaseModeler databaseModeler;
 
+        private Dictionary<string, Column> columns;
+
         public Table(DatabaseModeler modeler)
         {
-            this.databaseModeler = modeler;
+            this.columns = new Dictionary<string, Column>();
         }
 
         public string Name { get; private set; }
@@ -21,17 +24,24 @@ namespace Lightmap.Modeling
 
         public Column GetColumn(string name)
         {
-            return new Column();
+            Column column = null;
+            this.columns.TryGetValue(name, out column);
+            return column;
         }
 
-        public Column WithColumn<TDataType>(string name)
+        public StandardTableOptions WithColumn<TDataType>(string name)
         {
-            return new Column();
+            var column = new Column(this, name, typeof(TDataType));
+            this.columns.Add(name, column);
+
+            return new StandardTableOptions(column);
         }
-        
-        public Column WithColumn(Type dataType, string columnName)
+
+        public StandardTableOptions WithColumn(Type dataType, string columnName)
         {
-            return new Column();
+            var column = new Column(this, columnName, dataType);
+            this.columns.Add(columnName, column);
+            return new StandardTableOptions(column);
         }
     }
 
