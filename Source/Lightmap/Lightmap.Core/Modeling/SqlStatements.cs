@@ -15,7 +15,8 @@ namespace Lightmap.Modeling
             public const string CascadeDelete = "ON DELETE CASCADE";
             public const string Unique = "UNIQUE";
             public const string NotNull = "NOT NULL";
-            public const string References = "REFERENCES";
+            public const string ReferencesTable = "REFERENCES";
+            public const string ReferencesColumn = "REFERENCES";
             public const string AutoIncrement = "AUTOINCREMENT";
         }
     }

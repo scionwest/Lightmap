@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lightmap.Modeling
 {
@@ -9,6 +10,11 @@ namespace Lightmap.Modeling
 
         public DatabaseModeler(string databaseName)
         {
+            if (string.IsNullOrEmpty(databaseName))
+            {
+                throw new ArgumentNullException(nameof(databaseName), "The modeler needs to know what database you are modeling. You must provide a database name.");
+            }
+
             this.DatabaseName = databaseName;
             this.tables = new List<Table>();
         }
@@ -20,7 +26,12 @@ namespace Lightmap.Modeling
             return new DatabaseModelingOptions(this);
         }
 
-        internal void AddTable(Table table)
+        public bool HasTable(string name)
+        {
+            return this.tables.Any(table => table.Name == name);
+        }
+
+        public void AddTable(Table table)
         {
             if (table == null)
             {

@@ -10,12 +10,29 @@ namespace Lightmap.Modeling
 
         private Dictionary<string, Column> columns;
 
-        public Table(DatabaseModeler modeler)
+        private Dictionary<string, string> definition;
+
+        public Table(DatabaseModeler modeler, string name)
         {
+            this.Name = name;
+            this.databaseModeler = modeler;
+            this.definition = new Dictionary<string, string>();
             this.columns = new Dictionary<string, Column>();
         }
 
         public string Name { get; private set; }
+
+        public void AddDefiniton(string key, string value)
+        {
+            string existingDefinition = null;
+            if (!this.definition.TryGetValue(key, out existingDefinition))
+            {
+                this.definition.Add(key, value);
+                return;
+            }
+
+            existingDefinition = value;
+        }
 
         public DatabaseModeler GetDatabaseModeler()
         {
@@ -47,7 +64,7 @@ namespace Lightmap.Modeling
 
     public class Table<TTableDefiniton> : Table
     {
-        public Table(DatabaseModeler modeler) : base(modeler) { }
+        public Table(DatabaseModeler modeler, string name) : base(modeler, name) { }
 
         public TableExpressionDefinitonOptions<TTableDefiniton> GetColumn<TColumn>(Expression<Func<TTableDefiniton, TColumn>> columnSelector)
         {

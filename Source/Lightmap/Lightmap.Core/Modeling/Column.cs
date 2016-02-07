@@ -5,14 +5,14 @@ namespace Lightmap.Modeling
 {
     public class Column
     {
-        private Dictionary<string, List<string>> definition;
+        private Dictionary<string, string> definition;
 
         public Column(Table owner, string name, Type dataType)
         {
             this.Owner = owner;
             this.Name = name;
             this.DataType = dataType;
-            this.definition = new Dictionary<string, List<string>>();
+            this.definition = new Dictionary<string, string>();
         }
 
         public string Name { get; set; }
@@ -21,16 +21,28 @@ namespace Lightmap.Modeling
 
         public Type DataType { get; set; }
 
-        public void AddDefiniton(string statementKey, string statementValue)
+        public void AddDefinition(string statementKey, string statementValue)
         {
-            List<string> existingDefinitions = null;
-            if (!this.definition.TryGetValue(statementKey, out existingDefinitions))
+            string existingDefinition = null;
+            if (!this.definition.TryGetValue(statementKey, out existingDefinition))
             {
-                this.definition.Add(statementKey, new List<string>() { statementValue });
+                this.definition.Add(statementKey, statementValue);
                 return;
             }
 
-            existingDefinitions.Add(statementValue);
+            existingDefinition = statementValue;
+        }
+
+        public string GetDefinition(string statementKey)
+        {
+            string existingDefiniton = null;
+            this.definition.TryGetValue(statementKey, out existingDefiniton);
+            return existingDefiniton;
+        }
+
+        public void RemoveDefinition(string statementKey)
+        {
+            this.definition.Remove(statementKey);
         }
     }
 }

@@ -9,23 +9,53 @@
             this.owner = owner;
         }
 
+        public Table GetTable()
+        {
+            return this.owner.Owner;
+        }
+
         public StandardTableOptions AsPrimaryKey()
         {
-            this.owner.AddDefiniton(SqlStatements.Constraints.PrimaryKey, this.owner.Name);
+            this.owner.AddDefinition(SqlStatements.Constraints.PrimaryKey, this.owner.Name);
             return this;
         }
 
         public StandardTableOptions WithForeignKey(Table referenceTable, string constrainedColumn)
         {
-            this.owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, constrainedColumn);
-            this.owner.AddDefiniton(SqlStatements.Constraints.References, referenceTable.Name);
+            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
+            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, constrainedColumn);
             return this;
         }
 
         public StandardTableOptions WithForeignKey(Table referenceTable, Column constrainedColumn)
         {
-            this.owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, constrainedColumn.Name);
-            this.owner.AddDefiniton(SqlStatements.Constraints.References, referenceTable.Name);
+            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
+            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, constrainedColumn.Name);
+            return this;
+        }
+
+        public StandardTableOptions IsUnique()
+        {
+            this.owner.AddDefinition(SqlStatements.Constraints.Unique, this.owner.Name);
+            return this;
+        }
+
+        public StandardTableOptions DisallowNulls()
+        {
+            this.owner.AddDefinition(SqlStatements.Constraints.NotNull, this.owner.Name);
+            return this;
+        }
+
+        public StandardTableOptions AllowNulls()
+        {
+            if (string.IsNullOrEmpty(this.owner.GetDefinition(SqlStatements.Constraints.NotNull)))
+            {
+                return this;
+            }
+
+            this.owner.RemoveDefinition(SqlStatements.Constraints.NotNull);
             return this;
         }
     }
