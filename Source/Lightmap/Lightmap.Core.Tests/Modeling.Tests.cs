@@ -18,7 +18,7 @@ namespace Lightmap.Provider.Sqlite.Tests
         public async Task DatabaseModeler_provides_table_modeler()
         {
             // Arrange
-            int count = 1000;
+            int count = 100;
             var time = new List<double>();
 
 
@@ -29,7 +29,7 @@ namespace Lightmap.Provider.Sqlite.Tests
                 var watch = new Stopwatch();
 
                 watch.Start();
-                var model = new StronglyTypedMigration();
+                var model = new StringMigration();
                 var databaseManager = new DatabaseManager("Foo.Bar.sqlite", new List<IMigration> { model });
                 databaseManager.UseSqliteProvider();
                 await databaseManager.UpgradeDatabase();

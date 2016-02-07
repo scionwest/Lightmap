@@ -66,6 +66,38 @@ namespace Lightmap
             return cacheType.Type;
         }
 
+        public static Type GetGenericParameter(Type type, Func<Type, bool> predicate)
+        {
+            CachedTypeData cacheType;
+            ReflectedCache.TypePropertyCache.TryGetValue(type, out cacheType);
+
+            if (cacheType != null)
+            {
+                return cacheType.GetGenericArgument(predicate);
+            }
+
+            cacheType = new CachedTypeData(type);
+            ReflectedCache.TypePropertyCache.TryAdd(type, cacheType);
+
+            return cacheType.GetGenericArgument(predicate);
+        }
+
+        public static IEnumerable<Type> GetGenericParameters(Type type, Func<Type, bool> predicate = null)
+        {
+            CachedTypeData cacheType;
+            ReflectedCache.TypePropertyCache.TryGetValue(type, out cacheType);
+
+            if (cacheType != null)
+            {
+                return cacheType.GetGenericArguments(predicate);
+            }
+
+            cacheType = new CachedTypeData(type);
+            ReflectedCache.TypePropertyCache.TryAdd(type, cacheType);
+
+            return cacheType.GetGenericArguments(predicate);
+        }
+
         /// <summary>
         /// Adds the type.
         /// </summary>

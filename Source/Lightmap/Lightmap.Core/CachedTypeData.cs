@@ -34,6 +34,11 @@ namespace Lightmap
         ConcurrentBag<Attribute> typeAttributes;
 
         /// <summary>
+        /// The generic Type arguments on a Type
+        /// </summary>
+        ConcurrentBag<Type> genericArguments;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CachedTypeData"/> class for caching reflected meta-data for a given Type.
         /// </summary>
         /// <param name="type">The Type provided will have its reflected PropertyInfo and Attributes cached.</param>
@@ -48,12 +53,31 @@ namespace Lightmap
             this.propertiesBag = new ConcurrentBag<PropertyInfo>();
             this.propertyAttributesBag = new ConcurrentDictionary<PropertyInfo, IEnumerable<Attribute>>();
             this.typeAttributes = new ConcurrentBag<Attribute>();
+            this.genericArguments = new ConcurrentBag<Type>();
         }
 
         /// <summary>
         /// Gets the type that has its reflected PropertyInfo and Attributes cached.
         /// </summary>
         internal Type Type { get; }
+
+        internal IEnumerable<Type> GetGenericArguments(Func<Type, bool> predicate = null)
+        {
+            this.SetupGenericArgumentsBag();
+
+            // Return all attributes for the Type, filtered if needed
+            return predicate == null
+                ? this.genericArguments
+                : this.genericArguments.Where(predicate);
+        }
+
+        internal Type GetGenericArgument(Func<Type, bool> predicate)
+        {
+            this.SetupGenericArgumentsBag();
+
+            // Return all attributes for the Type, filtered if needed
+            return this.genericArguments.FirstOrDefault(predicate);
+        }
 
         /// <summary>
         /// <para>
@@ -136,7 +160,7 @@ namespace Lightmap
         /// </param>
         /// <param name="predicate">The predicate used to filter the results returned from the method.</param>
         /// <returns>Returns the first Attribute found matching the parameters provided. If no parameters are given, the first Attribute on the Type is returned.</returns>
-        internal Attribute GetAttribute(PropertyInfo property = null, Func<Attribute, bool> predicate = null) 
+        internal Attribute GetAttribute(PropertyInfo property = null, Func<Attribute, bool> predicate = null)
             => this.GetAttributes(property, predicate).FirstOrDefault();
 
         /// <summary>
@@ -252,6 +276,14 @@ namespace Lightmap
             if (this.propertiesBag.IsEmpty)
             {
                 this.propertiesBag = new ConcurrentBag<PropertyInfo>(this.Type.GetRuntimeProperties());
+            }
+        }
+
+        private void SetupGenericArgumentsBag()
+        {
+            if (this.genericArguments.IsEmpty)
+            {
+                this.genericArguments = new ConcurrentBag<Type>(this.Type.GenericTypeArguments);
             }
         }
     }

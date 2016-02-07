@@ -66,14 +66,14 @@ namespace Lightmap.Modeling
             }
 
             // Determine which expression is for the reference table
-            if (this.owner.Name != leftExpression.Member.DeclaringType.Name && this.owner.GetDatabaseModeler().HasTable(leftExpression.Member.DeclaringType.Name))
+            if (leftExpression.Member.DeclaringType.Name == referenceTable.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, leftExpression.Member.DeclaringType.Name);
+                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
                 this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, leftExpression.Member.Name);
             }
-            if (this.owner.Name != rightExpression.Member.DeclaringType.Name && this.owner.GetDatabaseModeler().HasTable(rightExpression.Member.DeclaringType.Name))
+            if (rightExpression.Member.DeclaringType.Name == referenceTable.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, rightExpression.Member.DeclaringType.Name);
+                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
                 this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, rightExpression.Member.Name);
             }
             else

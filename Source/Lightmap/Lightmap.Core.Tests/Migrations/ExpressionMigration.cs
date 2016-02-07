@@ -11,7 +11,7 @@ namespace Lightmap.Core.Tests.Migrations
     {
         public Task Apply(IDataProvider provider)
         {
-            throw new NotImplementedException();
+            return provider.ProcessMigration(this);
         }
 
         public void Configure(DatabaseModeler modeler)
