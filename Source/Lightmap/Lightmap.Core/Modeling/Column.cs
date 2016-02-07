@@ -40,6 +40,11 @@ namespace Lightmap.Modeling
             return existingDefiniton;
         }
 
+        public Dictionary<string, string> GetDefinitions()
+        {
+            return this.definition;
+        }
+
         public void RemoveDefinition(string statementKey)
         {
             this.definition.Remove(statementKey);

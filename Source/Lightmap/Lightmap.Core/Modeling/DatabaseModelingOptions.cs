@@ -35,7 +35,14 @@ namespace Lightmap.Modeling
 
         public StronglyTypedTableOptions<TTable> Table<TTable>() where TTable : class
         {
+            IEnumerable<PropertyInfo> modelProperties = PropertyCache.GetPropertiesForType<TTable>(property => property.CanRead);
             var table = new Table<TTable>(this.DatabaseModeler, typeof(TTable).Name);
+
+            foreach(PropertyInfo property in modelProperties)
+            {
+                table.WithColumn(property.PropertyType, property.Name);
+            }
+
             var tableOptions = new StronglyTypedTableOptions<TTable>(table);
             this.DatabaseModeler.AddTable(table);
 

@@ -6,15 +6,12 @@ using Lightmap.Modeling;
 
 namespace Lightmap.Core.Tests.Migrations
 {
+    [MigrationVersion(1)]
     public class ExpressionMigrations : IMigration
     {
-        public Task Apply()
+        public Task Apply(IDataProvider provider)
         {
             throw new NotImplementedException();
-        }
-
-        public void Configure(Lightmap.Modeling2.IDatabaseModeler modeler)
-        {
         }
 
         public void Configure(DatabaseModeler modeler)
@@ -107,7 +104,7 @@ namespace Lightmap.Core.Tests.Migrations
                 .WithForeignKey(userTable, (table, referenceTable) => table.UserId == referenceTable.Id);
         }
 
-        public Task Rollback()
+        public Task Rollback(IDataProvider provider)
         {
             throw new NotImplementedException();
         }

@@ -28,7 +28,9 @@ namespace Lightmap.Modeling
                 throw new NotSupportedException($"The selector provided is not supported. You must return a property that represents a column from the table definiton provided to you.");
             }
 
-            this.owner.AddDefiniton(SqlStatements.Constraints.PrimaryKey, memberExpression.Member.Name);
+            string columnName = memberExpression.Member.Name;
+            Column column = this.owner.GetColumn(columnName);
+            column.AddDefinition(SqlStatements.Constraints.PrimaryKey, columnName);
             return this;
         }
 
@@ -79,10 +81,22 @@ namespace Lightmap.Modeling
                 throw new InvalidOperationException("You can not reference a table/column with a foreign key constraint if the table has yet to be modeled as part of the database model.");
             }
 
-            //this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
-            //this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-            //this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, constrainedColumn.Name);
             return this;
+        }
+
+        public StronglyTypedTableOptions<TTable> WithUniqueColumn<TColumn>(Expression<Func<TTable, TColumn>> columnSelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StronglyTypedTableOptions<TTable> DisallowNulls()
+        {
+            throw new NotImplementedException();
+        }
+
+        public StronglyTypedTableOptions<TTable> AllowNulls()
+        {
+            throw new NotImplementedException();
         }
     }
 }

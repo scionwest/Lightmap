@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseManagerSqliteExtensionsTests;
@@ -14,20 +15,28 @@ namespace Lightmap.Provider.Sqlite.Tests
     public class DatabaseManagerSqliteExtensionsTests
     {
         [Fact]
-        public void DatabaseModeler_provides_table_modeler()
+        public async Task DatabaseModeler_provides_table_modeler()
         {
             // Arrange
-            int count = 100000;
+            int count = 1000;
             var time = new List<double>();
+
 
             // Act
             for (int c = 0; c < count; c++)
             {
+                File.Delete("Foo.Bar.sqlite");
                 var watch = new Stopwatch();
-                var model = new StronglyTypedMigration();
+
                 watch.Start();
-                model.Configure(new DatabaseModeler("Foo.sql"));
+                var model = new StronglyTypedMigration();
+                var databaseManager = new DatabaseManager("Foo.Bar.sqlite", new List<IMigration> { model });
+                databaseManager.UseSqliteProvider();
+                await databaseManager.UpgradeDatabase();
                 watch.Stop();
+
+                model = null;
+                databaseManager = null;
                 time.Add(watch.ElapsedTicks);
                 watch.Reset();
             }

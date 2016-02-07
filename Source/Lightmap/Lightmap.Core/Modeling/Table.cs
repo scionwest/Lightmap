@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
@@ -32,6 +33,16 @@ namespace Lightmap.Modeling
             }
 
             existingDefinition = value;
+        }
+
+        public Dictionary<string, string> GetDefinition()
+        {
+            return this.definition.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        public Column[] GetColumns()
+        {
+            return this.columns.Select(kvp => kvp.Value).ToArray();
         }
 
         public DatabaseModeler GetDatabaseModeler()

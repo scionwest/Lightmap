@@ -29,6 +29,11 @@ namespace Lightmap.Provider.Sqlite
             return File.Exists(manager.Database);
         }
 
+        public static void UseSqliteProvider(this DatabaseManager manager)
+        {
+            manager.ProviderFactory = new SqliteDataProviderFactory();
+        }
+
         public static async Task UpgradeDatabase(this DatabaseManager manager)
         {
             if (string.IsNullOrEmpty(manager.Database))
@@ -47,15 +52,16 @@ namespace Lightmap.Provider.Sqlite
                 return true;
             });
 
+            IDataProvider provider = manager.GetProvider();
             foreach (IMigration migration in migrationsRemainingToUpgrade)
             {
                 try
                 {
-                    await migration.Apply();
+                    await migration.Apply(provider);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    await migration.Rollback();
+                    await migration.Rollback(provider);
                     break;
                 }
             }

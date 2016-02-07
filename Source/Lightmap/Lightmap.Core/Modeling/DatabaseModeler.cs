@@ -26,11 +26,6 @@ namespace Lightmap.Modeling
             return new DatabaseModelingOptions(this);
         }
 
-        public bool HasTable(string name)
-        {
-            return this.tables.Any(table => table.Name == name);
-        }
-
         public void AddTable(Table table)
         {
             if (table == null)
@@ -44,6 +39,16 @@ namespace Lightmap.Modeling
             }
 
             this.tables.Add(table);
+        }
+
+        public Table[] GetTables()
+        {
+            return this.tables.ToArray();
+        }
+
+        public bool HasTable(string name)
+        {
+            return this.tables.Any(table => table.Name == name);
         }
     }
 }

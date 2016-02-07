@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "",
   "authors": [
@@ -15,7 +15,8 @@
   "dependencies": {
     "xunit": "2.1.0",
     "xunit.runner.dnx": "2.1.0-rc1-build204",
-    "Lightmap.Core": "1.0.0"
+    "Lightmap.Core": "1.0.0",
+    "Lightmap.Provider.Sqlite": "1.0.0-*"
   },
   "commands": {
     "test": "xunit.runner.dnx"

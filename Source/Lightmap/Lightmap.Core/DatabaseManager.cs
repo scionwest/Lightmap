@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Lightmap.Modeling2;
+using Lightmap.Modeling;
 
 namespace Lightmap
 {
     public class DatabaseManager
     {
+        private Dictionary<IMigration, DatabaseModeler> migrationModelers;
+
         public DatabaseManager(string database, IEnumerable<IMigration> migrations)
         {
             this.Database = database;
@@ -18,18 +20,33 @@ namespace Lightmap
 
             this.Migrations = migrations.OrderBy(migration =>
             {
-                return migration.GetType().GetTypeInfo().GetCustomAttribute<MigrationVersionAttribute>().MigrationVersion;
+                MigrationVersionAttribute attribute = AttributeCache.GetAttribute<MigrationVersionAttribute>(migration.GetType());
+                return attribute == null ? 0 : attribute.MigrationVersion;
             });
 
+            this.migrationModelers = new Dictionary<IMigration, DatabaseModeler>();
             foreach (IMigration migration in this.Migrations)
             {
                 var modeler = new DatabaseModeler(this.Database);
                 migration.Configure(modeler);
+                migrationModelers.Add(migration, modeler);
             }
         }
 
         public string Database { get; }
 
+        public IDataProviderFactory ProviderFactory { get; set; }
+
         public IEnumerable<IMigration> Migrations { get; }
+
+        public IDataProvider GetProvider()
+        {
+            return this.ProviderFactory.CreateProvider(this);
+        }
+
+        public DatabaseModeler GetModelerForMigration(IMigration migration)
+        {
+            return migrationModelers[migration];
+        }
     }
 }

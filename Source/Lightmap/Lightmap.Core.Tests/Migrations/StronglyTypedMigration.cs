@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Lightmap.Core.Tests.Models;
@@ -7,16 +8,12 @@ using Lightmap.Modeling;
 
 namespace Lightmap.Core.Tests
 {
+    [MigrationVersion(1)]
     public class StronglyTypedMigration : IMigration
     {
-        public Task Apply()
+        public Task Apply(IDataProvider provider)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Configure(Lightmap.Modeling2.IDatabaseModeler modeler)
-        {
-            throw new NotImplementedException();
+            return provider.ProcessMigration(this);
         }
 
         public void Configure(DatabaseModeler modeler)
@@ -46,9 +43,10 @@ namespace Lightmap.Core.Tests
                 .WithForeignKey(usersTable, (table, referenceTable) => table.UserId == referenceTable.Id);
         }
 
-        public Task Rollback()
+        public Task Rollback(IDataProvider provider)
         {
-            throw new NotImplementedException();
+            File.Delete(provider.DatabaseManager.Database);
+            return Task.FromResult(0);
         }
     }
 }
