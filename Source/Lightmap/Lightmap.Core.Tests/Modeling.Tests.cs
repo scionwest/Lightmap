@@ -29,7 +29,7 @@ namespace Lightmap.Provider.Sqlite.Tests
                 var watch = new Stopwatch();
 
                 watch.Start();
-                var model = new StringMigration();
+                var model = new PocoMigration();
                 var databaseManager = new DatabaseManager("Foo.Bar.sqlite", new List<IMigration> { model });
                 databaseManager.UseSqliteProvider();
                 await databaseManager.UpgradeDatabase();

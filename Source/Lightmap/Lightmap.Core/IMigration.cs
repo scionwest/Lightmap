@@ -8,7 +8,7 @@ namespace Lightmap
 {
     public interface IMigration
     {
-        void Configure(DatabaseModeler modeler);
+        void Configure(IDatabaseModeler modeler);
 
         Task Apply(IDataProvider provider);
 

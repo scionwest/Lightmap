@@ -14,7 +14,7 @@ namespace Lightmap.Core.Tests.Migrations
             return provider.ProcessMigration(this);
         }
 
-        public void Configure(DatabaseModeler modeler)
+        public void Configure(IDatabaseModeler modeler)
         {
             var rolesTable = modeler.Create().Table("AspNetRoles");
             rolesTable.WithColumn<string>("Id").AsPrimaryKey();

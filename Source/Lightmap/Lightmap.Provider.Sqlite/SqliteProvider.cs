@@ -26,7 +26,7 @@ namespace Lightmap.Provider.Sqlite
 
         public async Task ProcessMigration(IMigration migration)
         {
-            DatabaseModeler modeler = this.DatabaseManager.GetModelerForMigration(migration);
+            IDatabaseModelBrowser modeler = this.DatabaseManager.GetDatabaseModelBrowser(migration);
             var tables = modeler.GetTables();
 
             string finalSqlStatement = string.Empty;

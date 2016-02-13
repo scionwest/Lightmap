@@ -9,14 +9,14 @@ using Lightmap.Modeling;
 namespace Lightmap.Core.Tests
 {
     [MigrationVersion(1)]
-    public class StronglyTypedMigration : IMigration
+    public class PocoMigration : IMigration
     {
         public Task Apply(IDataProvider provider)
         {
             return provider.ProcessMigration(this);
         }
 
-        public void Configure(DatabaseModeler modeler)
+        public void Configure(IDatabaseModeler modeler)
         {
             var rolesTable = modeler.Create().Table<AspNetRoles>()
                 .WithPrimaryKey(table => table.Id)

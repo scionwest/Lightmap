@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Lightmap.Modeling
 {
-    public class DatabaseModeler
+    public class DatabaseModeler : IDatabaseModelBrowser, IDatabaseModeler
     {
-        private List<Table> tables;
+        private List<ITable> tables;
 
         public DatabaseModeler(string databaseName)
         {
@@ -16,7 +16,7 @@ namespace Lightmap.Modeling
             }
 
             this.DatabaseName = databaseName;
-            this.tables = new List<Table>();
+            this.tables = new List<ITable>();
         }
 
         public string DatabaseName { get; }
@@ -26,7 +26,7 @@ namespace Lightmap.Modeling
             return new DatabaseModelingOptions(this);
         }
 
-        public void AddTable(Table table)
+        public void AddTable(ITable table)
         {
             if (table == null)
             {
@@ -41,9 +41,9 @@ namespace Lightmap.Modeling
             this.tables.Add(table);
         }
 
-        public IEnumerable<Table> GetTables()
+        public IEnumerable<ITableViewer> GetTables()
         {
-            return this.tables;
+            return this.tables.OfType<ITableViewer>();
         }
 
         public bool HasTable(string name)

@@ -44,7 +44,7 @@ namespace Lightmap
             return this.ProviderFactory.CreateProvider(this);
         }
 
-        public DatabaseModeler GetModelerForMigration(IMigration migration)
+        public IDatabaseModelBrowser GetDatabaseModelBrowser(IMigration migration)
         {
             return migrationModelers[migration];
         }

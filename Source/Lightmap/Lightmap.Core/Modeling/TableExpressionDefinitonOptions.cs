@@ -15,7 +15,7 @@ namespace Lightmap.Modeling
             this.owner = owningTable;
         }
 
-        public Table<TTableDefinition> GetTable()
+        public ITable<TTableDefinition> GetTable()
         {
             return owner;
         }
@@ -28,7 +28,7 @@ namespace Lightmap.Modeling
             return this;
         }
 
-        public TableExpressionDefinitonOptions<TTableDefinition> WithForeignKey<TReferenceTable, TColumnMapping>(Table<TReferenceTable> referenceTable, Expression<Func<TTableDefinition, TReferenceTable, TColumnMapping>> constraint)
+        public TableExpressionDefinitonOptions<TTableDefinition> WithForeignKey<TReferenceTable, TColumnMapping>(ITable<TReferenceTable> referenceTable, Expression<Func<TTableDefinition, TReferenceTable, TColumnMapping>> constraint)
         {
             var equalsExpression = constraint.Body as BinaryExpression;
             if (equalsExpression == null)

@@ -9,7 +9,7 @@ namespace Lightmap.Modeling
 {
     public class DatabaseModelingOptions
     {
-        public DatabaseModelingOptions(DatabaseModeler modeler)
+        public DatabaseModelingOptions(IDatabaseModelBrowser modeler)
         {
             if (modeler == null)
             {
@@ -19,9 +19,9 @@ namespace Lightmap.Modeling
             this.DatabaseModeler = modeler;
         }
 
-        public DatabaseModeler DatabaseModeler { get; }
+        public IDatabaseModelBrowser DatabaseModeler { get; }
 
-        public Table Table(string name)
+        public ITable Table(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

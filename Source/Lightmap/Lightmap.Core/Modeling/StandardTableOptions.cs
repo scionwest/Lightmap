@@ -9,7 +9,7 @@
             this.owner = owner;
         }
 
-        public Table GetTable()
+        public ITable GetTable()
         {
             return this.owner.Owner;
         }
@@ -20,7 +20,7 @@
             return this;
         }
 
-        public StandardTableOptions WithForeignKey(Table referenceTable, string constrainedColumn)
+        public StandardTableOptions WithForeignKey(ITable referenceTable, string constrainedColumn)
         {
             this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
             this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
@@ -28,7 +28,7 @@
             return this;
         }
 
-        public StandardTableOptions WithForeignKey(Table referenceTable, Column constrainedColumn)
+        public StandardTableOptions WithForeignKey(ITable referenceTable, Column constrainedColumn)
         {
             this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
             this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);

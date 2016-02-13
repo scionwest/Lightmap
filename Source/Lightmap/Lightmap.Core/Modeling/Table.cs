@@ -5,15 +5,15 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class Table
+    public class Table : ITable, ITableViewer
     {
-        private DatabaseModeler databaseModeler;
+        private IDatabaseModelBrowser databaseModeler;
 
         private Dictionary<string, Column> columns;
 
         private Dictionary<string, string> definition;
 
-        public Table(DatabaseModeler modeler, string name)
+        public Table(IDatabaseModelBrowser modeler, string name)
         {
             this.Name = name;
             this.databaseModeler = modeler;
@@ -45,7 +45,7 @@ namespace Lightmap.Modeling
             return this.columns.Select(kvp => kvp.Value).ToArray();
         }
 
-        public DatabaseModeler GetDatabaseModeler()
+        public IDatabaseModelBrowser GetDatabaseModeler()
         {
             return this.databaseModeler;
         }
@@ -73,13 +73,13 @@ namespace Lightmap.Modeling
         }
     }
 
-    public class Table<TTableDefiniton> : Table
+    public class Table<TTableDefinition> : Table, ITable<TTableDefinition>
     {
-        public Table(DatabaseModeler modeler, string name) : base(modeler, name) { }
+        public Table(IDatabaseModelBrowser modeler, string name) : base(modeler, name) { }
 
-        public TableExpressionDefinitonOptions<TTableDefiniton> GetColumn<TColumn>(Expression<Func<TTableDefiniton, TColumn>> columnSelector)
+        public TableExpressionDefinitonOptions<TTableDefinition> GetColumn<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector)
         {
-            return new TableExpressionDefinitonOptions<TTableDefiniton>(this);
+            return new TableExpressionDefinitonOptions<TTableDefinition>(this);
         }
     }
 }

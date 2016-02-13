@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Lightmap.Modeling;
 
 namespace Lightmap.Core.Tests.Migrations
 {
     [MigrationVersion(1)]
-    public class ExpressionMigrations : IMigration
+    public class AnonymousTypeMigration : IMigration
     {
         public Task Apply(IDataProvider provider)
         {
             return provider.ProcessMigration(this);
         }
 
-        public void Configure(DatabaseModeler modeler)
+        public void Configure(IDatabaseModeler modeler)
         {
             var rolesTable = modeler.Create()
                 .Table(
