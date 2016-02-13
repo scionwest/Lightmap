@@ -27,36 +27,38 @@ namespace Lightmap.Provider.Sqlite
         public async Task ProcessMigration(IMigration migration)
         {
             IDatabaseModelBrowser modeler = this.DatabaseManager.GetDatabaseModelBrowser(migration);
-            var tables = modeler.GetTables();
+            IEnumerable<ITable> tables = modeler.GetTables();
 
             string finalSqlStatement = string.Empty;
             using (var connection = await this.DatabaseManager.OpenSqliteConnectionAsync())
             {
-                foreach (Table table in tables)
+                foreach (ITable table in tables)
                 {
-                    Dictionary<string, string> tableDefinition = table.GetDefinition();
-                    string sql = this.ProcessTable(table, tableDefinition);
+                    ITableModeler tableModel = table.GetTableModeler();
+                    Dictionary<string, string> tableDefinition = tableModel.GetDefinition();
+                    string sql = this.ProcessTable(table, tableModel, tableDefinition);
+                    
                     this.queryHistory.Add(sql);
                     await connection.ExecuteAsync(sql: sql, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
                 }
             }
         }
 
-        private string ProcessTable(Table table, Dictionary<string, string> tableDefinition)
+        private string ProcessTable(ITable table, ITableModeler tableModel, Dictionary<string, string> tableDefinition)
         {
             // We use string concatenation as it is faster than string builder or string interpolation.
             var sql = string.Empty;
             sql += _createTable + table.Name + "\n(\n\t";
-            Column[] columns = table.GetColumns();
+            IColumn[] columns = tableModel.GetColumns();
             int columnCount = columns.Length;
             string constraint = null;
             for (int index = 0; index < columnCount; index++)
             {
-                Column column = columns[index];
+                IColumn column = columns[index];
 
                 sql += column.Name + " " + this.ConvertTypeToSqlType(column.DataType);
 
-                Dictionary<string, string> columnDefinition = column.GetDefinitions();
+                Dictionary<string, string> columnDefinition = column.GetColumnModeler().GetDefinitions();
 
                 if (columnDefinition.TryGetValue(SqlStatements.Constraints.NotNull, out constraint))
                 {

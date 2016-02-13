@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 
 namespace Lightmap.Modeling
 {
-    public interface ITableViewer
+    public interface ITableModeler
     {
+        void AddDefinition(string statementKey, string statementValue);
+
         Dictionary<string, string> GetDefinition();
 
-        Column[] GetColumns();
+        IColumn[] GetColumns();
 
-        Column GetColumn(string name);
+        IColumn GetColumn(string name);
 
         StandardTableOptions WithColumn<TDataType>(string name);
 

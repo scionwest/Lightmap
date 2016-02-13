@@ -6,7 +6,7 @@ namespace Lightmap.Modeling
     {
         void AddTable(ITable table);
 
-        IEnumerable<ITableViewer> GetTables();
+        IEnumerable<ITable> GetTables();
 
         bool HasTable(string name);
     }

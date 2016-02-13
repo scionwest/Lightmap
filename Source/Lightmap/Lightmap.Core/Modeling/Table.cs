@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public class Table : ITable, ITableViewer
+    public class Table : ITable, ITableModeler
     {
         private IDatabaseModelBrowser databaseModeler;
 
@@ -23,16 +23,21 @@ namespace Lightmap.Modeling
 
         public string Name { get; private set; }
 
-        public void AddDefiniton(string key, string value)
+        public ITableModeler GetTableModeler()
+        {
+            return this;
+        }
+
+        public void AddDefinition(string statementKey, string statementValue)
         {
             string existingDefinition = null;
-            if (!this.definition.TryGetValue(key, out existingDefinition))
+            if (!this.definition.TryGetValue(statementKey, out existingDefinition))
             {
-                this.definition.Add(key, value);
+                this.definition.Add(statementKey, statementValue);
                 return;
             }
 
-            existingDefinition = value;
+            existingDefinition = statementValue;
         }
 
         public Dictionary<string, string> GetDefinition()
@@ -40,7 +45,7 @@ namespace Lightmap.Modeling
             return this.definition.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
-        public Column[] GetColumns()
+        public IColumn[] GetColumns()
         {
             return this.columns.Select(kvp => kvp.Value).ToArray();
         }
@@ -50,7 +55,7 @@ namespace Lightmap.Modeling
             return this.databaseModeler;
         }
 
-        public Column GetColumn(string name)
+        public IColumn GetColumn(string name)
         {
             Column column = null;
             this.columns.TryGetValue(name, out column);

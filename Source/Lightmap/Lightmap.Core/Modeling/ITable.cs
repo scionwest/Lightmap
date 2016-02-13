@@ -10,6 +10,8 @@ namespace Lightmap.Modeling
     {
         string Name { get; }
 
+        ITableModeler GetTableModeler();
+
         IDatabaseModelBrowser GetDatabaseModeler();
 
         StandardTableOptions WithColumn<TDataType>(string name);

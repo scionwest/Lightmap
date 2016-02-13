@@ -41,9 +41,9 @@ namespace Lightmap.Modeling
             this.tables.Add(table);
         }
 
-        public IEnumerable<ITableViewer> GetTables()
+        public IEnumerable<ITable> GetTables()
         {
-            return this.tables.OfType<ITableViewer>();
+            return this.tables;
         }
 
         public bool HasTable(string name)

@@ -22,17 +22,17 @@
 
         public StandardTableOptions WithForeignKey(ITable referenceTable, string constrainedColumn)
         {
-            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
-            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, constrainedColumn);
+            this.owner.Owner.GetTableModeler().AddDefinition(SqlStatements.Constraints.ForeignKey, this.owner.Name);
+            this.owner.Owner.GetTableModeler().AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+            this.owner.Owner.GetTableModeler().AddDefinition(SqlStatements.Constraints.ReferencesColumn, constrainedColumn);
             return this;
         }
 
         public StandardTableOptions WithForeignKey(ITable referenceTable, Column constrainedColumn)
         {
-            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, this.owner.Name);
-            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-            this.owner.Owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, constrainedColumn.Name);
+            this.owner.Owner.GetTableModeler().AddDefinition(SqlStatements.Constraints.ForeignKey, this.owner.Name);
+            this.owner.Owner.GetTableModeler().AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+            this.owner.Owner.GetTableModeler().AddDefinition(SqlStatements.Constraints.ReferencesColumn, constrainedColumn.Name);
             return this;
         }
 

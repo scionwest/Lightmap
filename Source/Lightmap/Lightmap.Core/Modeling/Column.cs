@@ -3,23 +3,30 @@ using System.Collections.Generic;
 
 namespace Lightmap.Modeling
 {
-    public class Column
+    public class Column : IColumn, IColumnModeler
     {
         private Dictionary<string, string> definition;
 
+        private Table owner;
+
         public Column(Table owner, string name, Type dataType)
         {
-            this.Owner = owner;
+            this.owner = owner;
             this.Name = name;
             this.DataType = dataType;
             this.definition = new Dictionary<string, string>();
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public Table Owner { get; set; }
+        public ITable Owner => this.owner;
 
-        public Type DataType { get; set; }
+        public Type DataType { get; }
+
+        public IColumnModeler GetColumnModeler()
+        {
+            return this;
+        }
 
         public void AddDefinition(string statementKey, string statementValue)
         {

@@ -23,8 +23,8 @@ namespace Lightmap.Modeling
         public TableExpressionDefinitonOptions<TTableDefinition> WithPrimaryKey<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector)
         {
             MemberExpression columnExpression = columnSelector.Body as MemberExpression;
-            Column column = this.owner.GetColumn(columnExpression.Member.Name);
-            column.AddDefinition(SqlStatements.Constraints.PrimaryKey, column.Name);
+            IColumn column = this.owner.GetTableModeler().GetColumn(columnExpression.Member.Name);
+            column.GetColumnModeler().AddDefinition(SqlStatements.Constraints.PrimaryKey, column.Name);
             return this;
         }
 
@@ -52,11 +52,11 @@ namespace Lightmap.Modeling
 
             if (leftExpression.Member.DeclaringType == owningTableType)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, leftExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ForeignKey, leftExpression.Member.Name);
             }
             else if (rightExpression.Member.DeclaringType == owningTableType)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, rightExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ForeignKey, rightExpression.Member.Name);
             }
             else
             {
@@ -67,13 +67,13 @@ namespace Lightmap.Modeling
             Type referenceDefinition = TypeCache.GetGenericParameters(referenceTable.GetType()).FirstOrDefault();
             if (leftExpression.Member.DeclaringType.Name == referenceDefinition.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, leftExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesColumn, leftExpression.Member.Name);
             }
             if (rightExpression.Member.DeclaringType.Name == referenceDefinition.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, rightExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesColumn, rightExpression.Member.Name);
             }
             else
             {

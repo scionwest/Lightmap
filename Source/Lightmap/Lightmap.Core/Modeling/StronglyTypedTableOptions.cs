@@ -29,8 +29,8 @@ namespace Lightmap.Modeling
             }
 
             string columnName = memberExpression.Member.Name;
-            Column column = this.owner.GetColumn(columnName);
-            column.AddDefinition(SqlStatements.Constraints.PrimaryKey, columnName);
+            IColumn column = this.owner.GetColumn(columnName);
+            column.GetColumnModeler().AddDefinition(SqlStatements.Constraints.PrimaryKey, columnName);
             return this;
         }
 
@@ -54,11 +54,11 @@ namespace Lightmap.Modeling
             if (leftExpression.Member.DeclaringType.Name == this.owner.Name)
             {
                 // Add the Property/Column name as the Foreign Key for this table.
-                this.owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, leftExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ForeignKey, leftExpression.Member.Name);
             }
             else if (rightExpression.Member.DeclaringType.Name == this.owner.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ForeignKey, rightExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ForeignKey, rightExpression.Member.Name);
             }
             else
             {
@@ -68,13 +68,13 @@ namespace Lightmap.Modeling
             // Determine which expression is for the reference table
             if (leftExpression.Member.DeclaringType.Name == referenceTable.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, leftExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesColumn, leftExpression.Member.Name);
             }
             if (rightExpression.Member.DeclaringType.Name == referenceTable.Name)
             {
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
-                this.owner.AddDefiniton(SqlStatements.Constraints.ReferencesColumn, rightExpression.Member.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
+                this.owner.AddDefinition(SqlStatements.Constraints.ReferencesColumn, rightExpression.Member.Name);
             }
             else
             {
