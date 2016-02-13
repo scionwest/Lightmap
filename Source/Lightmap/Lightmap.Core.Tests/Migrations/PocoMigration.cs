@@ -11,42 +11,36 @@ namespace Lightmap.Core.Tests
     [MigrationVersion(1)]
     public class PocoMigration : IMigration
     {
-        public Task Apply(IDataProvider provider)
-        {
-            return provider.ProcessMigration(this);
-        }
-
         public void Configure(IDatabaseModeler modeler)
         {
-            var rolesTable = modeler.Create().Table<AspNetRoles>()
+            var rolesTableDefinition = modeler.Create().Table<AspNetRoles>()
                 .WithPrimaryKey(table => table.Id)
                 .GetTable();
 
             modeler.Create().Table<AspNetRoleClaims>()
                 .WithPrimaryKey(table => table.Id)
-                .WithForeignKey(rolesTable, (table, referenceTable) => table.RoleId == referenceTable.Id);
+                .WithForeignKey(rolesTableDefinition, (claimTable, roleTable) => claimTable.RoleId == roleTable.Id)
+                    .OnDelete().Cascade();
 
-            var usersTable = modeler.Create().Table<AspNetUsers>()
-                .WithPrimaryKey(table => table.Id)
+            var usersTableDefinition = modeler.Create().Table<AspNetUsers>()
+                .WithPrimaryKey(userTable => userTable.Id)
                 .GetTable();
 
             var userRolesTable = modeler.Create().Table<AspNetUserRoles>()
-                .WithForeignKey(rolesTable, (table, referenceTable) => table.RoleId == referenceTable.Id)
-                .WithForeignKey(usersTable, (table, referenceTable) => table.UserId == referenceTable.Id);
+                .CheckValueOnColumn(table => table.RoleId, table => table.RoleId != string.Empty)
+                .WithForeignKey(rolesTableDefinition, (userRoleTable, roleTable) => userRoleTable.RoleId == roleTable.Id)
+                    .OnDelete().Restrict()
+                .WithForeignKey(usersTableDefinition, (userRoleTable, userTable) => userRoleTable.UserId == userTable.Id)
+                    .OnDelete().Cascade();
 
             modeler.Create().Table<AspNetUserLogins>()
                 //.WithClusteredPrimaryKey(table => table.ProviderKey, table => table.LoginProvider)
-                .WithForeignKey(usersTable, (table, referenceTable) => table.UserId == referenceTable.Id);
+                .WithForeignKey(usersTableDefinition, (userLoginTable, userTable) => userLoginTable.UserId == userTable.Id);
 
             modeler.Create().Table<AspNetUserClaims>()
                 .WithPrimaryKey(table => table.Id)
-                .WithForeignKey(usersTable, (table, referenceTable) => table.UserId == referenceTable.Id);
-        }
-
-        public Task Rollback(IDataProvider provider)
-        {
-            File.Delete(provider.DatabaseManager.Database);
-            return Task.FromResult(0);
+                .WithForeignKey(usersTableDefinition, (userClaimTable, userTable) => userClaimTable.UserId == userTable.Id)
+                    .OnDelete().Cascade();
         }
     }
 }

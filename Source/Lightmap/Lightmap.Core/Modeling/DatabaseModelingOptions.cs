@@ -49,7 +49,7 @@ namespace Lightmap.Modeling
             return tableOptions;
         }
 
-        public TableExpressionDefinitonOptions<TTableDefinition> Table<TTableDefinition>(string name, Expression<Func<TTableDefinition>> definition)
+        public StronglyTypedTableOptions<TTableDefinition> Table<TTableDefinition>(string name, Expression<Func<TTableDefinition>> definition)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -75,7 +75,7 @@ namespace Lightmap.Modeling
             }
 
             this.DatabaseModeler.AddTable(table);
-            return new TableExpressionDefinitonOptions<TTableDefinition>(table);
+            return new StronglyTypedTableOptions<TTableDefinition>(table);
         }
     }
 }

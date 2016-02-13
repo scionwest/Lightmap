@@ -40,9 +40,19 @@ namespace Lightmap.Modeling
             existingDefinition = statementValue;
         }
 
-        public Dictionary<string, string> GetDefinition()
+        public Dictionary<string, string> GetDefinitions()
         {
             return this.definition.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        public string GetDefinition(string statementKey)
+        {
+            return this.definition[statementKey];
+        }
+
+        public void RemoveDefinition(string statementKey)
+        {
+            this.definition.Remove(statementKey);
         }
 
         public IColumn[] GetColumns()
@@ -82,9 +92,9 @@ namespace Lightmap.Modeling
     {
         public Table(IDatabaseModelBrowser modeler, string name) : base(modeler, name) { }
 
-        public TableExpressionDefinitonOptions<TTableDefinition> GetColumn<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector)
+        public StronglyTypedTableOptions<TTableDefinition> GetColumn<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector)
         {
-            return new TableExpressionDefinitonOptions<TTableDefinition>(this);
+            return new StronglyTypedTableOptions<TTableDefinition>(this);
         }
     }
 }

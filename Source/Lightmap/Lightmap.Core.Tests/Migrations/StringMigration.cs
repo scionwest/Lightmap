@@ -9,11 +9,6 @@ namespace Lightmap.Core.Tests.Migrations
     [MigrationVersion(1)]
     public class StringMigration : IMigration
     {
-        public Task Apply(IDataProvider provider)
-        {
-            return provider.ProcessMigration(this);
-        }
-
         public void Configure(IDatabaseModeler modeler)
         {
             var rolesTable = modeler.Create().Table("AspNetRoles");
@@ -61,11 +56,6 @@ namespace Lightmap.Core.Tests.Migrations
             userClaimsTable.WithColumn<string>("ClaimType");
             userClaimsTable.WithColumn<string>("ClaimValue");
             userClaimsTable.WithColumn<string>("UserId").WithForeignKey(userTable, "Id");
-        }
-
-        public Task Rollback(IDataProvider provider)
-        {
-            throw new NotImplementedException();
         }
     }
 }

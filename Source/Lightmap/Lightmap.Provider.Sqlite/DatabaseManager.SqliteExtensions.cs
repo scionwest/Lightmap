@@ -55,15 +55,7 @@ namespace Lightmap.Provider.Sqlite
             IDataProvider provider = manager.GetProvider();
             foreach (IMigration migration in migrationsRemainingToUpgrade)
             {
-                try
-                {
-                    await migration.Apply(provider);
-                }
-                catch (Exception ex)
-                {
-                    await migration.Rollback(provider);
-                    break;
-                }
+                await provider.ProcessMigration(migration);
             }
         }
     }

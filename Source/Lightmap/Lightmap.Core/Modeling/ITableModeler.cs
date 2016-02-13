@@ -9,7 +9,11 @@ namespace Lightmap.Modeling
     {
         void AddDefinition(string statementKey, string statementValue);
 
-        Dictionary<string, string> GetDefinition();
+        Dictionary<string, string> GetDefinitions();
+
+        string GetDefinition(string statementKey);
+
+        void RemoveDefinition(string statementKey);
 
         IColumn[] GetColumns();
 

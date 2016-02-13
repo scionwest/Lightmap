@@ -7,11 +7,6 @@ namespace Lightmap.Core.Tests.Migrations
     [MigrationVersion(1)]
     public class AnonymousTypeMigration : IMigration
     {
-        public Task Apply(IDataProvider provider)
-        {
-            return provider.ProcessMigration(this);
-        }
-
         public void Configure(IDatabaseModeler modeler)
         {
             var rolesTable = modeler.Create()
@@ -100,11 +95,6 @@ namespace Lightmap.Core.Tests.Migrations
                 })
                 .WithPrimaryKey(table => table.Id)
                 .WithForeignKey(userTable, (table, referenceTable) => table.UserId == referenceTable.Id);
-        }
-
-        public Task Rollback(IDataProvider provider)
-        {
-            throw new NotImplementedException();
         }
     }
 }

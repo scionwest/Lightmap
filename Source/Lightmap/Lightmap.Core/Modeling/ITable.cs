@@ -21,6 +21,6 @@ namespace Lightmap.Modeling
 
     public interface ITable<TTableDefinition> : ITable
     {
-        TableExpressionDefinitonOptions<TTableDefinition> GetColumn<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector);
+        StronglyTypedTableOptions<TTableDefinition> GetColumn<TColumn>(Expression<Func<TTableDefinition, TColumn>> columnSelector);
     }
 }

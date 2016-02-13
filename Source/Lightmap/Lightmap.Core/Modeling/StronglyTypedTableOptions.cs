@@ -20,9 +20,9 @@ namespace Lightmap.Modeling
             return this.owner;
         }
 
-        public StronglyTypedTableOptions<TTable> WithPrimaryKey<TColumn>(Expression<Func<TTable, TColumn>> keySelector)
+        public StronglyTypedTableOptions<TTable> WithPrimaryKey<TColumn>(Expression<Func<TTable, TColumn>> columnSelector)
         {
-            var memberExpression = keySelector.Body as MemberExpression;
+            var memberExpression = columnSelector.Body as MemberExpression;
             if (memberExpression == null)
             {
                 throw new NotSupportedException($"The selector provided is not supported. You must return a property that represents a column from the table definiton provided to you.");
@@ -34,7 +34,7 @@ namespace Lightmap.Modeling
             return this;
         }
 
-        public StronglyTypedTableOptions<TTable> WithForeignKey<TReferenceTable, TConstraint>(ITable<TReferenceTable> referenceTable, Expression<Func<TTable, TReferenceTable, TConstraint>> constraint)
+        public ForeignKeyConstraints<StronglyTypedTableOptions<TTable>, TTable> WithForeignKey<TReferenceTable, TConstraint>(ITable<TReferenceTable> referenceTable, Expression<Func<TTable, TReferenceTable, TConstraint>> constraint)
         {
             var equalsExpression = constraint.Body as BinaryExpression;
             if (equalsExpression == null)
@@ -49,14 +49,18 @@ namespace Lightmap.Modeling
             {
                 throw new NotSupportedException("You must map a property off both the current table and the reference table to represent the foreign key column constraints.");
             }
-            
-            // Determine which expression is for the owning table.
-            if (leftExpression.Member.DeclaringType.Name == this.owner.Name)
+
+            Type owningTableType = TypeCache.GetGenericParameters(this.owner.GetType()).FirstOrDefault();
+            if (owningTableType == null)
             {
-                // Add the Property/Column name as the Foreign Key for this table.
+                throw new InvalidOperationException("The owning table was not defined using a generic Type or an expression.");
+            }
+
+            if (leftExpression.Member.DeclaringType == owningTableType)
+            {
                 this.owner.AddDefinition(SqlStatements.Constraints.ForeignKey, leftExpression.Member.Name);
             }
-            else if (rightExpression.Member.DeclaringType.Name == this.owner.Name)
+            else if (rightExpression.Member.DeclaringType == owningTableType)
             {
                 this.owner.AddDefinition(SqlStatements.Constraints.ForeignKey, rightExpression.Member.Name);
             }
@@ -66,12 +70,13 @@ namespace Lightmap.Modeling
             }
 
             // Determine which expression is for the reference table
-            if (leftExpression.Member.DeclaringType.Name == referenceTable.Name)
+            Type referenceDefinition = TypeCache.GetGenericParameters(referenceTable.GetType()).FirstOrDefault();
+            if (leftExpression.Member.DeclaringType.Name == referenceDefinition.Name)
             {
                 this.owner.AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
                 this.owner.AddDefinition(SqlStatements.Constraints.ReferencesColumn, leftExpression.Member.Name);
             }
-            if (rightExpression.Member.DeclaringType.Name == referenceTable.Name)
+            if (rightExpression.Member.DeclaringType.Name == referenceDefinition.Name)
             {
                 this.owner.AddDefinition(SqlStatements.Constraints.ReferencesTable, referenceTable.Name);
                 this.owner.AddDefinition(SqlStatements.Constraints.ReferencesColumn, rightExpression.Member.Name);
@@ -81,7 +86,7 @@ namespace Lightmap.Modeling
                 throw new InvalidOperationException("You can not reference a table/column with a foreign key constraint if the table has yet to be modeled as part of the database model.");
             }
 
-            return this;
+            return new ForeignKeyConstraints<StronglyTypedTableOptions<TTable>, TTable>(this.owner);
         }
 
         public StronglyTypedTableOptions<TTable> WithUniqueColumn<TColumn>(Expression<Func<TTable, TColumn>> columnSelector)
@@ -89,14 +94,31 @@ namespace Lightmap.Modeling
             throw new NotImplementedException();
         }
 
-        public StronglyTypedTableOptions<TTable> DisallowNulls()
+        public StronglyTypedTableOptions<TTable> WithDefaultColumnValue<TColumn, TValue>(TValue value, Expression<Func<TTable, TColumn>> columnSelector)
         {
-            throw new NotImplementedException();
+            return this;
         }
 
-        public StronglyTypedTableOptions<TTable> AllowNulls()
+        public StronglyTypedTableOptions<TTable> DisallowNullsOnColumn()
         {
-            throw new NotImplementedException();
+            this.owner.AddDefinition(SqlStatements.Constraints.NotNull, this.owner.Name);
+            return this;
+        }
+
+        public StronglyTypedTableOptions<TTable> AllowNullsOnColumn()
+        {
+            if (string.IsNullOrEmpty(this.owner.GetTableModeler().GetDefinition(SqlStatements.Constraints.NotNull)))
+            {
+                return this;
+            }
+
+            this.owner.GetTableModeler().RemoveDefinition(SqlStatements.Constraints.NotNull);
+            return this;
+        }
+
+        public StronglyTypedTableOptions<TTable> CheckValueOnColumn<TColumn>(Expression<Func<TTable, TColumn>> columnSelector, Expression<Func<TTable, bool>> condition)
+        {
+            return this;
         }
     }
 }

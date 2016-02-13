@@ -35,7 +35,7 @@ namespace Lightmap.Provider.Sqlite
                 foreach (ITable table in tables)
                 {
                     ITableModeler tableModel = table.GetTableModeler();
-                    Dictionary<string, string> tableDefinition = tableModel.GetDefinition();
+                    Dictionary<string, string> tableDefinition = tableModel.GetDefinitions();
                     string sql = this.ProcessTable(table, tableModel, tableDefinition);
                     
                     this.queryHistory.Add(sql);
