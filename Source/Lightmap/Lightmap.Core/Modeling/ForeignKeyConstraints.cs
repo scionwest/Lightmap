@@ -16,7 +16,7 @@ namespace Lightmap.Modeling
 
         public ConstraintOptions<TTableOptions> OnDelete()
         {
-            return new ConstraintOptions<TTableOptions>();
+            return new ConstraintOptions<TTableOptions>(null);
         }
 
         public ConstraintOptions<TTableOptions> OnUpdate()
@@ -28,6 +28,11 @@ namespace Lightmap.Modeling
     public class ConstraintOptions<TTableOptions>
     {
         private TTableOptions tableOptions;
+
+        public ConstraintOptions(TTableOptions options)
+        {
+            this.tableOptions = options;
+        }
 
         public TTableOptions NoAction()
         {

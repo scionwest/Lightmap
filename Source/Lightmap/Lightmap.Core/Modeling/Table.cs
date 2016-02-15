@@ -13,20 +13,22 @@ namespace Lightmap.Modeling
 
         private Dictionary<string, string> definition;
 
+        private SeedModel[] seedRows;
+
         public Table(IDatabaseModelBrowser modeler, string name)
         {
             this.Name = name;
             this.databaseModeler = modeler;
             this.definition = new Dictionary<string, string>();
             this.columns = new Dictionary<string, Column>();
+            this.seedRows = Array.Empty<SeedModel>();
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public ITableModeler GetTableModeler()
-        {
-            return this;
-        }
+        public ITableModeler GetTableModeler() => this;
+
+        public SeedModel[] GetSeedRows() => this.seedRows;
 
         public void AddDefinition(string statementKey, string statementValue)
         {
@@ -85,6 +87,10 @@ namespace Lightmap.Modeling
             var column = new Column(this, columnName, dataType);
             this.columns.Add(columnName, column);
             return new StandardTableOptions(column);
+        }
+
+        public void WithSeedData(params SeedModel[] seed)
+        {
         }
     }
 

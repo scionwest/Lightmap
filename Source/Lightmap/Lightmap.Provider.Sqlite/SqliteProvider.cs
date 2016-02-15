@@ -18,11 +18,19 @@ namespace Lightmap.Provider.Sqlite
         {
             this.DatabaseManager = manager;
             this.queryHistory = new List<string>();
+            this.QueryProvider = new Querying.SqliteProvider2();
         }
 
         public DatabaseManager DatabaseManager { get; }
 
         public IEnumerable<string> QueryHistory => this.queryHistory;
+
+        public Querying.SqliteProvider2 QueryProvider { get; }
+
+        public Task ExecuteAsync()
+        {
+            return Task.FromResult(0);
+        }
 
         public async Task ProcessMigration(IMigration migration)
         {

@@ -1,4 +1,7 @@
-﻿namespace Lightmap.Modeling
+﻿using System;
+using System.Linq.Expressions;
+
+namespace Lightmap.Modeling
 {
     public class StandardTableOptions
     {
@@ -40,6 +43,16 @@
         {
             this.owner.AddDefinition(SqlStatements.Constraints.Unique, this.owner.Name);
             return this;
+        }
+
+        public StandardTableOptions WithDefaultValue<TValue>(TValue value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StandardTableOptions WithValueCheck(Expression<Func<string, bool>> condition)
+        {
+            throw new NotImplementedException();
         }
 
         public StandardTableOptions DisallowNulls()

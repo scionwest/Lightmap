@@ -12,5 +12,7 @@ namespace Lightmap
 
         Task ProcessMigration(IMigration migration);
 
+        Task ExecuteAsync();
+
     }
 }

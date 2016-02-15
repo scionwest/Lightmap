@@ -1,13 +1,9 @@
-﻿using System;
+﻿using Lightmap.Core.Tests;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseManagerSqliteExtensionsTests;
-using Lightmap.Core.Tests;
-using Lightmap.Core.Tests.Migrations;
-using Lightmap.Modeling;
 using Xunit;
 
 namespace Lightmap.Provider.Sqlite.Tests
@@ -29,7 +25,7 @@ namespace Lightmap.Provider.Sqlite.Tests
                 var watch = new Stopwatch();
 
                 watch.Start();
-                var model = new AnonymousTypeMigration();
+                var model = new PocoMigration();
                 var databaseManager = new DatabaseManager("Foo.Bar.sqlite", new List<IMigration> { model });
                 databaseManager.UseSqliteProvider();
                 await databaseManager.UpgradeDatabase();
