@@ -15,9 +15,9 @@ namespace Lightmap.Migration
 
         ITableBuilder AddTable(ISchemaModel schema, string tableName);
 
-        ITableBuilder<TTable> AddTable<TTable>(string schema);
+        ITableBuilder<TTable> AddTable<TTable>(string schema) where TTable : class;
 
-        ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema);
+        ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema) where TTable : class;
 
         ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string schema, string name, Expression<Func<TTableDefinition>> definition);
 

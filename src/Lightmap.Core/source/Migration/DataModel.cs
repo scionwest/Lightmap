@@ -58,7 +58,7 @@ namespace Lightmap.Migration
 
         public ITableBuilder AddTable(ISchemaModel schema, string tableName) => this.AddTable(schema?.Name, tableName);
 
-        public ITableBuilder<TTable> AddTable<TTable>(string schemaName)
+        public ITableBuilder<TTable> AddTable<TTable>(string schemaName) where TTable : class
         {
             if (string.IsNullOrEmpty(schemaName))
             {
@@ -66,11 +66,40 @@ namespace Lightmap.Migration
             }
 
             var builder = new TableBuilder<TTable>(schemaName, typeof(TTable).Name, this);
+            IEnumerable<PropertyInfo> tableProperties = PropertyCache.GetPropertiesForType<TTable>();
+
+            // You can omit all Attributes and the API will just use all properties as columns,
+            // or you can specify which properties to use as columns, or specify which properties to exclude.
+            // You can't opt properties in and out at the same time. An exception will be thrown.
+            //if (AttributeCache.GetAttribute<IncludeOnTableAttribute>(typeof(TTable)) != null && AttributeCache.GetAttribute<ExcludeFromTableAttribute(typeof(TTable)))
+            //{
+            //      // TODO: Update tests to cover this use-case.
+            //    // throw an exception because you can't mix.
+            //}
+            //if (AttributeCache.GetAttribute<IncludeOnTableAttribute>(typeof(TTable)) != null)
+            //{
+
+            //}
+            //else if (AttributeCache.GetAttribute < ExcludeFromTableAttribute(typeof(TTable)))
+            //{
+
+            //}
+            //else
+            //{
+            //      //just use all properties as columns.
+            //}
+
+            foreach(PropertyInfo property in tableProperties)
+            {
+                builder.AddColumn(property.PropertyType, property.Name);
+            }
+
             this.tables.Add(builder);
             return builder;
         }
 
-        public ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema) => this.AddTable<TTable>(schema?.Name);
+        public ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema) where TTable : class 
+            => this.AddTable<TTable>(schema?.Name);
 
         public ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string schemaName, string name, Expression<Func<TTableDefinition>> definition)
         {
@@ -91,7 +120,7 @@ namespace Lightmap.Migration
             }
 
             var builder = new TableBuilder<TTableDefinition>(schemaName, name, this);
-            foreach(var columnData in columnExpression.Members.OfType<PropertyInfo>())
+            foreach (var columnData in columnExpression.Members.OfType<PropertyInfo>())
             {
                 builder.AddColumn(columnData.PropertyType, columnData.Name);
             }
