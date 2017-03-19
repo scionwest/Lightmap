@@ -10,7 +10,7 @@ namespace Lightmap.Sqlite
 {
     public class SqliteDatabaseManager : DatabaseManager
     {
-        public SqliteDatabaseManager(string databaseName) : base(databaseName)
+        public SqliteDatabaseManager(string databaseName, string connectionString) : base(databaseName, connectionString)
         {
         }
 

@@ -4,16 +4,23 @@ using System.Text;
 
 namespace Lightmap.Migration
 {
-    internal class TableColumnBuilder : ITableColumnBuilder
+    internal class TableColumnBuilder : IUntypedColumnBuilder
     {
         private Dictionary<string, string> columnDefinitions;
         private ITableBuilder owningTable;
 
-        internal TableColumnBuilder(ITableBuilder owner)
+        internal TableColumnBuilder(string columnName, Type dataType, ITableBuilder owner)
         {
             this.owningTable = owner;
             this.columnDefinitions = new Dictionary<string, string>();
+
+            this.ColumnName = columnName;
+            this.ColumnDataType = dataType;
         }
+
+        public string ColumnName { get; }
+
+        public Type ColumnDataType { get; }
 
         public ITableColumnBuilder AsPrimaryKey()
         {

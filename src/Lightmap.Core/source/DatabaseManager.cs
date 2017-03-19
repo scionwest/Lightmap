@@ -5,12 +5,15 @@ namespace Lightmap
 {
     public abstract class DatabaseManager : IDatabaseManager
     {
-        public DatabaseManager(string databaseName)
+        public DatabaseManager(string databaseName, string connectionString)
         {
             this.Database = databaseName;
+            this.ConnectionString = connectionString;
         }
 
-        public string Database { get; }
+        protected virtual string ConnectionString { get; }
+
+        public virtual string Database { get; }
 
         public abstract IDbConnection OpenConnection();
 

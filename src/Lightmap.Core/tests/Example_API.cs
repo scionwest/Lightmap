@@ -6,10 +6,8 @@ using Moq;
 
 namespace Lightmap
 {
-    [TestClass]
     public class DataModelTests
     {
-        [TestMethod]
         public void Example_of_API()
         {
             // Arrange
@@ -29,11 +27,11 @@ namespace Lightmap
                 .IsNullable();
 
             // Anonymous Type based
-            dataModel.AddTable("", () => new { Id = default(Guid), RoleId = default(string) })
+            dataModel.AddTable("", "", () => new { Id = default(Guid), RoleId = default(string) })
                 .AlterColumn(model => model.Id).AsPrimaryKey();
             
             // Mix string based, Type based and Anonymous Type based modeling.
-            dataModel.AddTable("", () => new { Id = default(Guid), RoleId = default(string), Name = default(string) })
+            dataModel.AddTable("", "", () => new { Id = default(Guid), RoleId = default(string), Name = default(string) })
                 .AlterColumn(model => model.RoleId).WithForeignKey(rolesTable, (userTable, roleTable) => userTable.RoleId == roleTable.Id).GetOwner()
                 .AddColumn(typeof(bool), "").IsNullable();
         }

@@ -11,7 +11,6 @@ namespace Lightmap.Migration
 
         private ISchemaBuilder schemaBuilder;
         private List<ITableColumnBuilder> columnBuilders;
-        private string tableName;
 
         public TableBuilder(string schema, string tableName, IDataModel currentDataModel)
         {
@@ -27,7 +26,6 @@ namespace Lightmap.Migration
 
             this.columnBuilders = new List<ITableColumnBuilder>();
             this.dataModel = currentDataModel;
-            this.tableName = tableName;
 
             ISchemaBuilder matchedSchema = this.dataModel.GetSchemas().FirstOrDefault(schemaModel => schemaModel.Name == schema);
             if (matchedSchema == null)
@@ -38,23 +36,34 @@ namespace Lightmap.Migration
             }
 
             this.schemaBuilder = matchedSchema;
+            this.TableName = tableName;
+            this.Schema = schema;
         }
+
+        public string TableName { get; }
+
+        public string Schema { get; }
 
         public ITableModel GetTableModel()
         {
             ITableColumn[] columns = this.GetColumns().Select(columnBuilder => columnBuilder.GetModel()).ToArray();
-            var tableModel = new TableModel(this.schemaBuilder.GetSchemaModel(), this.tableName, columns);
+            var tableModel = new TableModel(this.schemaBuilder.GetSchemaModel(), this.TableName, columns);
             return tableModel;
         }
 
         public IUntypedColumnBuilder AddColumn(Type dataType, string columnName)
         {
-            throw new NotImplementedException();
+            var builder = new TableColumnBuilder(columnName, dataType, this);
+            this.columnBuilders.Add(builder);
+            return builder;
         }
 
-        public ITableColumnBuilder[] GetColumns()
+        public IUntypedColumnBuilder AlterColumn(Func<ITableColumn, bool> columnSelector)
         {
-            throw new NotImplementedException();
+            return this.columnBuilders.OfType<IUntypedColumnBuilder>()
+                .FirstOrDefault(builder => columnSelector(builder.GetModel()));
         }
+
+        public ITableColumnBuilder[] GetColumns() => this.columnBuilders.ToArray();
     }
 }
