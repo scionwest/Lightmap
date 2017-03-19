@@ -14,11 +14,11 @@ namespace Lightmap
             var dataModel = new DataModel(Mock.Of<IDatabaseMigrator>());
 
             // String based
-            dataModel.AddTable("", "")
-                .AddColumn(typeof(bool), "").IsNullable();
+            dataModel.AddTable("dbo", "Foo")
+                .AddColumn(typeof(bool), "Id").IsNullable();
 
             // Type based
-            ITableBuilder<AspNetRoles> rolesTable = dataModel.AddTable<AspNetRoles>("");
+            ITableBuilder<AspNetRoles> rolesTable = dataModel.AddTable<AspNetRoles>("dbo");
             rolesTable.AlterColumn(model => model.Id)
                 .AsPrimaryKey()
                 .IsUniquenessRequired();
@@ -27,13 +27,13 @@ namespace Lightmap
                 .IsNullable();
 
             // Anonymous Type based
-            dataModel.AddTable("", "", () => new { Id = default(Guid), RoleId = default(string) })
+            dataModel.AddTable("dbo", "Foo", () => new { Id = default(Guid), RoleId = default(string) })
                 .AlterColumn(model => model.Id).AsPrimaryKey();
             
             // Mix string based, Type based and Anonymous Type based modeling.
-            dataModel.AddTable("", "", () => new { Id = default(Guid), RoleId = default(string), Name = default(string) })
+            dataModel.AddTable("dbo", "Foo", () => new { Id = default(Guid), RoleId = default(string), Name = default(string) })
                 .AlterColumn(model => model.RoleId).WithForeignKey(rolesTable, (userTable, roleTable) => userTable.RoleId == roleTable.Id).GetOwner()
-                .AddColumn(typeof(bool), "").IsNullable();
+                .AddColumn(typeof(bool), "CreatedOn").IsNullable();
         }
     }
 }
