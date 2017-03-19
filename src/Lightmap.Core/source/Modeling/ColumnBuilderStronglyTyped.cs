@@ -32,7 +32,7 @@ namespace Lightmap.Modeling
             throw new NotImplementedException();
         }
 
-        public IColumnBuilderStronglyTyped<TTableType> IsUniquenessRequired()
+        public IColumnBuilderStronglyTyped<TTableType> Unique()
         {
             throw new NotImplementedException();
         }

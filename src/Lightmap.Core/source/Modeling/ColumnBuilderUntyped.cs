@@ -52,7 +52,7 @@ namespace Lightmap.Modeling
             return this;
         }
 
-        public IColumnBuilder IsUniquenessRequired()
+        public IColumnBuilder Unique()
         {
             this.TryAddDefinition(ColumnDefinitions.Unique, this.ColumnName);
             return this;

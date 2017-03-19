@@ -11,7 +11,7 @@ namespace Lightmap.Modeling
 
         IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TConstraint>(ITableBuilder<TReferenceTable> referenceTable, Expression<Func<TTableType, TReferenceTable, TConstraint>> constraint);
 
-        IColumnBuilderStronglyTyped<TTableType> IsUniquenessRequired();
+        IColumnBuilderStronglyTyped<TTableType> Unique();
 
         IColumnBuilderStronglyTyped<TTableType> IsNullable();
     }

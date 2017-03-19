@@ -8,7 +8,7 @@
 
         IColumnBuilder WithForeignKey(IColumnModel referenceColumn);
 
-        IColumnBuilder IsUniquenessRequired();
+        IColumnBuilder Unique();
 
         IColumnBuilder IsNullable();
     }
