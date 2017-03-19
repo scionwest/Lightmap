@@ -14,7 +14,7 @@ namespace Lightmap.Modeling
         private const string _createTable = "CREATE TABLE";
         private List<string> migrationHistory;
 
-        public SqliteMigrator(IMigration[] migrations)
+        public SqliteMigrator(params IMigration[] migrations)
         {
             this.Migrations = migrations;
             this.migrationHistory = new List<string>();

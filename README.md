@@ -9,6 +9,16 @@ _Note: this project is still under heavy development. NuGet packages haven't bee
 - Supported Languages: C#, Visual Basic.
   - F# should work as well, but has not been tested.
 
+# Features
+
+- Table constraints
+  - Foreign Key
+  - Unique
+  - Not Null
+- Migration support
+  - Migrate a database forward
+  - Migrate a database backward
+
 # Examples
 
 ### Untyped Data Modeling
@@ -60,12 +70,45 @@ dataModel.AddTable("dbo", "Foo", () => new
     .Unique();
 ```
 
-# Features
+### Performing a migration
 
-- Table constraints
-  - Foreign Key
-  - Unique
-  - Not Null
-- Migration support
-  - Migrate a database forward
-  - Migrate a database backward
+You can migrate your database to new datamodels by defining the new model in a class that implements the `IMigration` interface.
+
+```
+public class InitialDataModel : IMigration
+{
+    public InitialDataModel(IDataModel currentModel) => this.DataModel = currentModel;
+
+    public IDataModel DataModel { get; }
+
+    public void Apply()
+    {
+        DataModel.AddTable("dbo", "User")
+            .AddColumn(typeof(int), "Id").GetOwner()
+            .AddColumn(typeof(string), "Name");
+    }
+
+    public void Revert()
+    {
+        // Code to revert:
+    }
+}
+```
+
+Once you have one or more migrations defined, you can process them with the datastore of your choice, providing it has an implementation of `IDatabaseManager` and `IDatabaseMigrator`.
+
+```
+public class Program
+{
+    public static void Main()
+    {
+        IDatabaseManager databaseManager = new SqliteDatabaseManager("MyDatabase", "DATA SOURCE=MyDatabase");
+        IDataModel dataModel = new DataModel();
+        IMigration initialMigration = new InitialDataModel(dataModel);
+        IDatabaseMigrator migrator = new SqliteMigrator(initialMigration);
+
+        // Apply migration to database.
+        migrator.Apply(databaseManager);
+    }
+}
+```
