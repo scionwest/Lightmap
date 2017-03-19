@@ -20,8 +20,51 @@ _Note: this project is still under heavy development. NuGet packages haven't bee
   - Migrate a database backward
   - Automatic migration discovery
   - Datamodel version tracking
-  
+
 # Examples
+
+### Performing a migration
+
+You can migrate your database to new datamodels by defining the new model in a class that implements the `IMigration` interface.
+
+```
+public class InitialDataModel : IMigration
+{
+    public InitialDataModel(IDataModel currentModel) => this.DataModel = currentModel;
+
+    public IDataModel DataModel { get; }
+
+    public void Apply()
+    {
+        DataModel.AddTable("dbo", "User")
+            .AddColumn(typeof(int), "Id").GetOwner()
+            .AddColumn(typeof(string), "Name");
+    }
+
+    public void Revert()
+    {
+        // Code to revert:
+    }
+}
+```
+
+Once you have one or more migrations defined, you can process them with the datastore of your choice, providing it has an implementation of `IDatabaseManager` and `IDatabaseMigrator`.
+
+```
+public class Program
+{
+    public static void Main()
+    {
+        IDatabaseManager databaseManager = new SqliteDatabaseManager("MyDatabase", "DATA SOURCE=MyDatabase");
+        IDataModel dataModel = new DataModel();
+        IMigration initialMigration = new InitialDataModel(dataModel);
+        IDatabaseMigrator migrator = new SqliteMigrator(initialMigration);
+
+        // Apply migration to database.
+        migrator.Apply(databaseManager);
+    }
+}
+```
 
 ### Untyped Data Modeling
 You can model database tables with just strings and Types.
@@ -70,47 +113,4 @@ dataModel.AddTable("dbo", "Foo", () => new
     .IsPrimaryKey()
   .AlterColumn(model => model.Name)
     .Unique();
-```
-
-### Performing a migration
-
-You can migrate your database to new datamodels by defining the new model in a class that implements the `IMigration` interface.
-
-```
-public class InitialDataModel : IMigration
-{
-    public InitialDataModel(IDataModel currentModel) => this.DataModel = currentModel;
-
-    public IDataModel DataModel { get; }
-
-    public void Apply()
-    {
-        DataModel.AddTable("dbo", "User")
-            .AddColumn(typeof(int), "Id").GetOwner()
-            .AddColumn(typeof(string), "Name");
-    }
-
-    public void Revert()
-    {
-        // Code to revert:
-    }
-}
-```
-
-Once you have one or more migrations defined, you can process them with the datastore of your choice, providing it has an implementation of `IDatabaseManager` and `IDatabaseMigrator`.
-
-```
-public class Program
-{
-    public static void Main()
-    {
-        IDatabaseManager databaseManager = new SqliteDatabaseManager("MyDatabase", "DATA SOURCE=MyDatabase");
-        IDataModel dataModel = new DataModel();
-        IMigration initialMigration = new InitialDataModel(dataModel);
-        IDatabaseMigrator migrator = new SqliteMigrator(initialMigration);
-
-        // Apply migration to database.
-        migrator.Apply(databaseManager);
-    }
-}
 ```
