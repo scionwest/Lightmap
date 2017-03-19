@@ -4,14 +4,16 @@ namespace Lightmap.Migration
 {
     public interface ITableBuilder
     {
+        IDataModel CurrentDataModel { get; }
+
         string TableName { get; }
 
         string Schema { get; }
 
         ITableModel GetTableModel();
 
-        ITableColumnBuilder[] GetColumns();
+        IColumnBuilder[] GetColumns();
 
-        IUntypedColumnBuilder AddColumn(Type dataType, string columnName);
+        IColumnBuilderUntyped AddColumn(Type dataType, string columnName);
     }
 }

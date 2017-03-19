@@ -239,7 +239,7 @@ namespace Lightmap.Migration
             });
 
             // Assert
-            ITableColumnBuilder[] columns = tableBuilder.GetColumns();
+            IColumnBuilder[] columns = tableBuilder.GetColumns();
             Assert.IsNotNull(tableBuilder);
             Assert.AreEqual(tableName, tableBuilder.TableName);
             Assert.AreEqual(_schema, tableBuilder.Schema);

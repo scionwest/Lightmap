@@ -7,10 +7,8 @@ namespace Lightmap.Migration
 {
     internal class TableBuilder : ITableBuilder
     {
-        private IDataModel dataModel;
-
         private ISchemaBuilder schemaBuilder;
-        private List<ITableColumnBuilder> columnBuilders;
+        private List<IColumnBuilder> columnBuilders;
 
         public TableBuilder(string schema, string tableName, IDataModel currentDataModel)
         {
@@ -24,15 +22,15 @@ namespace Lightmap.Migration
                 throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
             }
 
-            this.columnBuilders = new List<ITableColumnBuilder>();
-            this.dataModel = currentDataModel;
+            this.columnBuilders = new List<IColumnBuilder>();
+            this.CurrentDataModel = currentDataModel;
 
-            ISchemaBuilder matchedSchema = this.dataModel.GetSchemas().FirstOrDefault(schemaModel => schemaModel.Name == schema);
+            ISchemaBuilder matchedSchema = this.CurrentDataModel.GetSchemas().FirstOrDefault(schemaModel => schemaModel.Name == schema);
             if (matchedSchema == null)
             {
                 // TODO: Make this configurable so we throw an exception instead of auto-creating, if that's the desired behavior.
                 // if (!someConfig.AutoCreateMissingSchema) throw new InvalidOperationException($"The schema specified for the {tableName} does not exist.");
-                matchedSchema = this.dataModel.AddSchema(schema);
+                matchedSchema = this.CurrentDataModel.AddSchema(schema);
             }
 
             this.schemaBuilder = matchedSchema;
@@ -40,30 +38,42 @@ namespace Lightmap.Migration
             this.Schema = schema;
         }
 
+        public IDataModel CurrentDataModel { get; }
+
         public string TableName { get; }
 
         public string Schema { get; }
 
         public ITableModel GetTableModel()
         {
-            ITableColumn[] columns = this.GetColumns().Select(columnBuilder => columnBuilder.GetModel()).ToArray();
+            IColumnModel[] columns = this.GetColumns().Select(columnBuilder => columnBuilder.GetModel()).ToArray();
             var tableModel = new TableModel(this.schemaBuilder.GetSchemaModel(), this.TableName, columns);
             return tableModel;
         }
 
-        public IUntypedColumnBuilder AddColumn(Type dataType, string columnName)
+        public IColumnBuilderUntyped AddColumn(Type dataType, string columnName)
         {
-            var builder = new TableColumnBuilder(columnName, dataType, this);
+            if (dataType == null)
+            {
+                throw new ArgumentNullException(nameof(dataType), "You must provide the data type that this column represents. The data type may only be primitive value types");
+            }
+
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException(nameof(columnName), "You can not add a nameless column.");
+            }
+
+            var builder = new ColumnBuilderUntyped(columnName, dataType, this);
             this.columnBuilders.Add(builder);
             return builder;
         }
 
-        public IUntypedColumnBuilder AlterColumn(Func<ITableColumn, bool> columnSelector)
+        public IColumnBuilderUntyped AlterColumn(Func<IColumnModel, bool> columnSelector)
         {
-            return this.columnBuilders.OfType<IUntypedColumnBuilder>()
+            return this.columnBuilders.OfType<IColumnBuilderUntyped>()
                 .FirstOrDefault(builder => columnSelector(builder.GetModel()));
         }
 
-        public ITableColumnBuilder[] GetColumns() => this.columnBuilders.ToArray();
+        public IColumnBuilder[] GetColumns() => this.columnBuilders.ToArray();
     }
 }

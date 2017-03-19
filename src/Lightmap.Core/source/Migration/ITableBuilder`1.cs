@@ -7,6 +7,6 @@ namespace Lightmap.Migration
 {
     public interface ITableBuilder<TTableType> : ITableBuilder
     {
-        IStronglyTypedColumnBuilder<TTableType> AlterColumn<TColumn>(Expression<Func<TTableType, TColumn>> columnSelect);
+        IColumnBuilderStronglyTyped<TTableType> AlterColumn<TColumn>(Expression<Func<TTableType, TColumn>> columnSelect);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Lightmap.Migration
 {
-    public interface ITableColumnBuilder
+    public interface IColumnBuilder
     {
         Dictionary<string, string> GetTableDefinition();
 
@@ -11,6 +11,6 @@ namespace Lightmap.Migration
 
         Type ColumnDataType { get; }
 
-        ITableColumn GetModel();
+        IColumnModel GetModel();
     }
 }

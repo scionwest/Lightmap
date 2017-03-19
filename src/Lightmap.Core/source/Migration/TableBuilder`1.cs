@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Lightmap.Migration
 {
@@ -11,9 +11,27 @@ namespace Lightmap.Migration
         {
         }
 
-        public IStronglyTypedColumnBuilder<TTableType> AlterColumn<TColumn>(System.Linq.Expressions.Expression<Func<TTableType, TColumn>> columnSelect)
+        public IColumnBuilderStronglyTyped<TTableType> AlterColumn<TColumn>(Expression<Func<TTableType, TColumn>> columnSelect)
         {
-            throw new NotImplementedException();
+            var memberExpression = columnSelect.Body as MemberExpression;
+            if (memberExpression == null)
+            {
+                throw new NotSupportedException("The selector provided is not supported. You must return a property that represents a column from the table.");
+            }
+
+            string columnName = memberExpression.Member.Name;
+            Type dataType = memberExpression.Member.DeclaringType;
+
+            var columnToAlter = base.GetColumns()
+                .FirstOrDefault(column => column.ColumnName == columnName) as IColumnBuilderStronglyTyped<TTableType>;
+
+            // We have never altered the column - so just create it.
+            if (columnToAlter == null)
+            {
+                columnToAlter = new ColumnBuilderStronglyTyped<TTableType>(columnName, dataType, this);
+            }
+
+            return columnToAlter;
         }
     }
 }

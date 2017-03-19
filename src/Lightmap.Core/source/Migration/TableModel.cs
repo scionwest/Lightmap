@@ -2,10 +2,10 @@
 {
     internal struct TableModel : ITableModel
     {
-        private ITableColumn[] columns;
+        private IColumnModel[] columns;
         private ISchemaModel schemaModel;
 
-        public TableModel(ISchemaModel schemaModel, string tableName, ITableColumn[] columns)
+        public TableModel(ISchemaModel schemaModel, string tableName, IColumnModel[] columns)
         {
             this.columns = columns;
             this.schemaModel = schemaModel;
@@ -14,7 +14,9 @@
 
         public string Name { get; }
 
-        public ITableColumn[] Columns => this.columns;
+        public string FullyQualifiedName => $"{this.Schema.Name}.{this.Name}";
+
+        public IColumnModel[] Columns => this.columns;
 
         public ISchemaModel Schema => this.schemaModel;
     }

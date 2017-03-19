@@ -6,6 +6,8 @@
 
         ISchemaModel Schema { get;  }
 
-        ITableColumn[] Columns { get; }
+        string FullyQualifiedName { get; }
+
+        IColumnModel[] Columns { get; }
     }
 }

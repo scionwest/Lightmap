@@ -21,7 +21,7 @@ namespace Lightmap
             // Type based
             ITableBuilder<AspNetRoles> rolesTable = dataModel.AddTable<AspNetRoles>("dbo")
                 .AlterColumn(model => model.Id)
-                    .AsPrimaryKey()
+                    .IsPrimaryKey()
                     .IsUniquenessRequired()
                     .GetOwner()
                 .AlterColumn(model => model.Name)
@@ -34,7 +34,7 @@ namespace Lightmap
                 Id = default(Guid),
                 RoleId = default(string)
             })
-            .AlterColumn(model => model.Id).AsPrimaryKey();
+            .AlterColumn(model => model.Id).IsPrimaryKey();
             
             // Mix string based, Type based and Anonymous Type based modeling.
             dataModel.AddTable("dbo", "Foo", () => new
@@ -47,7 +47,7 @@ namespace Lightmap
                 .WithForeignKey(rolesTable, (userTable, roleTable) => userTable.RoleId == roleTable.Id)
                 .GetOwner()
             .AlterColumn(model => model.Id)
-                .AsPrimaryKey()
+                .IsPrimaryKey()
                 .GetOwner()
             .AddColumn(typeof(bool), "CreatedOn")
                 .IsNullable();
