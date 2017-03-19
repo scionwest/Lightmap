@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Lightmap.Modeling
 {
@@ -9,6 +10,10 @@ namespace Lightmap.Modeling
         string TableName { get; }
 
         string Schema { get; }
+
+        Dictionary<string, string> GetTableDefinition();
+
+        void TryAddDefinition(string definitionKey, string definitionValue);
 
         ITableModel GetTableModel();
 

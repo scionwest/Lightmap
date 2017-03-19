@@ -8,6 +8,7 @@ namespace Lightmap.Modeling
     {
         private ISchemaBuilder schemaBuilder;
         private List<IColumnBuilder> columnBuilders;
+        private Dictionary<string, string> tableDefinition;
 
         public TableBuilder(string schema, string tableName, IDataModel currentDataModel)
         {
@@ -42,6 +43,19 @@ namespace Lightmap.Modeling
         public string TableName { get; }
 
         public string Schema { get; }
+
+        public Dictionary<string, string> GetTableDefinition() => this.tableDefinition;
+
+        public void TryAddDefinition(string definitionKey, string definitionValue)
+        {
+            if (this.tableDefinition.TryGetValue(definitionKey, out var value))
+            {
+                this.tableDefinition[definitionKey] = definitionValue;
+                return;
+            }
+
+            this.tableDefinition.Add(definitionKey, definitionValue);
+        }
 
         public ITableModel GetTableModel()
         {

@@ -24,7 +24,7 @@ namespace Lightmap.Modeling
 
         public ITableBuilder GetOwner() => this.owningTable;
 
-        public Dictionary<string, string> GetTableDefinition() => this.columnDefinitions;
+        public Dictionary<string, string> GetColumnDefinition() => this.columnDefinitions;
 
         public IColumnModel GetModel()
         {
@@ -33,15 +33,15 @@ namespace Lightmap.Modeling
 
         public IColumnBuilder IsPrimaryKey()
         {
-            this.TryAddDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
+            this.TryAddColumnDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
             return this;
         }
 
         public IColumnBuilder WithForeignKey(IColumnModel referenceColumn)
         {
-            this.TryAddDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
-            this.TryAddDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().FullyQualifiedName);
-            this.TryAddDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
+            this.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
+            this.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().FullyQualifiedName);
+            this.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
 
             return this;
         }
@@ -54,19 +54,19 @@ namespace Lightmap.Modeling
 
         public IColumnBuilder Unique()
         {
-            this.TryAddDefinition(ColumnDefinitions.Unique, this.ColumnName);
+            this.TryAddColumnDefinition(ColumnDefinitions.Unique, this.ColumnName);
             return this;
         }
 
-        private void TryAddDefinition(string key, string value)
+        public void TryAddColumnDefinition(string definitionKey, string definitionValue)
         {
-            if (this.columnDefinitions.TryGetValue(key, out var result))
+            if (this.columnDefinitions.TryGetValue(definitionKey, out var result))
             {
-                this.columnDefinitions[key] = value;
+                this.columnDefinitions[definitionKey] = definitionValue;
                 return;
             }
 
-            this.columnDefinitions.Add(key, value);
+            this.columnDefinitions.Add(definitionKey, definitionValue);
         }
     }
 }
