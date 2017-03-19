@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     public interface ITableBuilder<TTableType> : ITableBuilder
     {

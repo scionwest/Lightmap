@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     public interface IDataModel
     {
         ITableBuilder[] GetTables();
 
         ISchemaBuilder[] GetSchemas();
-
-        IDatabaseMigrator DataModelMigration { get; }
 
         ITableBuilder AddTable(string schema, string tableName);
 

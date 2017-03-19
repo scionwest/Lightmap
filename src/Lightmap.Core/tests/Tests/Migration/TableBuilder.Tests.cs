@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     [TestClass]
     public class TableBuilderTests
@@ -17,8 +15,7 @@ namespace Lightmap.Migration
         public void UntypedTable_WithNullDataType_ThrowsException()
         {
             // Arrange
-            var migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
 
             // Act
@@ -30,8 +27,7 @@ namespace Lightmap.Migration
         public void UntypedTable_WithNullColumnName_ThrowsException()
         {
             // Arrange
-            var migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
 
             // Act
@@ -42,8 +38,7 @@ namespace Lightmap.Migration
         public void UntypedTable_WithDataTypeAndName_ReturnsUntypedColumnBuilder()
         {
             // Arrange
-            var migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
 
             // Act
@@ -61,8 +56,7 @@ namespace Lightmap.Migration
         public void UntypedTable_ReturnsColumns()
         {
             // Arrange
-            var migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
             IColumnBuilderUntyped intColumn = tableBuilder.AddColumn(typeof(int), "Id");
             IColumnBuilderUntyped stringColumn = tableBuilder.AddColumn(typeof(string), "Name");
@@ -83,20 +77,20 @@ namespace Lightmap.Migration
         public void UntypedTable_ReturnsTableModel()
         {
             // Arrange
-            var migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
             IColumnBuilderUntyped intColumn = tableBuilder.AddColumn(typeof(int), "Id");
             IColumnBuilderUntyped stringColumn = tableBuilder.AddColumn(typeof(string), "Name");
 
             // Act
             ITableModel model = tableBuilder.GetTableModel();
+            IColumnModel[] columns = model.GetColumns();
 
             // Assert
             Assert.IsNotNull(model);
             Assert.AreEqual(_schema, model.Schema.Name);
             Assert.AreEqual(_tableName, model.Name);
-            Assert.AreEqual(2, model.Columns.Length);
+            Assert.AreEqual(2, columns.Length);
             //Assert.AreEqual(model.Columns[0].ColumnName, "Id");
             //Assert.AreEqual(model.Columns[0].ColumnDataType, typeof(int));
             //Assert.AreEqual(model[1].ColumnName, "Name");

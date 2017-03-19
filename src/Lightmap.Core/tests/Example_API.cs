@@ -1,7 +1,6 @@
 using System;
-using Lightmap.Migration;
+using Lightmap.Modeling;
 using Lightmap.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace Lightmap
@@ -11,7 +10,7 @@ namespace Lightmap
         public void Example_of_API()
         {
             // Arrange
-            var dataModel = new DataModel(Mock.Of<IDatabaseMigrator>());
+            var dataModel = new DataModel();
 
             // String based
             dataModel.AddTable("dbo", "Foo")

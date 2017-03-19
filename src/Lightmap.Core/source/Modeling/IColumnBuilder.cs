@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     public interface IColumnBuilder
     {

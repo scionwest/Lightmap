@@ -1,4 +1,4 @@
-﻿namespace Lightmap.Migration
+﻿namespace Lightmap.Modeling
 {
     public interface ITableModel
     {
@@ -8,6 +8,6 @@
 
         string FullyQualifiedName { get; }
 
-        IColumnModel[] Columns { get; }
+        IColumnModel[] GetColumns();
     }
 }

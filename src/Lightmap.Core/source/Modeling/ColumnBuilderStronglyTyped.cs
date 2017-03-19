@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     internal class ColumnBuilderStronglyTyped<TTableType> : IColumnBuilderStronglyTyped<TTableType>
     {

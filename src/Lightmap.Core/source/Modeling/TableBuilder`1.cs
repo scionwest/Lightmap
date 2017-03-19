@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     internal class TableBuilder<TTableType> : TableBuilder, ITableBuilder<TTableType>
     {

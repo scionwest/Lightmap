@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Lightmap.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     [TestClass]
     public class DataModelTests
@@ -13,33 +11,11 @@ namespace Lightmap.Migration
         const string _schema = "dbo";
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_WithNullMigrator_ThrowsException()
-        {
-            // Act
-            var dataModel = new DataModel(null);
-        }
-
-        [TestMethod]
-        public void Ctor_SetsMigrator()
-        {
-            // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-
-            // Act
-            var dataModel = new DataModel(migrator);
-
-            // Assert
-            Assert.AreEqual(migrator, dataModel.DataModelMigration);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void AddTable_FromNullSchemaString_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "foo";
 
             // Act
@@ -51,8 +27,7 @@ namespace Lightmap.Migration
         public void AddTable_FromNullTableString_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             dataModel.AddTable(schemaName: _schema, tableName: null);
@@ -62,8 +37,7 @@ namespace Lightmap.Migration
 		public void AddTable_FromStrings_ReturnsBuilder()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "foo";
 
             // Act
@@ -80,9 +54,8 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaModelNull_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
             ISchemaModel schemaModel = Mock.Of<ISchemaModel>(mock => mock.Name == _schema);
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "foo";
 
             // Act
@@ -94,9 +67,8 @@ namespace Lightmap.Migration
         public void AddTable_WithTableNameNull_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
             ISchemaModel schemaModel = Mock.Of<ISchemaModel>(mock => mock.Name == _schema);
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             dataModel.AddTable(schema: schemaModel, tableName: null);
@@ -106,9 +78,8 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaModelAndString_ReturnsBuilder()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
             ISchemaModel schemaModel = Mock.Of<ISchemaModel>(mock => mock.Name == _schema);
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "foo";
 
             // Act
@@ -125,8 +96,7 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaStringNullAndType_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             dataModel.AddTable<AspNetRoles>(schemaName: null);
@@ -136,8 +106,7 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaStringAndType_ReturnsBuilder()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             ITableBuilder tableBuilder = dataModel.AddTable<AspNetRoles>(_schema);
@@ -153,8 +122,7 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaModelNullAndType_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             dataModel.AddTable<AspNetRoles>(schema: null);
@@ -164,9 +132,8 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaModelAndType_ReturnsBuilder()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
             ISchemaModel schemaModel = Mock.Of<ISchemaModel>(mock => mock.Name == _schema);
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             ITableBuilder tableBuilder = dataModel.AddTable<AspNetRoles>(schemaModel);
@@ -182,8 +149,7 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaStringNullAndAnonymousType_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "Foo";
 
             // Act
@@ -199,8 +165,7 @@ namespace Lightmap.Migration
         public void AddTable_WithTableStringNullAndAnonymousType_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
 
             // Act
             var tableBuilder = dataModel.AddTable(_schema, null, () => new
@@ -215,8 +180,7 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaStringAndAnonymousTypeNull_ThrowsException()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "Foo";
 
             // Act
@@ -227,8 +191,7 @@ namespace Lightmap.Migration
         public void AddTable_WithSchemaStringAndAnonymousType_ReturnsBuilder()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             string tableName = "Foo";
 
             // Act
@@ -253,10 +216,9 @@ namespace Lightmap.Migration
         public void GetTables_ReturnsTables()
         {
             // Arrange
-            IDatabaseMigrator migrator = Mock.Of<IDatabaseMigrator>();
             string table1Name = "Foo";
             string table2Name = "Bar";
-            var dataModel = new DataModel(migrator);
+            var dataModel = new DataModel();
             dataModel.AddTable(_schema, table1Name);
             dataModel.AddTable(_schema, table2Name);
 

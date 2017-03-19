@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     internal class TableBuilder : ITableBuilder
     {
@@ -46,8 +45,7 @@ namespace Lightmap.Migration
 
         public ITableModel GetTableModel()
         {
-            IColumnModel[] columns = this.GetColumns().Select(columnBuilder => columnBuilder.GetModel()).ToArray();
-            var tableModel = new TableModel(this.schemaBuilder.GetSchemaModel(), this.TableName, columns);
+            var tableModel = new TableModel(this.schemaBuilder.GetSchemaModel(), this.TableName, this);
             return tableModel;
         }
 

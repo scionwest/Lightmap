@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     public interface IDatabaseMigrator
     {

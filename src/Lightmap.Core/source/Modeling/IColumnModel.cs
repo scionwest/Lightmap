@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     public interface IColumnModel
     {

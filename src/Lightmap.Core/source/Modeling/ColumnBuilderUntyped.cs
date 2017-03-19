@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     internal class ColumnBuilderUntyped : IColumnBuilderUntyped
     {

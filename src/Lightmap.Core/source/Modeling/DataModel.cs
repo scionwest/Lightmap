@@ -3,29 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
-namespace Lightmap.Migration
+namespace Lightmap.Modeling
 {
     public class DataModel : IDataModel
     {
         private List<ISchemaBuilder> schemas;
         private List<ITableBuilder> tables;
 
-        public DataModel(IDatabaseMigrator migrator)
+        public DataModel()
         {
-            if (migrator == null)
-            {
-                throw new ArgumentNullException(nameof(migrator), "You can not provide the data model with a null migrator.");
-            }
-
-            this.DataModelMigration = migrator;
-
             this.schemas = new List<ISchemaBuilder>();
             this.tables = new List<ITableBuilder>();
         }
-
-        public IDatabaseMigrator DataModelMigration { get; }
 
         public ITableBuilder[] GetTables() => this.tables.ToArray();
 
@@ -33,7 +23,7 @@ namespace Lightmap.Migration
 
         public ISchemaBuilder AddSchema(string schemaName)
         {
-            var builder = new SchemaBuilder { Name = schemaName };
+            var builder = new SchemaBuilder(this) { Name = schemaName };
             this.schemas.Add(builder);
             return builder;
         }
@@ -56,7 +46,8 @@ namespace Lightmap.Migration
             return tableBuilder;
         }
 
-        public ITableBuilder AddTable(ISchemaModel schema, string tableName) => this.AddTable(schema?.Name, tableName);
+        public ITableBuilder AddTable(ISchemaModel schema, string tableName) 
+            => this.AddTable(schema?.Name, tableName);
 
         public ITableBuilder<TTable> AddTable<TTable>(string schemaName) where TTable : class
         {
@@ -65,33 +56,40 @@ namespace Lightmap.Migration
                 throw new ArgumentException(nameof(schemaName), "You must specify the name of hte schema that the new Table belongs to.");
             }
 
-            var builder = new TableBuilder<TTable>(schemaName, typeof(TTable).Name, this);
-            IEnumerable<PropertyInfo> tableProperties = PropertyCache.GetPropertiesForType<TTable>();
+            Type tableType = typeof(TTable);
+            var builder = new TableBuilder<TTable>(schemaName, tableType.Name, this);
+            bool decoratedWithInclude = AttributeCache.GetAttribute<IncludeColumnOnTableAttribute>(tableType) != null;
+            bool decoratedWithExclude = AttributeCache.GetAttribute<ExcludeColumnOnTableAttribute>(tableType) != null;
 
             // You can omit all Attributes and the API will just use all properties as columns,
             // or you can specify which properties to use as columns, or specify which properties to exclude.
             // You can't opt properties in and out at the same time. An exception will be thrown.
-            //if (AttributeCache.GetAttribute<IncludeOnTableAttribute>(typeof(TTable)) != null && AttributeCache.GetAttribute<ExcludeFromTableAttribute(typeof(TTable)))
-            //{
-            //      // TODO: Update tests to cover this use-case.
-            //    // throw an exception because you can't mix.
-            //}
-            //if (AttributeCache.GetAttribute<IncludeOnTableAttribute>(typeof(TTable)) != null)
-            //{
-
-            //}
-            //else if (AttributeCache.GetAttribute < ExcludeFromTableAttribute(typeof(TTable)))
-            //{
-
-            //}
-            //else
-            //{
-            //      //just use all properties as columns.
-            //}
-
-            foreach(PropertyInfo property in tableProperties)
+            if (decoratedWithInclude && decoratedWithExclude)
             {
-                builder.AddColumn(property.PropertyType, property.Name);
+                // TODO: Update tests to cover this use-case.
+                throw new InvalidOperationException($"You can not have a model decorated with both {typeof(IncludeColumnOnTableAttribute).Name} and {typeof(ExcludeColumnOnTableAttribute).Name} attributes. If no attributes are specified, all Properties are turned into Columns. If you specify columns to include, then all columns not specified are automatically excluded. If you mark columns as being excluded, then all remaining columns are automatically included. You can not mix the two attributes.");
+            }
+
+            if (decoratedWithInclude)
+            {
+                foreach (PropertyInfo property in PropertyCache.GetPropertiesForType(tableType, property => AttributeCache.GetAttribute<IncludeColumnOnTableAttribute>(tableType, property) != null))
+                {
+                    builder.AddColumn(property.PropertyType, property.Name);
+                }
+            }
+            else if (decoratedWithExclude)
+            {
+                foreach (PropertyInfo property in PropertyCache.GetPropertiesForType(tableType, property => AttributeCache.GetAttribute<ExcludeColumnOnTableAttribute>(tableType, property) == null))
+                {
+                    builder.AddColumn(property.PropertyType, property.Name);
+                }
+            }
+            else
+            {
+                foreach (PropertyInfo property in PropertyCache.GetPropertiesForType(tableType))
+                {
+                    builder.AddColumn(property.PropertyType, property.Name);
+                }
             }
 
             this.tables.Add(builder);
