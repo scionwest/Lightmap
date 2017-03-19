@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>dnxcore50</TargetFramework>
+    <AssemblyName>Lightmap.Provider.Sqlite.Tests</AssemblyName>
+    <PackageId>Lightmap.Provider.Sqlite.Tests</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lightmap.Core\Lightmap.Core.csproj" />
+    <ProjectReference Include="..\Lightmap.Provider.Sqlite\Lightmap.Provider.Sqlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
+    <PackageReference Include="xunit.runner.dnx" Version="2.1.0-rc1-build204" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'dnxcore50' ">
+    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+    <PackageReference Include="System.Collections" Version="4.0.11" />
+    <PackageReference Include="System.Linq" Version="4.1.0" />
+    <PackageReference Include="System.Runtime" Version="4.1.0" />
+    <PackageReference Include="System.Threading" Version="4.0.11" />
+  </ItemGroup>
+
+</Project>

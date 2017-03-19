@@ -1,21 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0512AA9E-1A3E-4E1B-BDE5-3CFC7BD51DC9}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-		Lightmap.Core\global.json = Lightmap.Core\global.json
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightmap.Core", "Lightmap.Core\Lightmap.Core.csproj", "{392585F0-0B4B-4D31-92B0-2206E667E19A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lightmap.Core", "Lightmap.Core\Lightmap.Core.xproj", "{392585F0-0B4B-4D31-92B0-2206E667E19A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lightmap.Provider.Sqlite", "Lightmap.Provider.Sqlite\Lightmap.Provider.Sqlite.xproj", "{DC7BC1B4-C02B-4F08-804C-A91D90998237}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightmap.Provider.Sqlite", "Lightmap.Provider.Sqlite\Lightmap.Provider.Sqlite.csproj", "{DC7BC1B4-C02B-4F08-804C-A91D90998237}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lightmap.Core.Tests", "Lightmap.Core.Tests\Lightmap.Core.Tests.xproj", "{650A5A85-5956-491E-9312-5E25A27D1108}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lightmap.Provider.Sqlite.Tests", "Lightmap.Provider.Sqlite.Tests\Lightmap.Provider.Sqlite.Tests.xproj", "{4FCC5C49-AF37-409F-95C7-42FA1E18956B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightmap.Provider.Sqlite.Tests", "Lightmap.Provider.Sqlite.Tests\Lightmap.Provider.Sqlite.Tests.csproj", "{4FCC5C49-AF37-409F-95C7-42FA1E18956B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

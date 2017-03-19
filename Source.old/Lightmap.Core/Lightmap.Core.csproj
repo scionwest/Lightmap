@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Lightmap.Core Class Library</Description>
+    <Authors>johna</Authors>
+    <TargetFramework>dotnet5.4</TargetFramework>
+    <AssemblyName>Lightmap.Core</AssemblyName>
+    <PackageId>Lightmap.Core</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Concurrent" Version="4.0.12" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'dotnet5.4' ">
+    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+    <PackageReference Include="System.Collections" Version="4.0.11" />
+    <PackageReference Include="System.Linq" Version="4.1.0" />
+    <PackageReference Include="System.Runtime" Version="4.1.0" />
+    <PackageReference Include="System.Threading" Version="4.0.11" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>

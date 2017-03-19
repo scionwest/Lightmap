@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Lightmap.Provider.Sqlite Class Library</Description>
+    <Authors>johna</Authors>
+    <TargetFramework>dotnet5.4</TargetFramework>
+    <AssemblyName>Lightmap.Provider.Sqlite</AssemblyName>
+    <PackageId>Lightmap.Provider.Sqlite</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lightmap.Core\Lightmap.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.0-beta7" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="1.0.1" />
+    <PackageReference Include="System.Linq.Parallel" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'dotnet5.4' ">
+    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+    <PackageReference Include="System.Collections" Version="4.0.11" />
+    <PackageReference Include="System.Linq" Version="4.1.0" />
+    <PackageReference Include="System.Runtime" Version="4.1.0" />
+    <PackageReference Include="System.Threading" Version="4.0.11" />
+    <PackageReference Include="System.Data.Common" Version="4.1.0" />
+    <PackageReference Include="System.IO" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
