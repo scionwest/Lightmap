@@ -18,7 +18,9 @@ _Note: this project is still under heavy development. NuGet packages haven't bee
 - Migration support
   - Migrate a database forward
   - Migrate a database backward
-
+  - Automatic migration discovery
+  - Datamodel version tracking
+  
 # Examples
 
 ### Untyped Data Modeling
