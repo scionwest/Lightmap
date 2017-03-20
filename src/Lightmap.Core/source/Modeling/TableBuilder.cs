@@ -22,6 +22,7 @@ namespace Lightmap.Modeling
                 throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
             }
 
+            this.tableDefinition = new Dictionary<string, string>();
             this.columnBuilders = new List<IColumnBuilder>();
             this.CurrentDataModel = currentDataModel;
 

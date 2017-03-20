@@ -9,7 +9,7 @@ using Microsoft.Data.Sqlite;
 
 namespace Lightmap.Modeling
 {
-    internal class SqliteMigrator : IDatabaseMigrator
+    public class SqliteMigrator : IDatabaseMigrator
     {
         private const string _createTable = "CREATE TABLE";
         private List<string> migrationHistory;

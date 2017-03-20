@@ -16,14 +16,14 @@ namespace Lightmap
 
         public SqliteConnection OpenSqliteConnection()
         {
-            var sqliteConnection = new SqliteConnection($"Data Source={base.Database}");
+            var sqliteConnection = new SqliteConnection(base.ConnectionString);
             sqliteConnection.Open();
             return sqliteConnection;
         }
 
         public async Task<SqliteConnection> OpenSqliteConnectionAsync()
         {
-            var sqliteConnection = new SqliteConnection($"Data Source={base.Database}");
+            var sqliteConnection = new SqliteConnection(base.ConnectionString);
             await sqliteConnection.OpenAsync();
             return sqliteConnection;
         }
