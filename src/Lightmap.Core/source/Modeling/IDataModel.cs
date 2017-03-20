@@ -9,16 +9,18 @@ namespace Lightmap.Modeling
 
         ISchemaBuilder[] GetSchemas();
 
-        ITableBuilder AddTable(string schema, string tableName);
+        ITableBuilder AddTable(string schemaName, string tableName);
 
         ITableBuilder AddTable(ISchemaModel schema, string tableName);
 
-        ITableBuilder<TTable> AddTable<TTable>(string schema) where TTable : class;
+        ITableBuilder<TTable> AddTable<TTable>(string schemaName) where TTable : class;
 
         ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema) where TTable : class;
 
         ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string schema, string name, Expression<Func<TTableDefinition>> definition);
 
         ISchemaBuilder AddSchema(string name);
+
+        void DropTable(string schemaName, string tableName);
     }
 }

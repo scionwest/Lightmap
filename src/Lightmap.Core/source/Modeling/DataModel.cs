@@ -126,5 +126,10 @@ namespace Lightmap.Modeling
             this.tables.Add(builder);
             return builder;
         }
+
+        public void DropTable(string schemaName, string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
