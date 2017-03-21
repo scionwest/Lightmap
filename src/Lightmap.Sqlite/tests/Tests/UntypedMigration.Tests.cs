@@ -45,20 +45,59 @@ namespace Lightmap.Sqlite.Tests
             this.Cleanup(databaseManager);
         }
 
+        [TestMethod]
+        public void SingleTable_SingleColumn_PrimaryKey_Created()
+        {
+            // Arrange
+            IDatabaseManager databaseManager = this.GetDatabaseManager();
+            IMigration migration = new Untyped_SingleTable_SingleColumn_PrimaryKey(this.dataModel);
+            var migrator = new SqliteMigrator(migration);
+
+            // Act
+            migrator.Apply(databaseManager);
+            this.Cleanup(databaseManager);
+        }
+
+        [TestMethod]
+        public void SingleTable_MultiColumn_Created()
+        {
+            // Arrange
+            IDatabaseManager databaseManager = this.GetDatabaseManager();
+            IMigration migration = new Untyped_SingleTable_MultiColumn(this.dataModel);
+            var migrator = new SqliteMigrator(migration);
+
+            // Act
+            migrator.Apply(databaseManager);
+            this.Cleanup(databaseManager);
+        }
+
+        [TestMethod]
+        public void SingleTable_MultiColumn_WithNullableColumn_Created()
+        {
+            // Arrange
+            IDatabaseManager databaseManager = this.GetDatabaseManager();
+            IMigration migration = new Untyped_SingleTable_MultiColumn_Nullable(this.dataModel);
+            var migrator = new SqliteMigrator(migration);
+
+            // Act
+            migrator.Apply(databaseManager);
+            this.Cleanup(databaseManager);
+        }
+
         private void Cleanup(IDatabaseManager manager)
         {
-            File.Delete("databases\\" + manager.Database + ".sqlite");
+            File.Delete(Directory.GetCurrentDirectory() + "\\databases\\" + manager.Database + ".sqlite");
         }
 
         private IDatabaseManager GetDatabaseManager([CallerMemberName] string methodName = "")
         {
-            if (!Directory.Exists("databases"))
+            if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\databases"))
             {
-                Directory.CreateDirectory("databases");
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\databases");
             }
 
             var databaseName = methodName + "_" + DateTime.Now.ToString("yyyyMMdd_HHMMss.ms");
-            return new SqliteDatabaseManager(databaseName, $"DATA SOURCe=databases\\{databaseName}.sqlite");
+            return new SqliteDatabaseManager(databaseName, $"DATA SOURCe={Directory.GetCurrentDirectory()}\\databases\\{databaseName}.sqlite");
         }
     }
 }

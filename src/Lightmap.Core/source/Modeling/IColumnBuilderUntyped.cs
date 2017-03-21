@@ -4,12 +4,12 @@
     {
         ITableBuilder GetOwner();
 
-        IColumnBuilder IsPrimaryKey();
+        IColumnBuilderUntyped IsPrimaryKey();
 
-        IColumnBuilder WithForeignKey(IColumnModel referenceColumn);
+        IColumnBuilderUntyped WithForeignKey(IColumnModel referenceColumn);
 
-        IColumnBuilder Unique();
+        IColumnBuilderUntyped Unique();
 
-        IColumnBuilder IsNullable();
+        IColumnBuilderUntyped IsNullable();
     }
 }

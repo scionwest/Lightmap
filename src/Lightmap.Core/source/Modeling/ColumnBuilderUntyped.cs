@@ -31,13 +31,13 @@ namespace Lightmap.Modeling
             return new ColumnModel(this.ColumnName, this.ColumnDataType, this.columnDefinitions, this.owningTable.GetTableModel());
         }
 
-        public IColumnBuilder IsPrimaryKey()
+        public IColumnBuilderUntyped IsPrimaryKey()
         {
             this.TryAddColumnDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
             return this;
         }
 
-        public IColumnBuilder WithForeignKey(IColumnModel referenceColumn)
+        public IColumnBuilderUntyped WithForeignKey(IColumnModel referenceColumn)
         {
             this.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
             this.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().FullyQualifiedName);
@@ -46,13 +46,13 @@ namespace Lightmap.Modeling
             return this;
         }
 
-        public IColumnBuilder IsNullable()
+        public IColumnBuilderUntyped IsNullable()
         {
             this.columnDefinitions.Remove(ColumnDefinitions.NotNull);
             return this;
         }
 
-        public IColumnBuilder Unique()
+        public IColumnBuilderUntyped Unique()
         {
             this.TryAddColumnDefinition(ColumnDefinitions.Unique, this.ColumnName);
             return this;

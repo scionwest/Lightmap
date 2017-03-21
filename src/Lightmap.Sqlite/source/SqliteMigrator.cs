@@ -87,6 +87,16 @@ namespace Lightmap.Modeling
                         sqlStatement += $" {ColumnDefinitions.NotNull}";
                     }
 
+                    if (columnDefinition.TryGetValue(ColumnDefinitions.Unique, out constraint))
+                    {
+                        sqlStatement += " UNIQYE";
+                    }
+
+                    if (columnDefinition.TryGetValue(ColumnDefinitions.PrimaryKey, out constraint))
+                    {
+                        sqlStatement += " PRIMARY KEY";
+                    }
+
                     if (columnDefinition.TryGetValue(ColumnDefinitions.AutoIncrement, out constraint))
                     {
                         sqlStatement += $" {ColumnDefinitions.AutoIncrement}";
@@ -115,7 +125,7 @@ namespace Lightmap.Modeling
 
         private string ConvertTypeToSqlType(Type dataType)
         {
-            if (dataType == typeof(string))
+            if (dataType == typeof(string) || dataType == typeof(DateTime))
             {
                 return "TEXT";
             }
