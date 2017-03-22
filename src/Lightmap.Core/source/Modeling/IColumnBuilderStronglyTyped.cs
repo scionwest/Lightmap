@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    public interface IColumnBuilderStronglyTyped<TTableType>
+    public interface IColumnBuilderStronglyTyped<TTableType> : IColumnBuilder
     {
         ITableBuilder<TTableType> GetOwner();
 

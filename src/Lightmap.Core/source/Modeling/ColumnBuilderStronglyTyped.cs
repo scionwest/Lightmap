@@ -1,44 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    internal class ColumnBuilderStronglyTyped<TTableType> : IColumnBuilderStronglyTyped<TTableType>
+    internal class ColumnBuilderStronglyTyped<TTableType> : ColumnBuilder, IColumnBuilderStronglyTyped<TTableType>
     {
-        private string columnName;
-        private Type dataType;
         private TableBuilder<TTableType> tableBuilder;
 
         public ColumnBuilderStronglyTyped(string columnName, Type dataType, TableBuilder<TTableType> tableBuilder)
+            : base(columnName, dataType, tableBuilder)
         {
-            this.columnName = columnName;
-            this.dataType = dataType;
             this.tableBuilder = tableBuilder;
+            base.TryAddColumnDefinition(ColumnDefinitions.NotNull, columnName);
         }
 
-        public ITableBuilder<TTableType> GetOwner()
-        {
-            throw new NotImplementedException();
-        }
+        public ITableBuilder<TTableType> GetOwner() => this.tableBuilder;
 
         public IColumnBuilderStronglyTyped<TTableType> IsNullable()
         {
-            throw new NotImplementedException();
+            base.GetColumnDefinition().Remove(ColumnDefinitions.NotNull);
+            return this;
         }
 
         public IColumnBuilderStronglyTyped<TTableType> IsPrimaryKey()
         {
-            throw new NotImplementedException();
+            base.TryAddColumnDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
+            return this;
         }
 
         public IColumnBuilderStronglyTyped<TTableType> Unique()
         {
-            throw new NotImplementedException();
+            base.TryAddColumnDefinition(ColumnDefinitions.Unique, this.ColumnName);
+            return this;
         }
 
-        public IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TConstraint>(ITableBuilder<TReferenceTable> referenceTable, System.Linq.Expressions.Expression<Func<TTableType, TReferenceTable, TConstraint>> constraint)
+        public IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TConstraint>(ITableBuilder<TReferenceTable> referenceTable, Expression<Func<TTableType, TReferenceTable, TConstraint>> constraint)
         {
+            //base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
+            //base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().FullyQualifiedName);
+            //base.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
+
             throw new NotImplementedException();
         }
     }

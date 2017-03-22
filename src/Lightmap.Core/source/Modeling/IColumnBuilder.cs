@@ -5,6 +5,8 @@ namespace Lightmap.Modeling
 {
     public interface IColumnBuilder
     {
+        ITableBuilder TableBuilder { get; }
+
         Dictionary<string, string> GetColumnDefinition();
 
         void TryAddColumnDefinition(string definitionKey, string definitionValue);
