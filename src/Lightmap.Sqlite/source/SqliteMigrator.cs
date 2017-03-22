@@ -33,17 +33,13 @@ namespace Lightmap.Modeling
                 var schemaVersion = connection.ExecuteScalar("Pragma schema_version");
                 if (!int.TryParse(schemaVersion.ToString(), out dbVersion))
                 {
-                    // throw exception here.
+                    // TODO: throw exception here.
                 }
             }
 
             // Return all migrations that have a version attribute assigned to them, that are greater than our current version.
-            IEnumerable<IMigration> migrationsRemainingToUpgrade = this.Migrations.Where(migration =>
-            {
-                //MigrationVersionAttribute migrationVersion = AttributeCache.GetAttribute<MigrationVersionAttribute>(migration.GetType());
-                //return migrationVersion != null;
-                return true;
-            });
+            IEnumerable<IMigration> migrationsRemainingToUpgrade = this.Migrations.Where(
+                migration => AttributeCache.GetAttribute<MigrationVersionAttribute>(migration.GetType()) != null);
 
             using (var connection = databaseManager.OpenConnection())
             {
@@ -58,9 +54,33 @@ namespace Lightmap.Modeling
             }
         }
 
-        public Task ApplyAsync(IDatabaseManager databaseManager)
+        public async Task ApplyAsync(IDatabaseManager databaseManager)
         {
-            throw new NotImplementedException();
+            int dbVersion = 0;
+            using (IDbConnection connection = await databaseManager.OpenConnectionAsync())
+            {
+                var schemaVersion = connection.ExecuteScalar("Pragma schema_version");
+                if (!int.TryParse(schemaVersion.ToString(), out dbVersion))
+                {
+                    // TODO: throw exception here.
+                }
+            }
+
+            // Return all migrations that have a version attribute assigned to them, that are greater than our current version.
+            IEnumerable<IMigration> migrationsRemainingToUpgrade = this.Migrations.Where(
+                migration => AttributeCache.GetAttribute<MigrationVersionAttribute>(migration.GetType()) != null);
+
+            using (var connection = await databaseManager.OpenConnectionAsync())
+            {
+                foreach (IMigration migration in this.Migrations)
+                {
+                    foreach (string sqlStatement in this.GetSqlStatements(migration))
+                    {
+                        await connection.ExecuteAsync(sqlStatement);
+                        this.migrationHistory.Add(sqlStatement);
+                    }
+                }
+            }
         }
 
         private IEnumerable<string> GetSqlStatements(IMigration migration)
@@ -129,9 +149,13 @@ namespace Lightmap.Modeling
             {
                 return "TEXT";
             }
-            else if (dataType == typeof(int))
+            else if (dataType == typeof(int) || dataType == typeof(short) || dataType == typeof(long) || dataType == typeof(bool))
             {
                 return "INTEGER";
+            }
+            else if (dataType == typeof(float) || dataType == typeof(decimal) || dataType == typeof(double))
+            {
+                return "REAL";
             }
 
             throw new InvalidOperationException("The data type specified for the column is not supported by the provider.");
