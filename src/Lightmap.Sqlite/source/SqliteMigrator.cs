@@ -124,7 +124,7 @@ namespace Lightmap.Modeling
 
                     if (columnDefinition.TryGetValue(ColumnDefinitions.Unique, out constraint))
                     {
-                        sqlStatement += " UNIQYE";
+                        sqlStatement += " UNIQUE";
                     }
 
                     if (columnDefinition.TryGetValue(ColumnDefinitions.PrimaryKey, out constraint))
