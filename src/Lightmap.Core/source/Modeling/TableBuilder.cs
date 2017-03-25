@@ -12,11 +12,6 @@ namespace Lightmap.Modeling
 
         public TableBuilder(string schema, string tableName, IDataModel currentDataModel)
         {
-            if (string.IsNullOrEmpty(schema))
-            {
-                throw new ArgumentException("You must specify the schema that owns the table being added.", nameof(schema));
-            }
-
             if (string.IsNullOrEmpty(tableName))
             {
                 throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
@@ -26,15 +21,19 @@ namespace Lightmap.Modeling
             this.columnBuilders = new List<IColumnBuilder>();
             this.CurrentDataModel = currentDataModel;
 
-            ISchemaBuilder matchedSchema = this.CurrentDataModel.GetSchemas().FirstOrDefault(schemaModel => schemaModel.Name == schema);
-            if (matchedSchema == null)
+            if (!string.IsNullOrWhiteSpace(schema))
             {
-                // TODO: Make this configurable so we throw an exception instead of auto-creating, if that's the desired behavior.
-                // if (!someConfig.AutoCreateMissingSchema) throw new InvalidOperationException($"The schema specified for the {tableName} does not exist.");
-                matchedSchema = this.CurrentDataModel.AddSchema(schema);
+                ISchemaBuilder matchedSchema = this.CurrentDataModel.GetSchemas().FirstOrDefault(schemaModel => schemaModel.Name == schema);
+                if (matchedSchema == null)
+                {
+                    // TODO: Make this configurable so we throw an exception instead of auto-creating, if that's the desired behavior.
+                    // if (!someConfig.AutoCreateMissingSchema) throw new InvalidOperationException($"The schema specified for the {tableName} does not exist.");
+                    matchedSchema = this.CurrentDataModel.AddSchema(schema);
+                }
+
+                this.schemaBuilder = matchedSchema;
             }
 
-            this.schemaBuilder = matchedSchema;
             this.TableName = tableName;
             this.Schema = schema;
         }
@@ -60,7 +59,7 @@ namespace Lightmap.Modeling
 
         public ITableModel GetTableModel()
         {
-            var tableModel = new TableModel(this.schemaBuilder.GetSchemaModel(), this.TableName, this);
+            var tableModel = new TableModel(this.schemaBuilder?.GetSchemaModel(), this.TableName, this);
             return tableModel;
         }
 

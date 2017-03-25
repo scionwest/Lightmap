@@ -28,13 +28,21 @@ namespace Lightmap.Modeling
             return builder;
         }
 
-        public ITableBuilder AddTable(string schemaName, string tableName)
+        public ITableBuilder AddTable(string tableName)
         {
-            if (string.IsNullOrEmpty(schemaName))
+            if (string.IsNullOrEmpty(tableName))
             {
-                throw new ArgumentException("You must specify the schema that owns the table being added.", nameof(schemaName));
+                throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
             }
 
+            var tableBuilder = new TableBuilder(null, tableName, this);
+            this.tables.Add(tableBuilder);
+
+            return tableBuilder;
+        }
+
+        public ITableBuilder AddTable(string schemaName, string tableName)
+        {
             if (string.IsNullOrEmpty(tableName))
             {
                 throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
@@ -49,13 +57,11 @@ namespace Lightmap.Modeling
         public ITableBuilder AddTable(ISchemaModel schema, string tableName) 
             => this.AddTable(schema?.Name, tableName);
 
+        public ITableBuilder<TTable> AddTable<TTable>() where TTable : class
+            => this.AddTable<TTable>(string.Empty);
+
         public ITableBuilder<TTable> AddTable<TTable>(string schemaName) where TTable : class
         {
-            if (string.IsNullOrEmpty(schemaName))
-            {
-                throw new ArgumentException(nameof(schemaName), "You must specify the name of hte schema that the new Table belongs to.");
-            }
-
             Type tableType = typeof(TTable);
             var builder = new TableBuilder<TTable>(schemaName, tableType.Name, this);
             bool decoratedWithInclude = AttributeCache.GetAttribute<IncludeColumnOnTableAttribute>(tableType) != null;
@@ -131,5 +137,8 @@ namespace Lightmap.Modeling
         {
             throw new NotImplementedException();
         }
+
+        public ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string tableName, Expression<Func<TTableDefinition>> definition)
+            => this.AddTable(null, tableName, definition);
     }
 }

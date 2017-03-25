@@ -29,7 +29,8 @@ namespace Lightmap.Modeling
         public IColumnBuilderUntyped WithForeignKey(IColumnModel referenceColumn)
         {
             base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
-            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().FullyQualifiedName);
+            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesSchema, referenceColumn.GetOwningTable().Schema?.Name);
+            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().Name);
             base.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
 
             return this;

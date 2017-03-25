@@ -18,9 +18,19 @@ namespace Lightmap.Modeling
             this.migrationHistory = new List<string>();
         }
 
+        public SqliteMigrator(string defaultSchema, params IMigration[] migrations) : this(migrations)
+        {
+            if (string.IsNullOrWhiteSpace(defaultSchema))
+            {
+                throw new ArgumentNullException(nameof(defaultSchema), "When using the constructor overload that takes a default schema name, you must provide a valid schema name.");
+            }
+
+            this.DefaultSchema = defaultSchema;
+        }
+
         public IMigration[] Migrations { get; }
 
-        public string DefaultSchema => "main";
+        public string DefaultSchema { get; } = "main";
 
         public bool IsMigrationNeeded()
         {
@@ -93,7 +103,10 @@ namespace Lightmap.Modeling
 
             foreach(ITableBuilder tableBuilder in tables)
             {
-                sqlStatement += $"{_createTable} {tableBuilder.Schema}.{tableBuilder.TableName} (\n\t";
+                string tableSchema = String.IsNullOrWhiteSpace(tableBuilder.Schema)
+                    ? this.DefaultSchema
+                    : tableBuilder.Schema;
+                sqlStatement += $"{_createTable} {tableSchema}.{tableBuilder.TableName} (\n\t";
                 
                 IColumnBuilder[] columns = tableBuilder.GetColumns();
                 string constraint = string.Empty;
@@ -134,10 +147,16 @@ namespace Lightmap.Modeling
                 if (tableDefinition.TryGetValue(ColumnDefinitions.ForeignKey, out constraint))
                 {
                     sqlStatement += ", \n";
+                    string referenceSchema = tableDefinition[ColumnDefinitions.ReferencesSchema];
+                    if (string.IsNullOrWhiteSpace(referenceSchema))
+                    {
+                        referenceSchema = this.DefaultSchema;
+                    }
+
                     string referenceTable = tableDefinition[ColumnDefinitions.ReferencesTable];
                     string referenceColumn = tableDefinition[ColumnDefinitions.ReferencesColumn];
                     sqlStatement += "\tCONSTRAINT \"FK_" + tableBuilder.TableName + "_" + referenceTable + "_" + referenceColumn + "\"";
-                    sqlStatement += " " + ColumnDefinitions.ForeignKey + " (\"" + constraint + "\") REFERENCES \"" + referenceTable + "\" (\"" + referenceColumn + "\")";
+                    sqlStatement += " " + ColumnDefinitions.ForeignKey + " (\"" + constraint + "\") REFERENCES \"" + referenceSchema + "." + referenceTable + "\" (\"" + referenceColumn + "\")";
                 }
 
                 sqlStatement += "\n)";

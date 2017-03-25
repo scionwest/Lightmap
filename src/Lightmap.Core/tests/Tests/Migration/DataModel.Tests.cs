@@ -11,15 +11,17 @@ namespace Lightmap.Modeling
         const string _schema = "dbo";
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddTable_FromNullSchemaString_ThrowsException()
+        public void AddTable_FromNullSchemaString_DoesNotThrowException()
         {
             // Arrange
             var dataModel = new DataModel();
             string tableName = "foo";
 
             // Act
-            dataModel.AddTable(schemaName: null, tableName: tableName);
+            var table = dataModel.AddTable(schemaName: null, tableName: tableName);
+
+            // Assert
+            Assert.IsNull(table.Schema);
         }
 
         [TestMethod]
@@ -50,8 +52,7 @@ namespace Lightmap.Modeling
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddTable_WithSchemaModelNull_ThrowsException()
+        public void AddTable_WithSchemaModelNull_DoesNotThrowException()
         {
             // Arrange
             ISchemaModel schemaModel = Mock.Of<ISchemaModel>(mock => mock.Name == _schema);
@@ -59,7 +60,10 @@ namespace Lightmap.Modeling
             string tableName = "foo";
 
             // Act
-            dataModel.AddTable(schema: null, tableName: tableName);
+            var table = dataModel.AddTable(schema: null, tableName: tableName);
+
+            // Assert
+            Assert.IsNull(table.Schema);
         }
 
         [TestMethod]
@@ -92,14 +96,16 @@ namespace Lightmap.Modeling
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddTable_WithSchemaStringNullAndType_ThrowsException()
+        public void AddTable_WithSchemaStringNullAndType_DoesNotThrowException()
         {
             // Arrange
             var dataModel = new DataModel();
 
             // Act
-            dataModel.AddTable<AspNetRoles>(schemaName: null);
+            var table = dataModel.AddTable<AspNetRoles>(schemaName: null);
+
+            // Assert
+            Assert.IsNull(table.Schema);
         }
 
         [TestMethod]
@@ -118,14 +124,16 @@ namespace Lightmap.Modeling
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddTable_WithSchemaModelNullAndType_ThrowsException()
+        public void AddTable_WithSchemaModelNullAndType_DoesNotThrowException()
         {
             // Arrange
             var dataModel = new DataModel();
 
             // Act
-            dataModel.AddTable<AspNetRoles>(schema: null);
+            var table = dataModel.AddTable<AspNetRoles>(schema: null);
+
+            // Assert
+            Assert.IsNull(table.Schema);
         }
 
         [TestMethod]
@@ -145,19 +153,18 @@ namespace Lightmap.Modeling
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddTable_WithSchemaStringNullAndAnonymousType_ThrowsException()
+        public void AddTable_WithSchemaStringNullAndAnonymousType_DoesNotThrowException()
         {
             // Arrange
             var dataModel = new DataModel();
             string tableName = "Foo";
 
             // Act
-            var tableBuilder = dataModel.AddTable(null, tableName, () => new
-            {
-                Id = default(int),
-                Name = default(string),
-            });
+            var tableBuilder = dataModel.AddTable(null, tableName, 
+                () => new { Id = default(int), Name = default(string), });
+
+            // Assert
+            Assert.IsNull(tableBuilder.Schema);
         }
 
         [TestMethod]
