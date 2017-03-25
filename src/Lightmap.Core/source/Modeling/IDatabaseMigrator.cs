@@ -6,6 +6,8 @@ namespace Lightmap.Modeling
     {
         IMigration[] Migrations { get; }
 
+        string DefaultSchema { get; }
+
         bool IsMigrationNeeded();
 
         void Apply(IDatabaseManager databaseManager);

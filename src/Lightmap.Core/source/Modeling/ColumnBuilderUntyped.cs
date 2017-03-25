@@ -17,6 +17,15 @@ namespace Lightmap.Modeling
             return this;
         }
 
+        public IColumnBuilderUntyped WithForeignKey(string schema, string table, string columnName)
+        {
+            base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
+            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, $"{schema}.{table}");
+            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, columnName);
+
+            return this;
+        }
+
         public IColumnBuilderUntyped WithForeignKey(IColumnModel referenceColumn)
         {
             base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);

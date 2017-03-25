@@ -20,6 +20,8 @@ namespace Lightmap.Modeling
 
         public IMigration[] Migrations { get; }
 
+        public string DefaultSchema => "main";
+
         public bool IsMigrationNeeded()
         {
             throw new NotImplementedException();

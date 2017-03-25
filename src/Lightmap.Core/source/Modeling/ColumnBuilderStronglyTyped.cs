@@ -34,12 +34,22 @@ namespace Lightmap.Modeling
             return this;
         }
 
-        public IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TConstraint>(ITableBuilder<TReferenceTable> referenceTable, Expression<Func<TTableType, TReferenceTable, TConstraint>> constraint)
+        public IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TColumn>(IColumnBuilder column, Expression<Func<TTableType, TColumn>> constraint)
         {
             //base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
             //base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().FullyQualifiedName);
             //base.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
 
+            throw new NotImplementedException();
+        }
+
+        public IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable>(Expression<Func<TTableType, TReferenceTable, bool>> constraint)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TColumn>(ITableBuilder<TReferenceTable> referenceTable, Expression<Func<TTableType, TReferenceTable, TColumn>> constraint)
+        {
             throw new NotImplementedException();
         }
     }

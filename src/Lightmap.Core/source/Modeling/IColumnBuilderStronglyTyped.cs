@@ -9,7 +9,10 @@ namespace Lightmap.Modeling
 
         IColumnBuilderStronglyTyped<TTableType> IsPrimaryKey();
 
-        IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TConstraint>(ITableBuilder<TReferenceTable> referenceTable, Expression<Func<TTableType, TReferenceTable, TConstraint>> constraint);
+        IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TColumn>(IColumnBuilder column, Expression<Func<TTableType, TColumn>> constraint);
+
+        IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable>(Expression<Func<TTableType, TReferenceTable, bool>> constraint);
+        IColumnBuilderStronglyTyped<TTableType> WithForeignKey<TReferenceTable, TColumn>(ITableBuilder<TReferenceTable> referenceTable, Expression<Func<TTableType, TReferenceTable, TColumn>> constraint);
 
         IColumnBuilderStronglyTyped<TTableType> Unique();
 
