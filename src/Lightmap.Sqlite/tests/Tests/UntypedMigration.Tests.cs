@@ -84,20 +84,33 @@ namespace Lightmap.Sqlite.Tests
             this.Cleanup(databaseManager);
         }
 
+        [TestMethod]
+        public void SingleTable_MultipleTable_WithForeignKey()
+        {
+            // Arrange
+            IDatabaseManager databaseManager = this.GetDatabaseManager();
+            IMigration migration = new Untyped_MultipleTable_WithForeignKey(this.dataModel);
+            var migrator = new SqliteMigrator(migration);
+
+            // Act
+            migrator.Apply(databaseManager);
+            this.Cleanup(databaseManager);
+        }
+
         private void Cleanup(IDatabaseManager manager)
         {
-            File.Delete(Directory.GetCurrentDirectory() + "\\databases\\" + manager.Database + ".sqlite");
+            File.Delete(AppContext.BaseDirectory + "\\databases\\" + manager.Database + ".sqlite");
         }
 
         private IDatabaseManager GetDatabaseManager([CallerMemberName] string methodName = "")
         {
-            if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\databases"))
+            if (!Directory.Exists(AppContext.BaseDirectory + "\\databases"))
             {
-                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\databases");
+                Directory.CreateDirectory(AppContext.BaseDirectory + "\\databases");
             }
 
             var databaseName = methodName + "_" + DateTime.Now.ToString("yyyyMMdd_HHMMss.ms");
-            return new SqliteDatabaseManager(databaseName, $"DATA SOURCe={Directory.GetCurrentDirectory()}\\databases\\{databaseName}.sqlite");
+            return new SqliteDatabaseManager(databaseName, $"DATA SOURCe={AppContext.BaseDirectory}\\databases\\{databaseName}.sqlite");
         }
     }
 }

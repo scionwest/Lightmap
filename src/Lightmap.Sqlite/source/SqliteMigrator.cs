@@ -161,6 +161,7 @@ namespace Lightmap.Modeling
 
                 sqlStatement += "\n)";
                 yield return sqlStatement;
+                sqlStatement = string.Empty;
             }
         }
 

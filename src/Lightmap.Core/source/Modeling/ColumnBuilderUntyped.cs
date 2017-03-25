@@ -19,19 +19,19 @@ namespace Lightmap.Modeling
 
         public IColumnBuilderUntyped WithForeignKey(string schema, string table, string columnName)
         {
-            base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
-            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, $"{schema}.{table}");
-            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, columnName);
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ReferencesTable, $"{schema}.{table}");
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ReferencesColumn, columnName);
 
             return this;
         }
 
         public IColumnBuilderUntyped WithForeignKey(IColumnModel referenceColumn)
         {
-            base.TryAddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
-            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesSchema, referenceColumn.GetOwningTable().Schema?.Name);
-            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().Name);
-            base.TryAddColumnDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ReferencesSchema, referenceColumn.GetOwningTable().Schema?.Name);
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().Name);
+            this.TableBuilder.TryAddDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
 
             return this;
         }
