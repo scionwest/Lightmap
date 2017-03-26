@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lightmap.Modeling
+namespace Lightmap
 {
     [AttributeUsage(AttributeTargets.All)]
-    public sealed class IncludeColumnOnTableAttribute : Attribute
+    public sealed class IsNotDeadCodeAttribute : Attribute
     {
     }
 }

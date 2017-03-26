@@ -2,7 +2,8 @@
 
 namespace Lightmap.Modeling
 {
-    public class MigrationVersionAttribute : Attribute
+    [AttributeUsage(AttributeTargets.All)]
+    public sealed class MigrationVersionAttribute : Attribute
     {
         public MigrationVersionAttribute(int version)
         {

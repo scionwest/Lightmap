@@ -32,7 +32,7 @@ namespace Lightmap.Modeling
 
         public Dictionary<string, string> GetTableDefinition() => this.tableDefinition;
 
-        public void TryAddDefinition(string definitionKey, string definitionValue)
+        public void AddDefinition(string definitionKey, string definitionValue)
         {
             if (this.tableDefinition.TryGetValue(definitionKey, out var value))
             {

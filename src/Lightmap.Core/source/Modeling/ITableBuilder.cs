@@ -13,7 +13,7 @@ namespace Lightmap.Modeling
 
         Dictionary<string, string> GetTableDefinition();
 
-        void TryAddDefinition(string definitionKey, string definitionValue);
+        void AddDefinition(string definitionKey, string definitionValue);
 
         ITableModel GetTableModel();
 

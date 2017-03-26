@@ -27,7 +27,7 @@ namespace Lightmap.Modeling
 
         public Dictionary<string, string> GetColumnDefinition() => this.columnDefinitions;
 
-        public void TryAddColumnDefinition(string definitionKey, string definitionValue)
+        public void AddColumnDefinition(string definitionKey, string definitionValue)
         {
             if (this.columnDefinitions.TryGetValue(definitionKey, out var result))
             {

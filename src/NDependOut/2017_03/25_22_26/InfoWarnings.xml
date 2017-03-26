@@ -31,10 +31,10 @@ Is the NDepend project missing the containing folder of the .NET assembly?</Warn
    System.Runtime.Extensions.dll   v4.0.0.0
    mscorlib.dll   v4.0.0.0</Info>
   <Warning>No application or third party assembly found in directory {C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF}</Warning>
-  <Warning>Assembly {System.Data.Common} is referenced by {Lightmap.Core} but is not found.</Warning>
   <Warning>Assembly {System.Data.Common} is referenced by {Lightmap.Sqlite} but is not found.</Warning>
   <Warning>Assembly {Microsoft.Data.Sqlite} is referenced by {Lightmap.Sqlite} but is not found.</Warning>
   <Warning>Assembly {Dapper} is referenced by {Lightmap.Sqlite} but is not found.</Warning>
+  <Warning>Assembly {System.Data.Common} is referenced by {Lightmap.Core} but is not found.</Warning>
   <Info>20 source files parsed ; all source files found ; all source files in-sync with PDB</Info>
   <Info>0 code rule has been extracted from code.</Info>
   <Info>No dependency cycle detected in assemblies referencement graph.</Info>
@@ -42,8 +42,6 @@ Is the NDepend project missing the containing folder of the .NET assembly?</Warn
   <Info>Analyse dependencies of your application.</Info>
   <Info>Log trend metrics values.</Info>
   <Info>Execute queries and rules.</Info>
-  <Warning>1 quality gate fail.
-  - 'Critical Rules Violated' value 1 rules greater than fail threshold 0 rules</Warning>
-  <Info>NDepend analysis done. Duration: 00:08</Info>
+  <Info>NDepend analysis done. Duration: 00:06</Info>
   <Info>Building the report (standard).</Info>
 </InfoWarnings>

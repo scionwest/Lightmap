@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Lightmap.Modeling
 {
-    public class ExcludeColumnOnTableAttribute : Attribute
+    [AttributeUsage(AttributeTargets.All)]
+    public sealed class ExcludeColumnOnTableAttribute : Attribute
     {
     }
 }

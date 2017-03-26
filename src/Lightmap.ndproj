@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<NDepend AppName="Lightmap.Core" Platform="DotNet" FileWrittenByProductVersion="2017.1.1.8920">
+<NDepend AppName="Lightmap" Platform="DotNet" FileWrittenByProductVersion="2017.1.1.8920">
   <OutputDir KeepXmlFiles="False">C:\Users\Sully\Documents\source\GitHub\Lightmap\src\NDependOut</OutputDir>
   <Assemblies>
     <Name>Lightmap.Core</Name>
@@ -28,8 +28,8 @@
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="110591" XslPath="" Flags="261120" />
-  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="NDaysAgoAnalysisResult" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="30" />
-  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="NDaysAgoAnalysisResult" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="30" />
+  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Users\Sully\Documents\source\GitHub\Lightmap\src\Lightmap.ndproj" BuildFileToCompareWith="C:\Users\Sully\Documents\source\GitHub\Lightmap\src\NDependOut\NDependAnalysisResult_Lightmap_2017Mar25_22h42.ndar" NDaysAgo="30" />
+  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Users\Sully\Documents\source\GitHub\Lightmap\src\Lightmap.ndproj" BuildFileToCompareWith="C:\Users\Sully\Documents\source\GitHub\Lightmap\src\NDependOut\NDependAnalysisResult_Lightmap_2017Mar25_22h42.ndar" NDaysAgo="30" />
   <CoverageFiles CoverageDir="" UncoverableAttribute="" />
   <TrendMetrics UseCustomLog="False" LogRecurrence="3" LogLabel="2" UseCustomDir="False" CustomDir="">
     <Chart Name="Size" ShowInReport="True">
@@ -63,7 +63,7 @@
       <Serie MetricName="Annual Interest (Metric)" MetricUnit="man-days" Color="#FFFF8C00" ChartType="Line" ScaleExp="0" />
     </Chart>
   </TrendMetrics>
-  <HistoricAnalysisResult PersistRecurrence="3" UseCustomDir="False" CustomDir="" />
+  <HistoricAnalysisResult PersistRecurrence="2" UseCustomDir="False" CustomDir="" />
   <SourceFileRebasing FromPath="" ToPath="" />
   <PathVariables />
   <RuleFiles />
@@ -5414,7 +5414,7 @@ let canMethodBeConsideredAsDeadProc = new Func<IMethod, bool>(
 
          // If you don't want to link NDepend.API.dll, you can use your own IsNotDeadCodeAttribute 
          // and adapt the source code of this rule.
-         !m.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()))
+         !m.HasAttribute("Lightmap.IsNotDeadCodeAttribute".AllowNoMatch()))
 
 // Get methods unused
 let methodsUnused = 

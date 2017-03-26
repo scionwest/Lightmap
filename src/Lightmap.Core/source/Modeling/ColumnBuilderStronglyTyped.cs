@@ -11,7 +11,7 @@ namespace Lightmap.Modeling
             : base(columnName, dataType, tableBuilder)
         {
             this.tableBuilder = tableBuilder;
-            base.TryAddColumnDefinition(ColumnDefinitions.NotNull, columnName);
+            base.AddColumnDefinition(ColumnDefinitions.NotNull, columnName);
         }
 
         public ITableBuilder<TTableType> GetOwner() => this.tableBuilder;
@@ -24,13 +24,13 @@ namespace Lightmap.Modeling
 
         public IColumnBuilderStronglyTyped<TTableType> IsPrimaryKey()
         {
-            base.TryAddColumnDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
+            base.AddColumnDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
             return this;
         }
 
         public IColumnBuilderStronglyTyped<TTableType> Unique()
         {
-            base.TryAddColumnDefinition(ColumnDefinitions.Unique, this.ColumnName);
+            base.AddColumnDefinition(ColumnDefinitions.Unique, this.ColumnName);
             return this;
         }
 
