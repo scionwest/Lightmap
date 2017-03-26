@@ -20,5 +20,7 @@ namespace Lightmap.Modeling
         IColumnBuilder[] GetColumns();
 
         IColumnBuilderUntyped AddColumn(Type dataType, string columnName);
+        
+        IColumnBuilderUntyped AlterColumn(Func<IColumnModel, bool> columnSelector);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Lightmap.Modeling
 {
-    internal class ColumnBuilderUntyped : ColumnBuilderBase, IColumnBuilderUntyped
+    internal sealed class ColumnBuilderUntyped : ColumnBuilderBase, IColumnBuilderUntyped
     {
         internal ColumnBuilderUntyped(string columnName, Type dataType, TableBuilder owner) : base(columnName, dataType, owner)
         {

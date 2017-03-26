@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Lightmap.Modeling
 {
-    internal class ColumnModel : IColumnModel
+    internal sealed class ColumnModel : IColumnModel
     {
         private readonly Dictionary<string, string> columnDefinitions;
         private readonly ITableModel owner;

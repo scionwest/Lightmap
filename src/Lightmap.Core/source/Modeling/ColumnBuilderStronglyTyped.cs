@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    internal class ColumnBuilderStronglyTyped<TTableType> : ColumnBuilderBase, IColumnBuilderStronglyTyped<TTableType>
+    internal sealed class ColumnBuilderStronglyTyped<TTableType> : ColumnBuilderBase, IColumnBuilderStronglyTyped<TTableType>
     {
         private readonly TableBuilder<TTableType> tableBuilder;
         private readonly Type tableType;

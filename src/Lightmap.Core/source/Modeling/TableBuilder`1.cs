@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    internal class TableBuilder<TTableType> : TableBuilder, ITableBuilder<TTableType>
+    internal sealed class TableBuilder<TTableType> : TableBuilder, ITableBuilder<TTableType>
     {
         public TableBuilder(ISchemaModel schema, string tableName, IDataModel currentDataModel) 
             : base(schema, tableName, currentDataModel)
