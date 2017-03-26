@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 
 namespace Lightmap.Modeling
 {
-    internal class ColumnBuilderStronglyTyped<TTableType> : ColumnBuilder, IColumnBuilderStronglyTyped<TTableType>
+    internal class ColumnBuilderStronglyTyped<TTableType> : ColumnBuilderBase, IColumnBuilderStronglyTyped<TTableType>
     {
-        private TableBuilder<TTableType> tableBuilder;
+        private readonly TableBuilder<TTableType> tableBuilder;
 
         public ColumnBuilderStronglyTyped(string columnName, Type dataType, TableBuilder<TTableType> tableBuilder)
             : base(columnName, dataType, tableBuilder)

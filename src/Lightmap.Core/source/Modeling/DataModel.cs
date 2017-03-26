@@ -8,8 +8,8 @@ namespace Lightmap.Modeling
 {
     public class DataModel : IDataModel
     {
-        private List<ISchemaBuilder> schemas;
-        private List<ITableBuilder> tables;
+        private readonly List<ISchemaBuilder> schemas;
+        private readonly List<ITableBuilder> tables;
 
         public DataModel()
         {
@@ -19,7 +19,30 @@ namespace Lightmap.Modeling
 
         public ITableBuilder[] GetTables() => this.tables.ToArray();
 
+        public ITableBuilder GetTable(string name, ISchemaModel schema = null)
+        {
+            if (schema == null)
+            {
+                return this.tables.FirstOrDefault(table => table.TableName == name);
+            }
+
+            return this.tables.FirstOrDefault(table => table.TableName == name && table.Schema.Name == schema.Name);
+        }
+
+        public ITableBuilder<TTable> GetTable<TTable>(ISchemaModel schema = null)
+        {
+            if (schema == null)
+            {
+                return this.tables.FirstOrDefault(table => table.TableName == typeof(TTable).Name) as ITableBuilder<TTable>;
+            }
+
+            return this.tables.FirstOrDefault(table => table.TableName == typeof(TTable).Name && table.Schema?.Name == schema.Name) as ITableBuilder<TTable>;
+        }
+
         public ISchemaBuilder[] GetSchemas() => this.schemas.ToArray();
+
+        public ISchemaBuilder GetSchema(string name)
+            => this.schemas.FirstOrDefault(schema => schema.Name == name);
 
         public ISchemaBuilder AddSchema(string schemaName)
         {
@@ -28,42 +51,24 @@ namespace Lightmap.Modeling
             return builder;
         }
 
-        public ITableBuilder AddTable(string tableName)
+        public ITableBuilder AddTable(string tableName, ISchemaModel schema = null)
         {
             if (string.IsNullOrEmpty(tableName))
             {
                 throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
             }
 
-            var tableBuilder = new TableBuilder(null, tableName, this);
+            var tableBuilder = new TableBuilder(schema, tableName, this);
             this.tables.Add(tableBuilder);
 
             return tableBuilder;
         }
 
-        public ITableBuilder AddTable(string schemaName, string tableName)
-        {
-            if (string.IsNullOrEmpty(tableName))
-            {
-                throw new ArgumentException("You must specify the name of the table you want to add.", nameof(tableName));
-            }
-
-            var tableBuilder = new TableBuilder(schemaName, tableName, this);
-            this.tables.Add(tableBuilder);
-
-            return tableBuilder;
-        }
-
-        public ITableBuilder AddTable(ISchemaModel schema, string tableName) 
-            => this.AddTable(schema?.Name, tableName);
-
-        public ITableBuilder<TTable> AddTable<TTable>() where TTable : class
-            => this.AddTable<TTable>(string.Empty);
-
-        public ITableBuilder<TTable> AddTable<TTable>(string schemaName) where TTable : class
+        public ITableBuilder<TTable> AddTable<TTable>(string tableName = null, ISchemaModel schema = null) where TTable : class
         {
             Type tableType = typeof(TTable);
-            var builder = new TableBuilder<TTable>(schemaName, tableType.Name, this);
+            string correctTableName = string.IsNullOrEmpty(tableName) ? tableType.Name : tableName;
+            var builder = new TableBuilder<TTable>(schema, correctTableName, this);
             bool decoratedWithInclude = AttributeCache.GetAttribute<IncludeColumnOnTableAttribute>(tableType) != null;
             bool decoratedWithExclude = AttributeCache.GetAttribute<ExcludeColumnOnTableAttribute>(tableType) != null;
 
@@ -102,14 +107,11 @@ namespace Lightmap.Modeling
             return builder;
         }
 
-        public ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema) where TTable : class 
-            => this.AddTable<TTable>(schema?.Name);
-
-        public ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string schemaName, string name, Expression<Func<TTableDefinition>> definition)
+        public ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(Expression<Func<TTableDefinition>> definition, string tableName = null, ISchemaModel schema = null)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(tableName))
             {
-                throw new ArgumentException(nameof(name), "You must specify the name of your table when constructing it without a Type.");
+                throw new ArgumentException(nameof(tableName), "You must specify the name of your table when constructing it without a Type.");
             }
 
             if (definition == null)
@@ -123,7 +125,7 @@ namespace Lightmap.Modeling
                 throw new NotSupportedException($"The {definition.Body.NodeType.GetType().Name} expression used in the definition is not supported. You must create and return an anonymous Type.");
             }
 
-            var builder = new TableBuilder<TTableDefinition>(schemaName, name, this);
+            var builder = new TableBuilder<TTableDefinition>(schema, tableName, this);
             foreach (var columnData in columnExpression.Members.OfType<PropertyInfo>())
             {
                 builder.AddColumn(columnData.PropertyType, columnData.Name);
@@ -132,13 +134,5 @@ namespace Lightmap.Modeling
             this.tables.Add(builder);
             return builder;
         }
-
-        public void DropTable(string schemaName, string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string tableName, Expression<Func<TTableDefinition>> definition)
-            => this.AddTable(null, tableName, definition);
     }
 }

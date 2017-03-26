@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 
 namespace Lightmap
 {
-    public class SqliteDatabaseManager : DatabaseManager
+    public class SqliteDatabaseManager : DatabaseManagerBase
     {
         public SqliteDatabaseManager(string databaseName, string connectionString) : base(databaseName, connectionString)
         {

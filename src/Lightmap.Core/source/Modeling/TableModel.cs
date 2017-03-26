@@ -4,8 +4,8 @@ namespace Lightmap.Modeling
 {
     internal struct TableModel : ITableModel
     {
-        private ISchemaModel schemaModel;
-        private ITableBuilder owningBuilder;
+        private readonly ISchemaModel schemaModel;
+        private readonly ITableBuilder owningBuilder;
 
         public TableModel(ISchemaModel schemaModel, string tableName, ITableBuilder owningBuilder)
         {
@@ -21,5 +21,26 @@ namespace Lightmap.Modeling
         public IColumnModel[] GetColumns() => this.owningBuilder.GetColumns().Select(columnBuilder => columnBuilder.GetModel()).ToArray();
 
         public ISchemaModel Schema => this.schemaModel;
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is TableModel))
+            {
+                return false;
+            }
+
+            TableModel model = (TableModel)obj;
+            return model.Name == this.Name;
+        }
+
+        public static bool operator ==(TableModel model1, TableModel model2)
+        {
+            return model1.Equals(model2);
+        }
+
+        public static bool operator !=(TableModel model1, TableModel model2)
+        {
+            return !model1.Equals(model2);
+        }
     }
 }

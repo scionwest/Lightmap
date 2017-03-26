@@ -9,7 +9,7 @@ namespace Lightmap.Modeling
 
         string TableName { get; }
 
-        string Schema { get; }
+        ISchemaModel Schema { get; }
 
         Dictionary<string, string> GetTableDefinition();
 

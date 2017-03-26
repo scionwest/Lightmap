@@ -7,26 +7,22 @@ namespace Lightmap.Modeling
     {
         ITableBuilder[] GetTables();
 
+        ITableBuilder GetTable(string name, ISchemaModel schema = null);
+
+        ITableBuilder<TTable> GetTable<TTable>(ISchemaModel schema = null);
+
         ISchemaBuilder[] GetSchemas();
 
-        ITableBuilder AddTable(string tableName);
-
-        ITableBuilder AddTable(string schemaName, string tableName);
-
-        ITableBuilder AddTable(ISchemaModel schema, string tableName);
-
-        ITableBuilder<TTable> AddTable<TTable>() where TTable : class;
-
-        ITableBuilder<TTable> AddTable<TTable>(string tableName) where TTable : class;
-
-        ITableBuilder<TTable> AddTable<TTable>(ISchemaModel schema) where TTable : class;
-
-        ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string tableName, Expression<Func<TTableDefinition>> definition);
-
-        ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(string schema, string name, Expression<Func<TTableDefinition>> definition);
+        ISchemaBuilder GetSchema(string name);
 
         ISchemaBuilder AddSchema(string name);
 
-        void DropTable(string schemaName, string tableName);
+        ITableBuilder AddTable(string tableName, ISchemaModel schema = null);
+
+        ITableBuilder<TTable> AddTable<TTable>(string tableName = null, ISchemaModel schema = null) where TTable : class;
+
+        ITableBuilder<TTableDefinition> AddTable<TTableDefinition>(Expression<Func<TTableDefinition>> definition, string tableName = null, ISchemaModel schema = null);
+
+        //void DropTable(string tableName, ISchemaModel schema = null);
     }
 }

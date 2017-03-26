@@ -6,7 +6,7 @@ namespace Lightmap.Modeling
 {
     internal class TableBuilder<TTableType> : TableBuilder, ITableBuilder<TTableType>
     {
-        public TableBuilder(string schema, string tableName, IDataModel currentDataModel) 
+        public TableBuilder(ISchemaModel schema, string tableName, IDataModel currentDataModel) 
             : base(schema, tableName, currentDataModel)
         {
         }

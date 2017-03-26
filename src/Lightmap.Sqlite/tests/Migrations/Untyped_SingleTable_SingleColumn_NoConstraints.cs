@@ -11,13 +11,12 @@ namespace Lightmap.Sqlite.Tests.Migrations
 
         public void Apply()
         {
-            this.DataModel.AddTable("main", "User")
+            this.DataModel.AddTable("User")
                 .AddColumn(typeof(int), "Id");
         }
 
         public void Revert()
         {
-            this.DataModel.DropTable("main", "User");
         }
     }
 }

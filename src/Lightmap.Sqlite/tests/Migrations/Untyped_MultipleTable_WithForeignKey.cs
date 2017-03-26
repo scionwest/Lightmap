@@ -33,7 +33,6 @@ namespace Lightmap.Sqlite.Tests.Migrations
 
         public void Revert()
         {
-            this.DataModel.DropTable("main", "User");
         }
     }
 }

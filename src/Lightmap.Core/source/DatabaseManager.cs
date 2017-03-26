@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Lightmap
 {
-    public abstract class DatabaseManager : IDatabaseManager
+    public abstract class DatabaseManagerBase : IDatabaseManager
     {
-        public DatabaseManager(string databaseName, string connectionString)
+        public DatabaseManagerBase(string databaseName, string connectionString)
         {
             this.Database = databaseName;
             this.ConnectionString = connectionString;

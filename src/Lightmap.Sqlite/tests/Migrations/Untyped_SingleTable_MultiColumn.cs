@@ -12,7 +12,7 @@ namespace Lightmap.Sqlite.Tests.Migrations
 
         public void Apply()
         {
-            this.DataModel.AddTable("main", "User")
+            this.DataModel.AddTable("User")
                 .AddColumn(typeof(int), "Id")
                     .GetOwner()
                 .AddColumn(typeof(string), "Name")
@@ -22,7 +22,6 @@ namespace Lightmap.Sqlite.Tests.Migrations
 
         public void Revert()
         {
-            this.DataModel.DropTable("main", "User");
         }
     }
 }

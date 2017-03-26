@@ -6,11 +6,10 @@ namespace Lightmap.Modeling
 {
     internal class TableBuilder : ITableBuilder
     {
-        private ISchemaBuilder schemaBuilder;
-        private List<IColumnBuilder> columnBuilders;
-        private Dictionary<string, string> tableDefinition;
+        private readonly List<IColumnBuilder> columnBuilders;
+        private readonly Dictionary<string, string> tableDefinition;
 
-        public TableBuilder(string schema, string tableName, IDataModel currentDataModel)
+        public TableBuilder(ISchemaModel schema, string tableName, IDataModel currentDataModel)
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -19,30 +18,17 @@ namespace Lightmap.Modeling
 
             this.tableDefinition = new Dictionary<string, string>();
             this.columnBuilders = new List<IColumnBuilder>();
+
             this.CurrentDataModel = currentDataModel;
-
-            if (!string.IsNullOrWhiteSpace(schema))
-            {
-                ISchemaBuilder matchedSchema = this.CurrentDataModel.GetSchemas().FirstOrDefault(schemaModel => schemaModel.Name == schema);
-                if (matchedSchema == null)
-                {
-                    // TODO: Make this configurable so we throw an exception instead of auto-creating, if that's the desired behavior.
-                    // if (!someConfig.AutoCreateMissingSchema) throw new InvalidOperationException($"The schema specified for the {tableName} does not exist.");
-                    matchedSchema = this.CurrentDataModel.AddSchema(schema);
-                }
-
-                this.schemaBuilder = matchedSchema;
-            }
-
-            this.TableName = tableName;
             this.Schema = schema;
+            this.TableName = tableName;
         }
 
         public IDataModel CurrentDataModel { get; }
 
         public string TableName { get; }
 
-        public string Schema { get; }
+        public ISchemaModel Schema { get; }
 
         public Dictionary<string, string> GetTableDefinition() => this.tableDefinition;
 
@@ -59,7 +45,7 @@ namespace Lightmap.Modeling
 
         public ITableModel GetTableModel()
         {
-            var tableModel = new TableModel(this.schemaBuilder?.GetSchemaModel(), this.TableName, this);
+            var tableModel = new TableModel(this.Schema, this.TableName, this);
             return tableModel;
         }
 

@@ -5,8 +5,8 @@ namespace Lightmap.Modeling
 {
     internal class ColumnModel : IColumnModel
     {
-        private Dictionary<string, string> columnDefinitions;
-        private ITableModel owner;
+        private readonly Dictionary<string, string> columnDefinitions;
+        private readonly ITableModel owner;
 
         public ColumnModel(string columnName, Type columnDataType, Dictionary<string, string> columnDefinitions, ITableModel owner)
         {

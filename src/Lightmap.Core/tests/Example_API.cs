@@ -14,7 +14,7 @@ namespace Lightmap
             var dataModel = new DataModel();
 
             // String based
-            ITableBuilder accountTable = dataModel.AddTable(schemaName: "dbo", tableName: "Account");
+            ITableBuilder accountTable = dataModel.AddTable("Account");
             IColumnBuilder aspNetUserIdColumn = accountTable
                 .AddColumn(dataType: typeof(int), columnName: "AccountId")
                     .IsPrimaryKey().Unique().GetOwner()
@@ -35,7 +35,7 @@ namespace Lightmap
                 .AlterColumn(model => model.Id).IsPrimaryKey();
 
             // Strongly Typed via Anonymous Objects
-            var userRoleTable = dataModel.AddTable("dbo", "UserRoles", () => new { UserId = default(string), RoleId = default(string), });
+            var userRoleTable = dataModel.AddTable(() => new { UserId = default(string), RoleId = default(string), }, "UserRoles");
             userRoleTable.AlterColumn(table => table.RoleId)
                 .WithForeignKey<AspNetRoles>((linkTable, rolesTable) => linkTable.RoleId == rolesTable.Id).GetOwner()
             .AlterColumn(table => table.UserId)

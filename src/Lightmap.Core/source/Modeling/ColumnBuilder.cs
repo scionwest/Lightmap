@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Lightmap.Modeling
 {
-    public abstract class ColumnBuilder : IColumnBuilder
+    public abstract class ColumnBuilderBase : IColumnBuilder
     {
-        private Dictionary<string, string> columnDefinitions;
+        private readonly Dictionary<string, string> columnDefinitions;
 
-        public ColumnBuilder(string columnName, Type dataType, ITableBuilder owningTable)
+        public ColumnBuilderBase(string columnName, Type dataType, ITableBuilder owningTable)
         {
             this.ColumnName = columnName;
             this.ColumnDataType = dataType;
@@ -25,9 +25,9 @@ namespace Lightmap.Modeling
         public virtual IColumnModel GetModel()
             => new ColumnModel(this.ColumnName, this.ColumnDataType, this.GetColumnDefinition(), this.TableBuilder.GetTableModel());
 
-        public virtual Dictionary<string, string> GetColumnDefinition() => this.columnDefinitions;
+        public Dictionary<string, string> GetColumnDefinition() => this.columnDefinitions;
 
-        public virtual void TryAddColumnDefinition(string definitionKey, string definitionValue)
+        public void TryAddColumnDefinition(string definitionKey, string definitionValue)
         {
             if (this.columnDefinitions.TryGetValue(definitionKey, out var result))
             {

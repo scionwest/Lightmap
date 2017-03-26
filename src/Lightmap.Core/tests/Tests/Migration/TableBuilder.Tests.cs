@@ -16,7 +16,8 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
-            ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
+            ITableBuilder tableBuilder = dataModel.AddTable(_tableName, schemaModel);
 
             // Act
             IColumnBuilderUntyped columnBuilder = tableBuilder.AddColumn(null, "Id");
@@ -28,7 +29,8 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
-            ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
+            ITableBuilder tableBuilder = dataModel.AddTable(_tableName, schemaModel);
 
             // Act
             IColumnBuilderUntyped columnBuilder = tableBuilder.AddColumn(typeof(int), null);
@@ -39,14 +41,15 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
-            ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
+            ITableBuilder tableBuilder = dataModel.AddTable(_tableName, schemaModel);
 
             // Act
             IColumnBuilderUntyped columnBuilder = tableBuilder.AddColumn(typeof(int), "Id");
 
             // Assert
             Assert.IsNotNull(columnBuilder);
-            Assert.AreEqual(_schema, tableBuilder.Schema);
+            Assert.AreEqual(schemaModel, tableBuilder.Schema);
             Assert.AreEqual(_tableName, tableBuilder.TableName);
             Assert.AreEqual("Id", columnBuilder.ColumnName);
             Assert.AreEqual(typeof(int), columnBuilder.ColumnDataType);
@@ -57,7 +60,8 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
-            ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
+            ITableBuilder tableBuilder = dataModel.AddTable(_tableName, schemaModel);
             IColumnBuilderUntyped intColumn = tableBuilder.AddColumn(typeof(int), "Id");
             IColumnBuilderUntyped stringColumn = tableBuilder.AddColumn(typeof(string), "Name");
 
@@ -78,7 +82,8 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
-            ITableBuilder tableBuilder = dataModel.AddTable(_schema, _tableName);
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
+            ITableBuilder tableBuilder = dataModel.AddTable(_tableName, schemaModel);
             IColumnBuilderUntyped intColumn = tableBuilder.AddColumn(typeof(int), "Id");
             IColumnBuilderUntyped stringColumn = tableBuilder.AddColumn(typeof(string), "Name");
 

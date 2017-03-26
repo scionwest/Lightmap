@@ -10,7 +10,7 @@ namespace Lightmap.Modeling
     public class SqliteMigrator : IDatabaseMigrator
     {
         private const string _createTable = "CREATE TABLE";
-        private List<string> migrationHistory;
+        private readonly List<string> migrationHistory;
 
         public SqliteMigrator(params IMigration[] migrations)
         {
@@ -57,7 +57,7 @@ namespace Lightmap.Modeling
             {
                 foreach (IMigration migration in this.Migrations)
                 {
-                    foreach(string sqlStatement in this.GetSqlStatements(migration))
+                    foreach (string sqlStatement in this.GenerateStatements(migration))
                     {
                         connection.Execute(sqlStatement);
                         this.migrationHistory.Add(sqlStatement);
@@ -86,7 +86,7 @@ namespace Lightmap.Modeling
             {
                 foreach (IMigration migration in this.Migrations)
                 {
-                    foreach (string sqlStatement in this.GetSqlStatements(migration))
+                    foreach (string sqlStatement in this.GenerateStatements(migration))
                     {
                         await connection.ExecuteAsync(sqlStatement);
                         this.migrationHistory.Add(sqlStatement);
@@ -95,47 +95,26 @@ namespace Lightmap.Modeling
             }
         }
 
-        private IEnumerable<string> GetSqlStatements(IMigration migration)
+        public IEnumerable<string> GenerateStatements(IMigration migration)
         {
             migration.Apply();
             ITableBuilder[] tables = migration.DataModel.GetTables();
             string sqlStatement = string.Empty;
 
-            foreach(ITableBuilder tableBuilder in tables)
+            foreach (ITableBuilder tableBuilder in tables)
             {
-                string tableSchema = String.IsNullOrWhiteSpace(tableBuilder.Schema)
+                string tableSchema = tableBuilder.Schema == null
                     ? this.DefaultSchema
-                    : tableBuilder.Schema;
+                    : tableBuilder.Schema.Name;
                 sqlStatement += $"{_createTable} {tableSchema}.{tableBuilder.TableName} (\n\t";
-                
+
                 IColumnBuilder[] columns = tableBuilder.GetColumns();
                 string constraint = string.Empty;
 
                 for (int index = 0; index < columns.Length; index++)
                 {
                     IColumnBuilder currentColumn = columns[index];
-                    sqlStatement += $"\t{currentColumn.ColumnName} {this.ConvertTypeToSqlType(currentColumn.ColumnDataType)}";
-                    Dictionary<string, string> columnDefinition = currentColumn.GetColumnDefinition();
-
-                    if (columnDefinition.TryGetValue(ColumnDefinitions.NotNull, out constraint))
-                    {
-                        sqlStatement += $" {ColumnDefinitions.NotNull}";
-                    }
-
-                    if (columnDefinition.TryGetValue(ColumnDefinitions.Unique, out constraint))
-                    {
-                        sqlStatement += " UNIQUE";
-                    }
-
-                    if (columnDefinition.TryGetValue(ColumnDefinitions.PrimaryKey, out constraint))
-                    {
-                        sqlStatement += " PRIMARY KEY";
-                    }
-
-                    if (columnDefinition.TryGetValue(ColumnDefinitions.AutoIncrement, out constraint))
-                    {
-                        sqlStatement += $" {ColumnDefinitions.AutoIncrement}";
-                    }
+                    sqlStatement += this.GenerateColumn(currentColumn);
 
                     if (index != columns.Length - 1)
                     {
@@ -143,26 +122,61 @@ namespace Lightmap.Modeling
                     }
                 }
 
-                Dictionary<string, string> tableDefinition = tableBuilder.GetTableDefinition();
-                if (tableDefinition.TryGetValue(ColumnDefinitions.ForeignKey, out constraint))
-                {
-                    sqlStatement += ", \n";
-                    string referenceSchema = tableDefinition[ColumnDefinitions.ReferencesSchema];
-                    if (string.IsNullOrWhiteSpace(referenceSchema))
-                    {
-                        referenceSchema = this.DefaultSchema;
-                    }
-
-                    string referenceTable = tableDefinition[ColumnDefinitions.ReferencesTable];
-                    string referenceColumn = tableDefinition[ColumnDefinitions.ReferencesColumn];
-                    sqlStatement += "\tCONSTRAINT \"FK_" + tableBuilder.TableName + "_" + referenceTable + "_" + referenceColumn + "\"";
-                    sqlStatement += " " + ColumnDefinitions.ForeignKey + " (\"" + constraint + "\") REFERENCES \"" + referenceSchema + "." + referenceTable + "\" (\"" + referenceColumn + "\")";
-                }
-
+                sqlStatement += this.GenerateTableConstraints(tableBuilder);
                 sqlStatement += "\n)";
+
                 yield return sqlStatement;
                 sqlStatement = string.Empty;
             }
+        }
+
+        private string GenerateTableConstraints(ITableBuilder tableBuilder)
+        {
+            Dictionary<string, string> tableDefinition = tableBuilder.GetTableDefinition();
+            string constraint = string.Empty;
+            string sqlStatement = string.Empty;
+
+            if (tableDefinition.TryGetValue(ColumnDefinitions.ForeignKey, out constraint))
+            {
+                sqlStatement += ", \n";
+                string referenceSchema = tableDefinition[ColumnDefinitions.ReferencesSchema];
+                string referenceTable = tableDefinition[ColumnDefinitions.ReferencesTable];
+                string referenceColumn = tableDefinition[ColumnDefinitions.ReferencesColumn];
+                sqlStatement += "\tCONSTRAINT \"FK_" + tableBuilder.TableName + "_" + referenceTable + "_" + referenceColumn + "\"";
+                sqlStatement += " " + ColumnDefinitions.ForeignKey + " (\"" + constraint + "\") REFERENCES \"" + referenceSchema + "." + referenceTable + "\" (\"" + referenceColumn + "\")";
+            }
+
+            return sqlStatement;
+        }
+
+        private string GenerateColumn(IColumnBuilder columnBuilder)
+        {
+            string sqlStatement = $"\t{columnBuilder.ColumnName} {this.ConvertTypeToSqlType(columnBuilder.ColumnDataType)}";
+            string constraint = string.Empty;
+
+            Dictionary<string, string> columnDefinition = columnBuilder.GetColumnDefinition();
+
+            if (columnDefinition.TryGetValue(ColumnDefinitions.NotNull, out constraint))
+            {
+                sqlStatement += $" {ColumnDefinitions.NotNull}";
+            }
+
+            if (columnDefinition.TryGetValue(ColumnDefinitions.Unique, out constraint))
+            {
+                sqlStatement += " UNIQUE";
+            }
+
+            if (columnDefinition.TryGetValue(ColumnDefinitions.PrimaryKey, out constraint))
+            {
+                sqlStatement += " PRIMARY KEY";
+            }
+
+            if (columnDefinition.TryGetValue(ColumnDefinitions.AutoIncrement, out constraint))
+            {
+                sqlStatement += $" {ColumnDefinitions.AutoIncrement}";
+            }
+
+            return sqlStatement;
         }
 
         private string ConvertTypeToSqlType(Type dataType)

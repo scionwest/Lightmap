@@ -2,7 +2,7 @@
 {
     public class SchemaBuilder : ISchemaBuilder
     {
-        private IDataModel dataModel;
+        private readonly IDataModel dataModel;
 
         public SchemaBuilder(IDataModel currentModel)
         {

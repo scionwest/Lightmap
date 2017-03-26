@@ -18,7 +18,7 @@ namespace Lightmap.Modeling
             string tableName = "foo";
 
             // Act
-            var table = dataModel.AddTable(schemaName: null, tableName: tableName);
+            var table = dataModel.AddTable(tableName);
 
             // Assert
             Assert.IsNull(table.Schema);
@@ -32,7 +32,7 @@ namespace Lightmap.Modeling
             var dataModel = new DataModel();
 
             // Act
-            dataModel.AddTable(schemaName: _schema, tableName: null);
+            dataModel.AddTable(null);
         }
 
         [TestMethod]
@@ -41,14 +41,15 @@ namespace Lightmap.Modeling
             // Arrange
             var dataModel = new DataModel();
             string tableName = "foo";
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
 
             // Act
-            ITableBuilder tableBuilder = dataModel.AddTable(_schema, tableName);
+            ITableBuilder tableBuilder = dataModel.AddTable(tableName, schemaModel);
 
             // Assert
             Assert.IsNotNull(tableBuilder);
             Assert.AreEqual(tableName, tableBuilder.TableName);
-            Assert.AreEqual(_schema, tableBuilder.Schema);
+            Assert.AreEqual(schemaModel, tableBuilder.Schema);
         }
 
         [TestMethod]
@@ -87,12 +88,12 @@ namespace Lightmap.Modeling
             string tableName = "foo";
 
             // Act
-            ITableBuilder tableBuilder = dataModel.AddTable(schemaModel, tableName);
+            ITableBuilder tableBuilder = dataModel.AddTable(tableName, schemaModel);
 
             // Assert
             Assert.IsNotNull(tableBuilder);
             Assert.AreEqual(tableName, tableBuilder.TableName);
-            Assert.AreEqual(_schema, tableBuilder.Schema);
+            Assert.AreEqual(schemaModel, tableBuilder.Schema);
         }
 
         [TestMethod]
@@ -102,7 +103,7 @@ namespace Lightmap.Modeling
             var dataModel = new DataModel();
 
             // Act
-            var table = dataModel.AddTable<AspNetRoles>(schemaName: null);
+            var table = dataModel.AddTable<AspNetRoles>(schema: null);
 
             // Assert
             Assert.IsNull(table.Schema);
@@ -113,14 +114,15 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
 
             // Act
-            ITableBuilder tableBuilder = dataModel.AddTable<AspNetRoles>(_schema);
+            ITableBuilder tableBuilder = dataModel.AddTable<AspNetRoles>(schema: schemaModel);
 
             // Assert
             Assert.IsNotNull(tableBuilder);
             Assert.AreEqual(typeof(AspNetRoles).Name, tableBuilder.TableName);
-            Assert.AreEqual(_schema, tableBuilder.Schema);
+            Assert.AreEqual(schemaModel, tableBuilder.Schema);
         }
 
         [TestMethod]
@@ -144,12 +146,12 @@ namespace Lightmap.Modeling
             var dataModel = new DataModel();
 
             // Act
-            ITableBuilder tableBuilder = dataModel.AddTable<AspNetRoles>(schemaModel);
+            ITableBuilder tableBuilder = dataModel.AddTable<AspNetRoles>(schema: schemaModel);
 
             // Assert
             Assert.IsNotNull(tableBuilder);
             Assert.AreEqual(typeof(AspNetRoles).Name, tableBuilder.TableName);
-            Assert.AreEqual(_schema, tableBuilder.Schema);
+            Assert.AreEqual(schemaModel, tableBuilder.Schema);
         }
 
         [TestMethod]
@@ -160,8 +162,7 @@ namespace Lightmap.Modeling
             string tableName = "Foo";
 
             // Act
-            var tableBuilder = dataModel.AddTable(null, tableName, 
-                () => new { Id = default(int), Name = default(string), });
+            var tableBuilder = dataModel.AddTable(() => new { Id = default(int), Name = default(string), }, tableName);
 
             // Assert
             Assert.IsNull(tableBuilder.Schema);
@@ -175,11 +176,9 @@ namespace Lightmap.Modeling
             var dataModel = new DataModel();
 
             // Act
-            var tableBuilder = dataModel.AddTable(_schema, null, () => new
-            {
-                Id = default(int),
-                Name = default(string),
-            });
+            var tableBuilder = dataModel.AddTable(() => new
+                { Id = default(int), Name = default(string), },
+                null);
         }
 
         [TestMethod]
@@ -189,9 +188,10 @@ namespace Lightmap.Modeling
             // Arrange
             var dataModel = new DataModel();
             string tableName = "Foo";
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
 
             // Act
-            var tableBuilder = dataModel.AddTable<AspNetRoles>(schemaName: _schema, name: tableName, definition: null);
+            var tableBuilder = dataModel.AddTable<AspNetRoles>(null, tableName, schemaModel);
         }
 
         [TestMethod]
@@ -199,20 +199,20 @@ namespace Lightmap.Modeling
         {
             // Arrange
             var dataModel = new DataModel();
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
             string tableName = "Foo";
 
             // Act
-            var tableBuilder = dataModel.AddTable(_schema, tableName, () => new
-            {
-                Id = default(int),
-                Name = default(string),
-            });
+            var tableBuilder = dataModel.AddTable(() => new
+            { Id = default(int), Name = default(string), },
+                tableName,
+                schemaModel);
 
             // Assert
             IColumnBuilder[] columns = tableBuilder.GetColumns();
             Assert.IsNotNull(tableBuilder);
             Assert.AreEqual(tableName, tableBuilder.TableName);
-            Assert.AreEqual(_schema, tableBuilder.Schema);
+            Assert.AreEqual(schemaModel, tableBuilder.Schema);
             Assert.AreEqual("Id", columns[0].ColumnName);
             Assert.AreEqual(typeof(int), columns[0].ColumnDataType);
             Assert.AreEqual("Name", columns[1].ColumnName);
@@ -226,8 +226,9 @@ namespace Lightmap.Modeling
             string table1Name = "Foo";
             string table2Name = "Bar";
             var dataModel = new DataModel();
-            dataModel.AddTable(_schema, table1Name);
-            dataModel.AddTable(_schema, table2Name);
+            ISchemaModel schemaModel = dataModel.AddSchema(_schema).GetSchemaModel();
+            dataModel.AddTable(table1Name, schemaModel);
+            dataModel.AddTable(table2Name, schemaModel);
 
             // Act
             ITableBuilder[] builders = dataModel.GetTables();
