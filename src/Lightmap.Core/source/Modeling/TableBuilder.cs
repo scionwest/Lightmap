@@ -34,6 +34,11 @@ namespace Lightmap.Modeling
 
         public void AddDefinition(string definitionKey, string definitionValue)
         {
+            if (string.IsNullOrEmpty(definitionKey) || string.IsNullOrEmpty(definitionValue))
+            {
+                return;
+            }
+
             if (this.tableDefinition.TryGetValue(definitionKey, out var value))
             {
                 this.tableDefinition[definitionKey] = definitionValue;

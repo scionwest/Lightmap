@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Lightmap" Platform="DotNet" FileWrittenByProductVersion="2017.1.1.8920">
   <OutputDir KeepXmlFiles="False">C:\Users\Sully\Documents\source\GitHub\Lightmap\src\NDependOut</OutputDir>
   <Assemblies>
@@ -90,7 +90,8 @@
       <Major2Critical_SeverityThreshold>72000000000</Major2Critical_SeverityThreshold>
       <Critical2Blocker_SeverityThreshold>360000000000</Critical2Blocker_SeverityThreshold>
     </DebtSettings>
-  </ProjectDebtSettings><Queries>
+  </ProjectDebtSettings>
+  <Queries>
     <Group Name="Quality Gates" Active="True" ShownInReport="True">
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Quality Gates Evolution</Name>
 from qg in QualityGates
@@ -1236,6 +1237,30 @@ warnif count > 0 from t in JustMyCode.Types where
 // varies linearly from 5 minutes for a type with a low poorCohesionScore,
 // up to 4 hours for a type with high poorCohesionScore.
 //</HowToFix>]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Rules violated</Name>
+from r in Rules
+where r.IsViolated()
+orderby r.Debt().Value descending
+select new { 
+   r, 
+   Issues = r.Issues(), 
+   Debt = r.Debt(), 
+   AnnualInterest = r.AnnualInterest(), 
+   BreakingPoint = r.BreakingPoint(),
+   Category = r.Category
+}
+
+//<Description>
+// **Debt**: Estimated effort to fix all rule issues.
+//
+// **Annual Interest**: Estimated annual cost to leave all rule issues unfixed.
+//
+// **Breaking Point**: Estimated point in time from now, when leaving the rule issues unfixed cost as much as fixing the rule issues.
+// A low value indicates an a rule with easy-to-fix issue with high annual interest.
+// This value can be used to prioritize issues fix, to significantly reduce interest with minimum effort.
+//
+// More documentation: http://www.ndepend.com/docs/technical-debt
+//</Description>]]></Query>
     </Group>
     <Group Name="Code Smells Regression" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>From now, all types added should respect basic quality principles</Name>
@@ -5414,7 +5439,7 @@ let canMethodBeConsideredAsDeadProc = new Func<IMethod, bool>(
 
          // If you don't want to link NDepend.API.dll, you can use your own IsNotDeadCodeAttribute 
          // and adapt the source code of this rule.
-         !m.HasAttribute("Lightmap.IsNotDeadCodeAttribute".AllowNoMatch()))
+         !m.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()))
 
 // Get methods unused
 let methodsUnused = 
@@ -10924,4 +10949,5 @@ select new {
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries></NDepend>
+  </Queries>
+</NDepend>

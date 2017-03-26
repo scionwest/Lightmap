@@ -98,6 +98,8 @@ namespace Lightmap.Modeling
         public IEnumerable<string> GenerateStatements(IMigration migration)
         {
             migration.Apply();
+            var columnTableConstraints = new Dictionary<IColumnBuilder, Dictionary<string, string>>();
+
             ITableBuilder[] tables = migration.DataModel.GetTables();
             string sqlStatement = string.Empty;
 
@@ -115,6 +117,7 @@ namespace Lightmap.Modeling
                 {
                     IColumnBuilder currentColumn = columns[index];
                     sqlStatement += this.GenerateColumn(currentColumn);
+                    columnTableConstraints.Add(currentColumn, currentColumn.GetColumnDefinition());
 
                     if (index != columns.Length - 1)
                     {
@@ -122,7 +125,8 @@ namespace Lightmap.Modeling
                     }
                 }
 
-                sqlStatement += SqliteMigrator.GenerateTableConstraints(tableBuilder);
+                // TODO: Replace the dictionary with an internal model that represents this data.
+                sqlStatement += this.GenerateTableConstraints(tableBuilder, columnTableConstraints);
                 sqlStatement += "\n)";
 
                 yield return sqlStatement;
@@ -130,20 +134,28 @@ namespace Lightmap.Modeling
             }
         }
 
-        private static string GenerateTableConstraints(ITableBuilder tableBuilder)
+        private string GenerateTableConstraints(ITableBuilder tableBuilder, Dictionary<IColumnBuilder, Dictionary<string, string>> tableConstraints)
         {
-            Dictionary<string, string> tableDefinition = tableBuilder.GetTableDefinition();
             string constraint = string.Empty;
             string sqlStatement = string.Empty;
 
-            if (tableDefinition.TryGetValue(ColumnDefinitions.ForeignKey, out constraint))
+            foreach(KeyValuePair<IColumnBuilder, Dictionary<string, string>> column in tableConstraints)
             {
-                sqlStatement += ", \n";
-                string referenceSchema = tableDefinition[ColumnDefinitions.ReferencesSchema];
-                string referenceTable = tableDefinition[ColumnDefinitions.ReferencesTable];
-                string referenceColumn = tableDefinition[ColumnDefinitions.ReferencesColumn];
-                sqlStatement += "\tCONSTRAINT \"FK_" + tableBuilder.TableName + "_" + referenceTable + "_" + referenceColumn + "\"";
-                sqlStatement += " " + ColumnDefinitions.ForeignKey + " (\"" + constraint + "\") REFERENCES \"" + referenceSchema + "." + referenceTable + "\" (\"" + referenceColumn + "\")";
+                Dictionary<string, string> columnConstraint = column.Value;
+                if (!columnConstraint.TryGetValue(ColumnDefinitions.ReferencesSchema, out var referenceSchema))
+                {
+                    referenceSchema = this.DefaultSchema;
+                }
+
+                if (columnConstraint.TryGetValue(ColumnDefinitions.ForeignKey, out constraint))
+                {
+                    sqlStatement += ", \n";
+
+                    string referenceTable = columnConstraint[ColumnDefinitions.ReferencesTable];
+                    string referenceColumn = columnConstraint[ColumnDefinitions.ReferencesColumn];
+                    sqlStatement += "\tCONSTRAINT \"FK_" + tableBuilder.TableName + "_" + referenceTable + "_" + referenceColumn + "\"";
+                    sqlStatement += " " + ColumnDefinitions.ForeignKey + " (\"" + constraint + "\") REFERENCES \"" + referenceSchema + "." + referenceTable + "\" (\"" + referenceColumn + "\")";
+                }
             }
 
             return sqlStatement;

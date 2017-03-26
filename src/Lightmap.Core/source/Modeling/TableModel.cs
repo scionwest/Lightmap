@@ -22,6 +22,8 @@ namespace Lightmap.Modeling
 
         public ISchemaModel Schema => this.schemaModel;
 
+        public override int GetHashCode() => this.Name.GetHashCode() ^ (this.Schema?.GetHashCode() ?? 0) ^ this.FullyQualifiedName.GetHashCode() ^ this.owningBuilder.GetHashCode();
+
         public override bool Equals(object obj)
         {
             if (!(obj is TableModel))

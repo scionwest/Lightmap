@@ -24,7 +24,7 @@ namespace Lightmap
             // Strongly Typed with Foreign Key to Untyped Table
             dataModel.AddTable<AspNetUsers>("dbo")
                 .AlterColumn(model => model.Id).IsPrimaryKey()
-                .WithForeignKey(aspNetUserIdColumn, (aspNetUsersTable) => aspNetUsersTable.Id);
+                .WithForeignKey(aspNetUserIdColumn);
 
             // Strongly Typed with Foreign Key to strongly Typed table
             dataModel.AddTable<AspNetUserLogins>("dbo")
@@ -48,7 +48,7 @@ namespace Lightmap
             // Foreign Key between Anonymous and Standard Strongly Typed
             dataModel.AddTable<AspNetUserClaims>("dbo")
                 .AlterColumn(table => table.UserId)
-                .WithForeignKey(userRoleTable, (claimTable, roleTable) => claimTable.UserId == roleTable.UserId);
+                .WithForeignKey((claimTable, roleTable) => claimTable.UserId == roleTable.UserId, userRoleTable);
         }
     }
 }

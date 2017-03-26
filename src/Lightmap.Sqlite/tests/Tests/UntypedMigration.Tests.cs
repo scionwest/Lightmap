@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Dapper;
-using Lightmap;
 using Lightmap.Modeling;
 using Lightmap.Sqlite.Tests.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,8 +13,6 @@ namespace Lightmap.Sqlite.Tests
     public class UntypedMigrationTests
     {
         private IDataModel dataModel;
-        private string databaseName;
-        IDatabaseManager databaseManager;
 
         [TestInitialize]
         public void Setup()

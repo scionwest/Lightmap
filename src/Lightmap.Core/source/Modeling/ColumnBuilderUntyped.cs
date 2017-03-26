@@ -16,24 +16,24 @@ namespace Lightmap.Modeling
             base.AddColumnDefinition(ColumnDefinitions.PrimaryKey, this.ColumnName);
             return this;
         }
-
-        [IsNotDeadCode]
-        public IColumnBuilderUntyped WithForeignKey(string schema, string table, string columnName)
+        
+        public IColumnBuilderUntyped WithForeignKey(string table, string columnName, ISchemaModel schema = null)
         {
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ReferencesTable, $"{schema}.{table}");
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ReferencesColumn, columnName);
+            base.AddColumnDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
+            base.AddColumnDefinition(ColumnDefinitions.ReferencesColumn, columnName);
+            base.AddColumnDefinition(ColumnDefinitions.ReferencesTable, $"{table}");
+            if (schema != null)
+            {
+                base.AddColumnDefinition(ColumnDefinitions.ReferencesSchema, schema.Name);
+            }
 
             return this;
         }
 
         public IColumnBuilderUntyped WithForeignKey(IColumnModel referenceColumn)
         {
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ForeignKey, this.ColumnName);
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ReferencesSchema, referenceColumn.GetOwningTable().Schema?.Name);
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ReferencesTable, referenceColumn.GetOwningTable().Name);
-            this.TableBuilder.AddDefinition(ColumnDefinitions.ReferencesColumn, referenceColumn.Name);
-
+            ITableModel referenceTable = referenceColumn.GetOwningTable();
+            this.WithForeignKey(referenceTable.Name, referenceColumn.Name, referenceTable.Schema);
             return this;
         }
 

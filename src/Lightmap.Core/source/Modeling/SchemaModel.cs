@@ -6,6 +6,8 @@
 
         public string Name { get; }
 
+        public override int GetHashCode() => this.Name.GetHashCode();
+
         public override bool Equals(object obj)
         {
             if (!(obj is SchemaModel))
