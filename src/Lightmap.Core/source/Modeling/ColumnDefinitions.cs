@@ -1,6 +1,6 @@
 ﻿namespace Lightmap.Modeling
 {
-    public class ColumnDefinitions
+    public static class ColumnDefinitions
     {
         public static readonly string PrimaryKey = "PRIMARY KEY";
         public static readonly string CompositeKey = "__CompositeKey__";

@@ -122,7 +122,7 @@ namespace Lightmap.Modeling
                     }
                 }
 
-                sqlStatement += this.GenerateTableConstraints(tableBuilder);
+                sqlStatement += SqliteMigrator.GenerateTableConstraints(tableBuilder);
                 sqlStatement += "\n)";
 
                 yield return sqlStatement;
@@ -130,7 +130,7 @@ namespace Lightmap.Modeling
             }
         }
 
-        private string GenerateTableConstraints(ITableBuilder tableBuilder)
+        private static string GenerateTableConstraints(ITableBuilder tableBuilder)
         {
             Dictionary<string, string> tableDefinition = tableBuilder.GetTableDefinition();
             string constraint = string.Empty;
@@ -179,7 +179,7 @@ namespace Lightmap.Modeling
             return sqlStatement;
         }
 
-        private string ConvertTypeToSqlType(Type dataType)
+        protected virtual string ConvertTypeToSqlType(Type dataType)
         {
             if (dataType == typeof(string) || dataType == typeof(DateTime))
             {

@@ -8,11 +8,11 @@ namespace Lightmap.Modeling
     {
         private readonly Dictionary<string, string> columnDefinitions;
 
-        public ColumnBuilderBase(string columnName, Type dataType, ITableBuilder owningTable)
+        protected ColumnBuilderBase(string columnName, Type dataType, ITableBuilder owningTable)
         {
+            this.columnDefinitions = new Dictionary<string, string>();
             this.ColumnName = columnName;
             this.ColumnDataType = dataType;
-            this.columnDefinitions = new Dictionary<string, string>();
             this.TableBuilder = owningTable;
         }
 

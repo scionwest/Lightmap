@@ -5,7 +5,7 @@ namespace Lightmap
 {
     public abstract class DatabaseManagerBase : IDatabaseManager
     {
-        public DatabaseManagerBase(string databaseName, string connectionString)
+        protected DatabaseManagerBase(string databaseName, string connectionString)
         {
             this.Database = databaseName;
             this.ConnectionString = connectionString;
